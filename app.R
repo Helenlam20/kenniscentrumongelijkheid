@@ -1,4 +1,4 @@
-# KCO Dashboard 
+# KCO dashboard 
 #
 # - Start of the app that loads UI and server
 # - Load packages and data 
@@ -23,3 +23,5 @@ source("code/ui.R")
 source("code/server.R")
 
 shinyApp(ui = ui, server = server)
+
+

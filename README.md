@@ -1,7 +1,5 @@
-# KCO Dashboard of Amsterdam Metropolitan Area
-_KCO dashboard_ is a project on the socioeconomic inequality across municipalities in the Amsterdam Metropolitan Area from Kenniscentrum Ongelijkheid (KCO) in collaboration with Erasmus School of Economics (ESE). 
-
-The purpose of this dashboard is to describe and better understand the socioeconomic inequality within Metropool Amsterdam and eventually support policymakers with descriptive statistics on inequality in Amsterdam. 
+# KCO dashboard of Amsterdam Metropolitan Area
+_KCO dashboard_ is a project on the socioeconomic inequality across municipalities in the Amsterdam Metropolitan Area from Kenniscentrum Ongelijkheid (KCO) in collaboration with Erasmus School of Economics (ESE). The purpose of this dashboard is to describe and better understand the socioeconomic inequality within Metropool Amsterdam and eventually support policymakers with descriptive statistics on inequality in Amsterdam. 
 
 **How:** using an interactive and intuitive dashboard, the user gains insight into the relationship between childhood conditions and inequality in outcomes for individuals raised in Amsterdam.
 
@@ -11,3 +9,7 @@ The dashboard consists of three elements:
 - Y-axis figure: the outcome measure, for example, personal income.
 - X-axis figure: dimensions of a demographic characteristic or outcome measure, for example, migration background.
 - Group selection (Z): one or two groups based on demographics and geography.
+
+
+![logo_ese.png](logo/logo_ese.png) ![logo_kco.png](logo/logo_kco.png)
+

@@ -1,4 +1,4 @@
-# KCO Dashboard 
+# KCO dashboard 
 #
 # - server: a server function
 # - The server function contains the instructions that your computer needs to build your app.
@@ -9,5 +9,11 @@
 
 #### DEFINE SERVER ####
 server <- function(input, output) {
+  set.seed(122)
+  histdata <- rnorm(500)
   
+  output$plot1 <- renderPlot({
+    data <- histdata[seq_len(input$slider)]
+    hist(data)
+  })
 }
