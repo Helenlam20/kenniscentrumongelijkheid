@@ -1,4 +1,4 @@
-# KCO dashboard 
+# KCO Dashboard 
 #
 # - Start of the app that loads UI and server
 # - Load packages and data 
@@ -10,8 +10,9 @@
 #### PACKAGES ####
 library(shiny)
 library(tidyverse)
-library(ploty)
+library(plotly)
 library(shinydashboard)
+library(dashboardthemes)
 
 
 #### LOAD DATA ####

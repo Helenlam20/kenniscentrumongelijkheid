@@ -1,0 +1,20 @@
+---
+output: html_document
+---
+
+<h1>Gradienten van kansenongelijkheid in Amsterdam</h1>
+<br><br>
+Deze gradienten bestaan uit drie elementen:
+
+<ol>
+  <li>Y-as figuur: de uitkomstmaat. Bijvoorbeeld persoonlijk inkomen.</li>
+  <li>X-as figuur: dimensies van een demografisch kenmerk of uitkomstmaat. Bijvoorbeeld migratieachtergrond.</li>
+  <li>Selectie groepen (Z): één of twee groepen op basis van demografie en geografie. Bijvoorbeeld mannen vs. vrouwen</li>
+</ol>
+
+
+
+
+
+
+

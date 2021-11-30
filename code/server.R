@@ -1,4 +1,4 @@
-# KCO dashboard 
+# KCO Dashboard 
 #
 # - server: a server function
 # - The server function contains the instructions that your computer needs to build your app.
