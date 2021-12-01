@@ -2,7 +2,8 @@
 output: html_document
 ---
 
-<h1>Welkom op het KCO Dashboard!</h1>
+<br>
+<h2>Welkom op het KCO Dashboard!</h1>
 <br><br>
 <i> KCO Dashboard </i> is een project van <a href="https://www.kenniscentrumongelijkheid.nl/">Kenniscentrum Ongelijkheid (KCO)</a> in samenwerking met <a href="https://www.eur.nl/en/ese/">Erasmus School of Economics (ESE)</a> over de sociaaleconomische ongelijkheid binnen de Metropoolregio Amsterdam. 
 

@@ -2,4 +2,6 @@
 output: html_document
 ---
 
-<h1>Contact information is coming soon!</h1>
+<br>
+<h2>Contact information is coming soon!</h1>
+<br><br>

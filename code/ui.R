@@ -14,7 +14,7 @@ sidebar <-
         "<br>",
         "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='temp_home.png' width = '186'>",
         "<br>"
-        )),
+      )),
       menuItem("Home", tabName = "home", icon = icon("home")),
       menuItem("Gradient", tabName = "gradient", icon = icon("signal", lib = "glyphicon"),
                badgeLabel = "Nieuw", badgeColor = "teal"),
@@ -22,13 +22,13 @@ sidebar <-
       menuItem("Info", tabName = "info", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
       
-      HTML(paste0("<br><br><br><br>")),
+      HTML(paste0("<br>")),
       
-      # sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
-      #                   label = "Search..."),
+      sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
+                        label = "Search..."),
       
       HTML(paste0(
-        "<br><br><br><br><br><br><br><br><br><br>",
+        "<br><br><br><br><br><br><br><br><br>",
         "<table style='margin-left:auto; margin-right:auto;'>",
         "<tr>",
         "<td style='padding: 5px;'><a href='https://www.facebook.com/' target='_blank'><i class='fab fa-facebook-square fa-lg'></i></a></td>",
@@ -55,9 +55,10 @@ sidebar <-
 body <-   dashboardBody(
   
   ### changing theme
-  shinyDashboardThemes(
-    theme = "blue_gradient"
-  ),
+  # shinyDashboardThemes(
+  #   theme = "blue_gradient"
+  # ),
+  uiChangeThemeOutput(),
   
   tabItems(
     # home tab content
@@ -68,60 +69,88 @@ body <-   dashboardBody(
     
     # gradient
     tabItem(tabName = "gradient",
-            h1("Gradienten over Kansenongelijkheid in Amsterdam"),
-            br(), br(),
+            br(),
+            # h2("Gradienten over Kansenongelijkheid in Amsterdam"), br(), 
             
             fluidRow(
               box(
-                title = "Uitkomstmaat", width = 4, status = "primary", solidHeader = TRUE,
-                selectInput("select", label = "",
+                title = "Uitkomstmaat", width = 4, status = "info", solidHeader = TRUE,
+                selectInput(inputId = "x", label = "",
                             choices = list("Inkomen" = 1, "HBO en hoger" = 2, "WO en hoger" = 3),
                              selected = 1)
               ),
-              box(
-                title = "Geografie", width = 4, status = "info", solidHeader = TRUE,
-                selectInput("select", label = "",
-                            choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
-                            selected = 1),
-                selectInput("select", label = "",
-                            choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
-                            selected = 2),
+              box(inputId = "geo", 
+                title = "Geografie", width = 4, status = "primary", solidHeader = TRUE,
+             selectInput("geo_1", label = "",
+                         choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
+                         selected = 1),
+             selectInput("geo_2", label = "",
+                         choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
+                         selected = 2)
               ),
-              box(width = 4,
-                title = "Controls",
-                sliderInput("slider", "Number of observations:", 1, 100, 50)
+              box(
+                title = "Geslacht", width = 4, status = "success", solidHeader = TRUE,
+                radioButtons("radio", label = "",
+                             choices = list("Totaal", "Mannen", "Vrouwen"), 
+                             selected = "Totaal"),
               )
-              # box(
-              #   title = "Demografie", width = 4, status = "success", solidHeader = TRUE,
-              #   selectInput("select", label = "",
-              #               choices = list("Choice" = 1, "Choice 2" = 2, "Choice 3" = 3),
-              #               selected = 1)
-              # )
             ),
-  
-            column(width = 12,
-                   box(collapsible = TRUE,
-                     title = "Keuzemenu", width = NULL, solidHeader = FALSE, status = "primary",
-                     plotOutput("plot1", height = 425)
-                   )
+            fluidRow(
+            column(width = 8,
+                   box(collapsible = FALSE,
+                     title = "Gradient", width = NULL, solidHeader = FALSE, status = "primary",
+                     plotOutput("gradient", height = 480)
+                     )
+                   ),
+            
+           
+              column(width = 4, 
+                     box(
+                       width = NULL, background = "purple",
+                       title = "Geboortecohort",
+                       "Hier komt een beschrijving van een geboortecohort. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+                     ),
+                     box(
+                       width = NULL, background = "teal",
+                       title = "uitleg",
+                       "Hier komt een uitleg/interpretatie van de gradient. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+                     ),
+                     box(
+                       width = NULL, background = "maroon",
+                       title = "Uitkomstmaat",
+                       "Hier komt een beschrijving van een uitkomstmaat. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+                     ),
+                     box(background = "light-blue", width = NULL, solidHeader = TRUE, 
+                         title = "Ouderlijke inkomen",
+                         "Hier komt een beschrijving van het ouderlijke inkomen. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+   
+                     ),
+    
+                     )
             )
+            
+            
     ),
     
     # barplot tab content
-    tabItem(tabName = "bar",
-            h1("Staafdiagrammen over Kansenongelijkheid in Amsterdam"),
-            br(), br(),
-            h1("COMING SOON!!")
+    tabItem(tabName = "bar",  br(),
+            h2("Staafdiagrammen over Kansenongelijkheid in Amsterdam"), br(), br(),
+            h2("COMING SOON!!")
     ),
     
     # info tab content
-    tabItem(tabName = "info",
+    tabItem(tabName = "info", 
             includeMarkdown("www/info.Rmd")
     ),
 
     # contact tab content
     tabItem(tabName = "contact",
-            includeMarkdown("www/contact.Rmd")
+            includeMarkdown("www/contact.Rmd"),
+            uiChangeThemeDropdown()
     )
     
   )
@@ -131,7 +160,7 @@ body <-   dashboardBody(
 #### DEFINE UI ####
 ui <- dashboardPage(
   dashboardHeader(title = shinyDashboardLogo(
-    theme = "blue_gradient",
+    theme = "poor_mans_flatly",
     boldText = "KCO Dashboard",
     mainText = "",
     badgeText = "BETA"), titleWidth = 300),

@@ -6,6 +6,8 @@
 #
 # (c) Erasmus School of Economics 2022
 
+# clear workspace
+rm(list=ls())
 
 #### PACKAGES ####
 library(shiny)
@@ -20,8 +22,10 @@ tab <- read_rds("data/data_metropool_amsterdam.rds")
 
 
 #### RUN APP ####
-source("code/ui.R")
-source("code/server.R")
+setwd("./code")
+source("ModuleChangeThemes.R")
+source("ui.R")
+source("server.R")
 
 shinyApp(ui = ui, server = server)
 
