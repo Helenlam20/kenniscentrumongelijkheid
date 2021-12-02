@@ -10,6 +10,9 @@
 #### DEFINE SERVER ####
 server <- function(input, output) {
   
+
+  
+  
   # CHANGING THEME ----------------------------------------------------------
   callModule(module = serverChangeTheme, id = "moduleChangeTheme")
   

@@ -19,10 +19,10 @@ library(dashboardthemes)
 
 
 #### LOAD DATA ####
-gradient_dat <- read_rds("data/gradients_data.rds")
-barplot_dat <- read_rds("data/barplot_data.rds")
-uitkomst_dat <- read_rds("data/uitkomst_data.rds")
-geo_dat <- read_rds("data/geo_data.rds")
+gradient_dat <- read_rds("./data/gradients_data.rds")
+barplot_dat <- read_rds("./data/barplot_data.rds")
+uitkomst_dat <- read_rds("./data/uitkomst_data.rds")
+geo_dat <- read_rds("./data/geo_data.rds")
 
 
 #### RUN APP ####
@@ -30,6 +30,9 @@ setwd("./code")
 source("ModuleChangeThemes.R")
 source("ui.R")
 source("server.R")
+
+
+
 
 shinyApp(ui = ui, server = server)
 

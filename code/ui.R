@@ -75,28 +75,38 @@ body <-   dashboardBody(
             fluidRow(
               box(height = 221,
                 title = "Uitkomstmaat", width = 4, status = "info", solidHeader = TRUE,
-                selectInput(inputId = "outcome", label = "Kies een uitkomstmaat",
+                selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
                             choices = uitkomst_dat$uitkomstmaat,
                              selected = "Persoonlijk inkomen"),
                 htmlOutput("selected_outcome")
               ),
-              box(inputId = "geo", 
-                title = "Demografie (1)", width = 4, status = "primary", solidHeader = TRUE,
-             selectInput("mun", label = "Kies een gemeente",
-                         choices = subset(geo_dat$naam, geo_dat$geografie == "Metropoolregio"),
-                         selected = "Amsterdam"),
-             selectInput("stadsdelen", label = "Kies een stadsdeel",
-                         choices = subset(geo_dat$naam, geo_dat$geografie == "Stadsdelen"),
-                         selected = "Centrum")
-              ),
+               box(
+                 title = "Demografie (1)", width = 4, status = "primary", solidHeader = TRUE,
+                 selectizeInput(inputId = "gemeente", label = "Selecteer hier een gemeente", 
+                                choices  = subset(geo_dat$naam, geo_dat$geografie == "Metropoolregio"),
+                                selected = c("Nederland", "Amsterdam"), multiple = TRUE,
+                                options = list(maxItems = 2, placeholder = "Metropool Amsterdam", 
+                                               plugins = list('remove_button', 'drag_drop'))),
+                 
+                 selectizeInput(inputId = "stadsdeel", label = "Selecteer hier een stadsdeel van Amsterdam", 
+                                choices  = subset(geo_dat$naam, geo_dat$geografie == "Stadsdelen"),
+                                multiple = TRUE,
+                                options = list(maxItems = 2, placeholder = "Stadsdelen Amsterdam", 
+                                               plugins = list('remove_button', 'drag_drop')))
+               ),
+              
               box(
                 title = "Demografie (2)", width = 4, status = "success", solidHeader = TRUE,
-                selectInput("stadsdelen", label = "Kies een stadsdeel",
-                            choices = subset(geo_dat$naam, geo_dat$geografie == "Gebieden"),
-                            selected = "Bijlmer-Oost"),
-                selectInput("stadsdelen", label = "Kies een geslacht",
-                            choices = list("Totaal", "Mannen", "Vrouwen"),
-                            selected = "Totaal")
+                selectizeInput(inputId = "gebied", label = "Selecteer hier een gebied van Amsterdam", 
+                               choices  = subset(geo_dat$naam, geo_dat$geografie == "Gebieden"),
+                               multiple = TRUE,
+                               options = list(maxItems = 2, placeholder = "Gebieden Amsterdam", 
+                                              plugins = list('remove_button', 'drag_drop'))),
+                
+                selectizeInput(inputId = "geslacht", label = "Selecteer hier een geslacht", 
+                               choices  = c("Totaal", "Mannen", "Vrouwen"), multiple = TRUE,
+                               options = list(maxItems = 2, placeholder = "Geslacht", 
+                                              plugins = list('remove_button', 'drag_drop')))
               )
             ),
             fluidRow(
@@ -131,7 +141,7 @@ body <-   dashboardBody(
                        "Hier komt iets, maar ik weet nog niet wat. Dus je kan nu stoppen met lezen. 
                        Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
                        om te laten zien hoe het er uit komt te zien."
-                     ),
+                       )
                      )
             )
             
