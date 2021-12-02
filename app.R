@@ -6,6 +6,7 @@
 #
 # (c) Erasmus School of Economics 2022
 
+
 # clear workspace
 rm(list=ls())
 
@@ -18,7 +19,10 @@ library(dashboardthemes)
 
 
 #### LOAD DATA ####
-tab <- read_rds("data/data_metropool_amsterdam.rds")
+gradient_dat <- read_rds("data/gradients_data.rds")
+barplot_dat <- read_rds("data/barplot_data.rds")
+uitkomst_dat <- read_rds("data/uitkomst_data.rds")
+geo_dat <- read_rds("data/geo_data.rds")
 
 
 #### RUN APP ####

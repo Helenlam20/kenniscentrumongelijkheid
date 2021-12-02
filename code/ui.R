@@ -73,26 +73,30 @@ body <-   dashboardBody(
             # h2("Gradienten over Kansenongelijkheid in Amsterdam"), br(), 
             
             fluidRow(
-              box(
+              box(height = 221,
                 title = "Uitkomstmaat", width = 4, status = "info", solidHeader = TRUE,
-                selectInput(inputId = "x", label = "",
-                            choices = list("Inkomen" = 1, "HBO en hoger" = 2, "WO en hoger" = 3),
-                             selected = 1)
+                selectInput(inputId = "outcome", label = "Kies een uitkomstmaat",
+                            choices = uitkomst_dat$uitkomstmaat,
+                             selected = "Persoonlijk inkomen"),
+                htmlOutput("selected_outcome")
               ),
               box(inputId = "geo", 
-                title = "Geografie", width = 4, status = "primary", solidHeader = TRUE,
-             selectInput("geo_1", label = "",
-                         choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
-                         selected = 1),
-             selectInput("geo_2", label = "",
-                         choices = list("Nederland" = 1, "Amsterdam" = 2, "Metropool Amsterdam" = 3),
-                         selected = 2)
+                title = "Demografie (1)", width = 4, status = "primary", solidHeader = TRUE,
+             selectInput("mun", label = "Kies een gemeente",
+                         choices = subset(geo_dat$naam, geo_dat$geografie == "Metropoolregio"),
+                         selected = "Amsterdam"),
+             selectInput("stadsdelen", label = "Kies een stadsdeel",
+                         choices = subset(geo_dat$naam, geo_dat$geografie == "Stadsdelen"),
+                         selected = "Centrum")
               ),
               box(
-                title = "Geslacht", width = 4, status = "success", solidHeader = TRUE,
-                radioButtons("radio", label = "",
-                             choices = list("Totaal", "Mannen", "Vrouwen"), 
-                             selected = "Totaal"),
+                title = "Demografie (2)", width = 4, status = "success", solidHeader = TRUE,
+                selectInput("stadsdelen", label = "Kies een stadsdeel",
+                            choices = subset(geo_dat$naam, geo_dat$geografie == "Gebieden"),
+                            selected = "Bijlmer-Oost"),
+                selectInput("stadsdelen", label = "Kies een geslacht",
+                            choices = list("Totaal", "Mannen", "Vrouwen"),
+                            selected = "Totaal")
               )
             ),
             fluidRow(
@@ -106,30 +110,28 @@ body <-   dashboardBody(
            
               column(width = 4, 
                      box(
-                       width = NULL, background = "purple",
-                       title = "Geboortecohort",
-                       "Hier komt een beschrijving van een geboortecohort. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
-                     ),
-                     box(
                        width = NULL, background = "teal",
-                       title = "uitleg",
-                       "Hier komt een uitleg/interpretatie van de gradient. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+                       title = textOutput("sample"),
+                       "Hier komt een beschrijving van een geboortecohort. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen.
+                       Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
+                       om te laten zien hoe het er uit komt te zien."
                      ),
                      box(
-                       width = NULL, background = "maroon",
-                       title = "Uitkomstmaat",
-                       "Hier komt een beschrijving van een uitkomstmaat. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
+                       width = NULL, background = "maroon", 
+                       title = "Uitleg",
+                       "Hier komt een uitleg/interpretatie van de gradient. De rest is 
+                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen. 
+                       Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
+                       om te laten zien hoe het er uit komt te zien."
                      ),
-                     box(background = "light-blue", width = NULL, solidHeader = TRUE, 
-                         title = "Ouderlijke inkomen",
-                         "Hier komt een beschrijving van het ouderlijke inkomen. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen."
-   
+                     box(
+                       width = NULL, background = "light-blue",
+                       title = "Hier komt iets",
+                       "Hier komt iets, maar ik weet nog niet wat. Dus je kan nu stoppen met lezen. 
+                       Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
+                       om te laten zien hoe het er uit komt te zien."
                      ),
-    
                      )
             )
             
