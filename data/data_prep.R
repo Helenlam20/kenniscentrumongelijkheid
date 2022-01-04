@@ -8,6 +8,8 @@ library(tidyverse)
 library(openxlsx)
 
 
+
+
 # DATA PREP FOR FIGURES ----------------------------------------------------------
 
 #### LOAD DATA ####
@@ -33,11 +35,8 @@ tab <-
   ) 
 
 
-# cheange name of outcomes
-unique(tab$uitkomst)
-
-tab <- 
-  tab %>%
+# change name of outcomes
+tab <- tab %>%
   mutate(uitkomst = recode(uitkomst, 
                            "low_birthweight" = "Laag geboortegewicht",     
                            "premature_birth" = "Vroeggeboorte",    
@@ -95,6 +94,7 @@ write_rds(barplot_tab, "data/barplot_data.rds")
 rm(barplot_tab)
 
 
+
 # DATA PREP FOR WIDGETS ----------------------------------------------------------
 
 uitkomst_tab <- read.xlsx("data/dashboard_overzicht.xlsx", sheet = "uitkomst") %>%
@@ -112,3 +112,4 @@ geo_tab <- read.xlsx("data/dashboard_overzicht.xlsx", sheet = "geografie") %>%
 
 write_rds(geo_tab, "data/geo_data.rds")
 rm(geo_tab)
+
