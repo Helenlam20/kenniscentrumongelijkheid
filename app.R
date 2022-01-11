@@ -37,12 +37,14 @@ source("server.R")
 
 shinyApp(ui = ui, server = server)
 
-
+# TODO
 # gradient met trema puntjes op de e
-# hover tip aanpassen
-# fitted line toevoegen
-# twee deomografie duidelijk malen welke het is.
-  # - kenmerken groep 1/ groep 2
-# download as pdf button
+# tooltip aanpassen
+# fitted line toevoegen (met een on/off button)
+# gemiddelde lijn button
+# download as pdf button/ download button data
+
+# y- axis
+# uitleg aanpassen 
 
 

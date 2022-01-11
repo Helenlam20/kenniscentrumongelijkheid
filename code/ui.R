@@ -16,9 +16,9 @@ sidebar <-
         "<br>"
       )),
       menuItem("Home", tabName = "home", icon = icon("home")),
-      menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon"),
-               badgeLabel = "Nieuw", badgeColor = "teal"),
-      menuItem("Staafdiagram", tabName = "bar", icon = icon("stats", lib = "glyphicon")),
+      menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
+               # badgeLabel = "Nieuw", badgeColor = "teal"),
+      # menuItem("Staafdiagram", tabName = "bar", icon = icon("stats", lib = "glyphicon")),
       menuItem("Info", tabName = "info", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
       
@@ -63,81 +63,71 @@ body <-   dashboardBody(
     
     # gradient
     tabItem(tabName = "gradient",
-            br(),
-            # h2("Gradienten over Kansenongelijkheid in Amsterdam"), br(),
             fluidRow(
               column(width = 4, 
-              box(height = 200,  
-                width = NULL, background = "light-blue",
-                title = textOutput("sample"),
-                "Hier komt een beschrijving van een geboortecohort. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen.
-                       Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
-                       om te laten zien hoe het er uit komt te zien.")
+                     box(height = 220, 
+                         title = "Uitkomstmaat", width = NULL, status = "primary", solidHeader = TRUE,
+                         selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
+                                     choices = sort(unique(gradient_dat$uitkomst)),
+                                     selected = unique(gradient_dat$uitkomst)[1]),
+                         htmlOutput("selected_outcome")
+                     ),
               ),
               column(width = 4,
-              box(height = 200, 
-                width = NULL, background = "olive", 
-                title = "Uitleg",
-                "Hier komt een uitleg/interpretatie van de gradiënt. De rest is 
-                       gewoon beschrijving om dit op te vullen. Dus je kan nu stoppen met lezen. 
-                       Ik meen het. Ik ga hier niks bijzonders vertellen, want dit is gewoon tekst 
-                       om te laten zien hoe het er uit komt te zien.")
+                     box(height = 220, 
+                       title = "Demografie (1)", width = NULL, status = "info", solidHeader = TRUE,
+                       selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied", 
+                                      choices  = unique(gradient_dat$geografie),
+                                      selected = unique(gradient_dat$geografie)[1],
+                                      multiple = FALSE,
+                                      options = list(maxItems = 1, placeholder = "Demografie", 
+                                                     plugins = list('remove_button', 'drag_drop'))),
+                       selectizeInput(inputId = "geslacht1", label = "Selecteer hier een geslacht",
+                                    choices = unique(gradient_dat$geslacht), 
+                                    selected = unique(gradient_dat$geslacht)[1])
+                     ),
               ),
-              column(width = 4, 
-              box(height = 200, 
-                  title = "Uitkomstmaat", width = NULL, status = "info", solidHeader = TRUE,
-                  selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
-                              choices = unique(gradient_dat$uitkomst),
-                              selected = unique(gradient_dat$uitkomst)[1]),
-                  htmlOutput("selected_outcome")
-                  )
+              column(width = 4,
+                     box(height = 220, 
+                       title = "Demografie (2)", width = NULL, status = "success", solidHeader = TRUE,
+                       selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied", 
+                                      choices  = unique(gradient_dat$geografie),
+                                      selected = unique(gradient_dat$geografie)[6],
+                                      multiple = FALSE,
+                                      options = list(maxItems = 1, placeholder = "Demografie", 
+                                                     plugins = list('remove_button', 'drag_drop'))),
+                       selectizeInput(inputId = "geslacht2", label = "Selecteer hier een geslacht",
+                                    choices = unique(gradient_dat$geslacht), 
+                                    selected = unique(gradient_dat$geslacht)[1])
+                       ),
+                     ),
+              # column(width = 2,
+              #        box(height = 220, 
+              #          title = "Options", width = NULL, status = "primary", solidHeader = TRUE,
+              #          checkboxInput("smooth_line", label = "Smoothed line", value = TRUE),
+              #          checkboxInput("mean_line", label = "mean line", value = TRUE)
+              #        ),
+              # ),
               ),
-            ),
             fluidRow(
             column(width = 8,
-                   box(collapsible = FALSE,
+                   box(collapsible = FALSE, 
                      title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
                      status = "primary",
-                     # plotOutput("gradient", height = 480)
                      plotlyOutput("gradient", height = 480)
                      )
                    ),
             
               column(width = 4,
-                     box(
-                       title = "Demografie", width = NULL, status = "primary", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[1],
-                                      # choices  = c("Metropoolregio Amsterdam", "Stadsdeel Amsterdam", "Gebied Amsterdam"),
-                                      # selected = c("Metropool Amsterdam"), 
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       # br(),
-                       # selectizeInput(inputId = "keuze", label = "Selecteer hier een subgroep",
-                       #                choices  = textOutput("geo"),
-                       #                multiple = TRUE,
-                       #                options = list(maxItems = 2, placeholder = "Subgroepen",
-                       #                               plugins = list('remove_button', 'drag_drop'))),
-                       radioButtons(inputId = "geslacht1", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
-                        ),
-                     box(
-                       title = "Demografie", width = NULL, status = "success", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[3],
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       radioButtons(inputId = "geslacht2", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
-                     ),
+                     box(height = 262,  
+                         width = NULL, background = "light-blue",
+                         title = textOutput("sample"),
+                         textOutput("sample_uitleg")),
                      
+                     box(height = 262,
+                       width = NULL, background = "olive",
+                       title = "Uitleg",
+                       textOutput("gradient_uitleg")),
                      
                      )
             )
@@ -146,10 +136,10 @@ body <-   dashboardBody(
     ),
     
     # barplot tab content
-    tabItem(tabName = "bar",  br(),
-            h2("Staafdiagrammen over Kansenongelijkheid in Amsterdam"), br(), br(),
-            h2("COMING SOON!!")
-    ),
+    # tabItem(tabName = "bar",  br(),
+    #         h2("Staafdiagrammen over Kansenongelijkheid in Amsterdam"), br(), br(),
+    #         h2("COMING SOON!!")
+    # ),
     
     # info tab content
     tabItem(tabName = "info", 

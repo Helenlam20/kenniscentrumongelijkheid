@@ -11,5 +11,5 @@ The dashboard consists of three elements:
 - Group selection (Z): one or two groups based on demographics and geography.
 
 
-![logo_ese.png](logo/logo_ese.png) ![logo_kco.png](logo/logo_kco.png)
+![logo_kco.png](logo/logo_kco.png)
 

@@ -78,7 +78,8 @@ tab <- tab %>%
 # create data for gradients
 gradient_tab <- 
   tab %>%
-  filter(bins != "Totaal")
+  filter(bins != "Totaal",
+         !is.na(mean)) 
 
 # save tab
 write_rds(gradient_tab, "data/gradients_data.rds")
@@ -87,7 +88,8 @@ rm(gradient_tab)
 # create data for barplot
 barplot_tab <- 
   tab %>%
-  filter(bins == "Totaal")
+  filter(bins == "Totaal",
+         !is.na(mean)) 
 
 # save tab
 write_rds(barplot_tab, "data/barplot_data.rds")
