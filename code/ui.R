@@ -17,7 +17,6 @@ sidebar <-
       )),
       menuItem("Home", tabName = "home", icon = icon("home")),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-               # badgeLabel = "Nieuw", badgeColor = "teal"),
       # menuItem("Staafdiagram", tabName = "bar", icon = icon("stats", lib = "glyphicon")),
       menuItem("Info", tabName = "info", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
@@ -114,21 +113,31 @@ body <-   dashboardBody(
                    box(collapsible = FALSE, 
                      title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
                      status = "primary",
-                     plotlyOutput("gradient", height = 480)
+                     plotlyOutput("gradient", height = 460)
                      )
                    ),
             
               column(width = 4,
-                     box(height = 262,  
+                     box(height = NULL, collapsible = TRUE,
                          width = NULL, background = "light-blue",
-                         title = textOutput("sample"),
+                         title = "Welke gegevens gebruikt dit figuur?",
                          textOutput("sample_uitleg")),
                      
-                     box(height = 262,
+                     box(height = NULL, collapsible = TRUE,
                        width = NULL, background = "olive",
-                       title = "Uitleg",
+                       title = "Wat laat het figuur zien?",
                        textOutput("gradient_uitleg")),
                      
+                     box(height = NULL,
+                         width = NULL, background = "purple",
+                         title = "Causaliteit", collapsible = TRUE,
+                         "Het dashboard brengt de samenhang in beeld tussen de omstandigheden 
+                         waarin kinderen opgroeien — zoals samenstelling van het huishouden, 
+                         inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de 
+                         levensloop. Echter, omstandigheden hangen vaak met elkaar samen en hangen 
+                         samen met andere factoren waar niet voor te controleren valt. We meten hier 
+                         dus alleen een samenhang met omstandigheden en geen causaal effect van 
+                         bijvoorbeeld inkomen van de ouders op uitkomsten.")
                      )
             )
             

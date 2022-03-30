@@ -99,6 +99,7 @@ rm(barplot_tab)
 
 # DATA PREP FOR WIDGETS ----------------------------------------------------------
 
+setwd("~/GitHub/kco_dashboard")
 uitkomst_tab <- read.xlsx("data/dashboard_overzicht.xlsx", sheet = "uitkomst") %>%
   mutate(uitkomstmaat = trimws(uitkomstmaat),
          sample = trimws(sample),

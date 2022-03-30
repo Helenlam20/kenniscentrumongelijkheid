@@ -27,22 +27,44 @@ server <- function(input, output, session) {
     uitleg <- subset(uitkomst_dat$definitie, uitkomst_dat$uitkomstmaat == input$outcome)
     HTML(paste0("<b>", input$outcome, ":</b> ", uitleg))
   })
-  
-  # Sample widget
-  output$sample <- renderPrint({ 
-    sample_name <- subset(uitkomst_dat$uitleg, uitkomst_dat$uitkomstmaat == input$outcome)
-    HTML(paste0(sample_name, " geboortecohort"))
-  })
-  
+
   # sample explanation
   output$sample_uitleg <- renderPrint({ 
-    HTML(subset(uitkomst_dat$sample_uitleg, uitkomst_dat$uitkomstmaat == input$outcome))
+    sample_dat <- subset(uitkomst_dat, uitkomst_dat$uitkomstmaat == input$outcome)
+
+    N1 <- sum(gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie1, 
+                              geslacht == input$geslacht1) %>% select(N))
+    
+    N2 <- sum(gradient_dat %>% 
+                filter(uitkomst == input$outcome, geografie ==input$geografie2, 
+                       geslacht == input$geslacht2) %>% select(N))
+    
+    HTML(paste("Voor de uitkomst", input$outcome, "gebruiken we", sample_dat$sample_uitleg, 
+               "In heel Nederland gaat dit om van", sample_dat$sample_size, sample_dat$sample, 
+               "geboren in ", sample_dat$geboortejaar_start, "en", sample_dat$geboortejaar_end,  
+               "Dit figuur gebruikt gegevens van", format(N1, big.mark = "."), sample_dat$sample, "uit", input$geografie1, "en", 
+               format(N2, big.mark = "."), sample_dat$sample, "uit", input$geografie2, "."))
   })
   
   # gradient explanation
   output$gradient_uitleg <- renderPrint({ 
-    HTML(subset(uitkomst_dat$gradient_uitleg, uitkomst_dat$uitkomstmaat == input$outcome))
+    sample <- subset(uitkomst_dat$sample, uitkomst_dat$uitkomstmaat == input$outcome)
+    gradient_uitleg <- subset(uitkomst_dat$gradient_uitleg, uitkomst_dat$uitkomstmaat == input$outcome)
+
+    dat1 <- gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie1, 
+                                    geslacht == input$geslacht1)
+    N1 <- format(round(mean(dat1$N)), big.mark = ".")
+    
+    dat2 <- gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie2, 
+                                    geslacht == input$geslacht2)
+    N2 <- format(round(mean(dat2$N)), big.mark = ".")
+    
+    HTML(paste("Iedere stip in het figuur toont op de verticale as het percentage",
+                gradient_uitleg, "per 5 procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor",
+                input$geografie1, "zijn dit", N1, sample, "per stip (blauw) en voor", input$geografie2,
+               "zijn dit", N2, sample, "per stip (groen)."))
   })
+  
   
   # outcome explanation widget
   output$selected_outcome <- renderPrint({ 
@@ -50,8 +72,10 @@ server <- function(input, output, session) {
     HTML(paste0("<b>", input$outcome, ":</b> ", uitleg))
   })
   
+  
+  ##### FIGURE ##### 
+  
   # title plot widget
-  # Sample widget
   output$title_plot <- renderPrint({ 
     if (input$outcome == "Persoonlijk inkomen") {
       HTML(input$outcome, " (x € 1.000)")
@@ -61,7 +85,6 @@ server <- function(input, output, session) {
   })
   
   
-  ##### FIGURE ##### 
   output$gradient <- renderPlotly({
     
     sign1 <- ""
@@ -82,17 +105,26 @@ server <- function(input, output, session) {
              geslacht == input$geslacht2)
     
     dat <- rbind(dat1, dat2)
-    min_y <- min(dat$mean, na.rm = TRUE)
-    max_y <- max(dat$mean, na.rm = TRUE)
+    min_y <- floor(dat$mean)
+    max_y <- ceiling(dat$mean)
     
 
   plot <- ggplot() + 
-      geom_point(data = dat1,
-                 aes(x = parents_income, y = mean), color = "#3E87CF", size = 3) +
-      geom_point(data = dat2, 
-                 aes(x = parents_income, y = mean), color = "#4CAA88", size = 3) +
+      geom_point(data = dat1, aes(x = parents_income, y = mean, 
+                     text = paste0("<b>", input$geografie1, "</b></br>", 
+                       "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ","),
+                                  "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ","), sign2, 
+                     "</br>Aantal mensen: ", format(round(N), big.mark = "."))), 
+                 color = "#3E87CF", size = 3) +
+      geom_point(data = dat2, aes(x = parents_income, y = mean, 
+                     text = paste0("<b>", input$geografie2, "</b></br>", 
+                                  "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ","),
+                                  "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ","), sign2, 
+                                  "</br>Aantal mensen: ", format(round(N), big.mark = "."))), 
+                 color = "#4CAA88", size = 3) +
       scale_x_continuous(labels = function(x) paste0("€ ", x)) +
-    scale_y_continuous(breaks = round(seq(min_y, max_y, length.out = 5), 1), 
+    scale_y_continuous(
+      # breaks = round(seq(min_y, max_y, length.out = 5)),
       labels = function(x) paste0(sign1, x, sign2)) +
       theme_minimal() +
       labs(x ="Jaarlijks inkomen ouders (x € 1.000)",
@@ -119,7 +151,8 @@ server <- function(input, output, session) {
             panel.grid.minor.x = element_blank())
 
 
-  ggplotly(plot) %>% config(displayModeBar = F, scrollZoom = F)
+
+  ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
     
   })
   
