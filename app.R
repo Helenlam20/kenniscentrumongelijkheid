@@ -21,9 +21,21 @@ library(readxl)
 
 #### LOAD DATA ####
 setwd("/Users/helenlam20/GitHub/kco_dashboard/")
-gradient_dat <- read_rds("./data/gradient_dat.rds") 
-parents_edu_dat <- read_rds("./data/parents_edu.rds") 
 outcome_dat <- read_excel("./data/outcome_table.xlsx")
+
+for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
+  
+  assign(i, read_rds(file.path("./data/", paste0(i, "_tab.rds"))))
+  
+}
+rm(i)
+
+# combins gradient data
+gradient_dat <- bind_rows(bins_20, bins_10) 
+gradient_dat <- bind_rows(gradient_dat, bins_5)
+gradient_dat <- bind_rows(gradient_dat, total)
+gradient_dat <- bind_rows(gradient_dat, parents_edu)
+rm(bins_20, bins_10, bins_5, total, parents_edu)
 
 
 
