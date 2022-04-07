@@ -16,8 +16,7 @@ sidebar <-
         "<br>"
       )),
       menuItem("Home", tabName = "home", icon = icon("home")),
-      menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Staafdiagram", tabName = "bar", icon = icon("stats", lib = "glyphicon")),
+      menuItem("Gradiënt", tabName = "gradientt", icon = icon("signal", lib = "glyphicon")),
       menuItem("Info", tabName = "info", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
       
@@ -60,96 +59,101 @@ body <-   dashboardBody(
             includeMarkdown("www/home.Rmd")
     ),
     
-    # gradient
-    tabItem(tabName = "gradient",
+    # gradientt
+    tabItem(tabName = "gradientt",
             fluidRow(
-              column(width = 4, 
-                     box(height = 220, 
-                         title = "Uitkomstmaat", width = NULL, status = "primary", solidHeader = TRUE,
-                         selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
-                                     choices = sort(unique(gradient_dat$uitkomst)),
-                                     selected = unique(gradient_dat$uitkomst)[1]),
-                         htmlOutput("selected_outcome")
-                     ),
-              ),
-              column(width = 4,
-                     box(height = 220, 
-                       title = "Demografie (1)", width = NULL, status = "info", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[1],
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       selectizeInput(inputId = "geslacht1", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
-                     ),
-              ),
-              column(width = 4,
-                     box(height = 220, 
-                       title = "Demografie (2)", width = NULL, status = "success", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[6],
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       selectizeInput(inputId = "geslacht2", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
-                       ),
-                     ),
-              # column(width = 2,
-              #        box(height = 220, 
-              #          title = "Options", width = NULL, status = "primary", solidHeader = TRUE,
-              #          checkboxInput("smooth_line", label = "Smoothed line", value = TRUE),
-              #          checkboxInput("mean_line", label = "mean line", value = TRUE)
-              #        ),
-              # ),
-              ),
-            fluidRow(
-            column(width = 8,
+            column(width = 9,
                    box(collapsible = FALSE, 
-                     title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
-                     status = "primary",
-                     plotlyOutput("gradient", height = 460)
-                     )
+                       title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
+                       status = "primary",
+                       # textOutput("gradient"),
+                       plotlyOutput("gradient", height = 420),
                    ),
-            
-              column(width = 4,
-                     box(height = NULL, collapsible = TRUE,
-                         width = NULL, background = "light-blue",
-                         title = "Welke gegevens gebruikt dit figuur?",
-                         textOutput("sample_uitleg")),
-                     
-                     box(height = NULL, collapsible = TRUE,
-                       width = NULL, background = "olive",
-                       title = "Wat laat het figuur zien?",
-                       textOutput("gradient_uitleg")),
-                     
+                   
+                   fluidRow(
+                     column(width = 5,
+                            box(height = NULL, title = "Uitkomstmaat", width = NULL, 
+                                status = "primary", solidHeader = TRUE,
+                                selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
+                                            choices = sort(outcome_dat$outcome_name),
+                                            selected = "Persoonlijk inkomen"),
+                                HTML("<b>Selecteer hier een optie:</b>"),
+                                checkboxGroupInput(inputId = "line_options", label = "",
+                                                   choices = c("Fitted lijn" = TRUE,
+                                                               "Gemiddelde lijn" = TRUE), inline = TRUE),
+                                HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                radioButtons(inputId = "parents_options", label = "",
+                                                   choices = c("Inkomen ouders", "Opleiding ouders"), 
+                                                   inline = TRUE, selected = "Inkomen ouders")
+                            ),
+                     ),
+                     column(width = 7,
+                            tabBox(
+                              id = "tabset1", height = NULL, width = NULL, 
+                              tabPanel("Figuur beschrijving", htmlOutput("selected_outcome"),),
+                              tabPanel("Gegevens van figuur", "Test 2"),
+                              tabPanel("Causaliteit", 
+                              "Het dashboard brengt de samenhang in beeld tussen de omstandigheden
+                              waarin kinderen opgroeien — zoals samenstelling van het huishouden,
+                              inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de
+                              levensloop. Echter, omstandigheden hangen vaak met elkaar samen en hangen
+                              samen met andere factoren waar niet voor te controleren valt. We meten hier
+                              dus alleen een samenhang met omstandigheden en geen causaal effect van
+                              bijvoorbeeld inkomen van de ouders op uitkomsten."),
+                              selected = "Figuur beschrijving"),
+                     ),
+                   ),
+                   ),
+              column(width = 3,
                      box(height = NULL,
-                         width = NULL, background = "purple",
-                         title = "Causaliteit", collapsible = TRUE,
-                         "Het dashboard brengt de samenhang in beeld tussen de omstandigheden 
-                         waarin kinderen opgroeien — zoals samenstelling van het huishouden, 
-                         inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de 
-                         levensloop. Echter, omstandigheden hangen vaak met elkaar samen en hangen 
-                         samen met andere factoren waar niet voor te controleren valt. We meten hier 
-                         dus alleen een samenhang met omstandigheden en geen causaal effect van 
-                         bijvoorbeeld inkomen van de ouders op uitkomsten.")
+                         title = "Demografie (1)", width = NULL, status = "info", solidHeader = TRUE,
+                         selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied",
+                                        choices  = unique(gradient_dat$geografie),
+                                        selected = unique(gradient_dat$geografie)[1], multiple = FALSE,
+                                        options = list(maxItems = 1, placeholder = "Demografie",
+                                                       plugins = list('remove_button', 'drag_drop'))),
+                         selectizeInput(inputId = "geslacht1", label = "Selecteer hier een geslacht",
+                                        choices = c("Totaal", "Mannen", "Vrouwen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "migratie1", label = "Selecteer hier een migratie",
+                                        choices = unique(gradient_dat$migratieachtergrond),
+                                        selected = unique(gradient_dat$migratieachtergrond)[1]),
+                         selectizeInput(inputId = "huishouden1", label = "Selecteer hier een huishouden",
+                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
+                                        selected = "Totaal")
+                     ),
+                     box(height = NULL,
+                         title = "Demografie (2)", width = NULL, status = "success", solidHeader = TRUE,
+                         selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied",
+                                        choices  = unique(gradient_dat$geografie),
+                                        selected = unique(gradient_dat$geografie)[2], multiple = FALSE,
+                                        options = list(maxItems = 1, placeholder = "Demografie",
+                                                       plugins = list('remove_button', 'drag_drop'))),
+                         selectizeInput(inputId = "geslacht2", label = "Selecteer hier een geslacht",
+                                        choices = c("Totaal", "Mannen", "Vrouwen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "migratie2", label = "Selecteer hier een migratie",
+                                        choices = unique(gradient_dat$migratieachtergrond),
+                                        selected = unique(gradient_dat$migratieachtergrond)[2]),
+                         selectizeInput(inputId = "huishouden2", label = "Selecteer hier een huishouden",
+                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
+                                        selected = "Totaal")
+                     ),
+                     # box(height = NULL, collapsible = TRUE,
+                     #     width = NULL, background = "light-blue",
+                     #     title = "Welke gegevens gebruikt dit figuur?",
+                     #     # textOutput("sample_uitleg")
+                     #     ),
+                     # 
+                     # box(height = NULL, collapsible = TRUE,
+                     #   width = NULL, background = "olive",
+                     #   title = "Wat laat het figuur zien?",
+                     #   # textOutput("gradientt_uitleg")
+                     #   ),
                      )
-            )
-            
-            
+            ),
     ),
-    
-    # barplot tab content
-    # tabItem(tabName = "bar",  br(),
-    #         h2("Staafdiagrammen over Kansenongelijkheid in Amsterdam"), br(), br(),
-    #         h2("COMING SOON!!")
-    # ),
-    
+
     # info tab content
     tabItem(tabName = "info", 
             includeMarkdown("www/info.Rmd")
@@ -171,7 +175,8 @@ ui <- dashboardPage(
     theme = "poor_mans_flatly",
     boldText = "KCO Dashboard",
     mainText = "",
-    badgeText = "BETA"), titleWidth = 300),
+    badgeText = "BETA"),
+    titleWidth = 300),
   
 sidebar,
 body  

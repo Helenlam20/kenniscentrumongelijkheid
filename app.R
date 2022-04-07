@@ -21,13 +21,10 @@ library(readxl)
 
 #### LOAD DATA ####
 setwd("/Users/helenlam20/GitHub/kco_dashboard/")
-gradient_dat <- read_rds("./data/gradients_data.rds") %>%
-  filter(migratieachtergrond == "Totaal")
-barplot_dat <- read_rds("./data/barplot_data.rds") 
-uitkomst_dat <- read_excel("data/dashboard_overzicht.xlsx", sheet = "uitkomst") %>%
-  mutate(uitkomstmaat = trimws(uitkomstmaat),
-         sample = trimws(sample),
-         definitie = trimws(definitie))
+gradient_dat <- read_rds("./data/gradient_dat.rds") 
+parents_edu_dat <- read_rds("./data/parents_edu.rds") 
+outcome_dat <- read_excel("./data/outcome_table.xlsx")
+
 
 
 #### RUN APP ####
@@ -38,23 +35,3 @@ source("server.R")
 
 
 shinyApp(ui = ui, server = server)
-
-# TODO
-# tooltip aanpassen
-# fitted line toevoegen (met een on/off button)
-# gemiddelde lijn button
-# download as pdf button/ download button data
-# uitleg aanpassen 
-
-
-# Uitleg van gradient:
-#   - wat is een bolletje; wat zie je in de gradient?
-#   - Dan pas interpretatie van de gradient
-#   - getallen achter de komma weghalen?
-
-# tekst is te veel voor mensen: 
-# b1 niveau Nederlands
-# mensen die kleurenblind zijn?
-# highligten van belangrijke bolletjes
-# vergelijking met twee groepen is misschien iets te veel voor de eerste keer.
-# Alleen de 1 groep tonen en in de tweede groep alleen een tekstje toevoegen (kies hier een groep)
