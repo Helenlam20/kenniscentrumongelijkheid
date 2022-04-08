@@ -29,62 +29,68 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
 
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
-  
-  
-  
-  
-  # CHANGING THEME ----------------------------------------------------------
-  callModule(module = serverChangeTheme, id = "moduleChangeTheme")
-  
-  
+
   
   # GRADIENT ----------------------------------------------------------
   
   ##### WIDGETS #####
-  
+
   # Outcome widget
   output$selected_outcome <- renderPrint({
+    
+    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     uitleg <- subset(outcome_dat$definition, outcome_dat$outcome_name == input$outcome)
-    HTML(paste0("<b>", input$outcome, ":</b> ", uitleg))
+    
+    N1 <- round(mean(subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
+                              gradient_dat$geografie == input$geografie1 &
+                              gradient_dat$geslacht == input$geslacht1 &
+                              gradient_dat$migratieachtergrond == input$migratie1 &
+                              gradient_dat$huishouden == input$huishouden1)))
+    N1 <- format(N1, big.mark = ".", decimal.mark = ",")
+    
+    
+    N2 <- round(mean(subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
+                              gradient_dat$geografie == input$geografie2 & 
+                              gradient_dat$geslacht == input$geslacht2 &
+                              gradient_dat$migratieachtergrond == input$migratie2 & 
+                              gradient_dat$huishouden == input$huishouden2)))
+    N1 <- format(N1, big.mark = ".", decimal.mark = ",")
+
+    HTML(paste0("<b>", input$outcome, ":</b> ", uitleg, "<br><br>",
+                "Iedere stip in het figuur toont op de verticale as het percentage ", sample_dat$population, 
+                " per 5 procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor ",
+                input$geografie1, " zijn dit ", N1, " ", sample_dat$population, 
+                " per stip (blauw) en voor ", input$geografie2, " zijn dit ", N2, " ",
+                sample_dat$population, " per stip (groen)."))
   })
+
   
-  # # sample explanation
-  # output$sample_uitleg <- renderPrint({ 
-  #   sample_dat <- subset(uitkomst_dat, uitkomst_dat$uitkomstmaat == input$outcome)
-  # 
-  #   N1 <- sum(gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie1, 
-  #                             geslacht == input$geslacht1) %>% select(N))
-  #   
-  #   N2 <- sum(gradient_dat %>% 
-  #               filter(uitkomst == input$outcome, geografie ==input$geografie2, 
-  #                      geslacht == input$geslacht2) %>% select(N))
-  #   
-  #   HTML(paste("Voor de uitkomst", input$outcome, "gebruiken we", sample_dat$sample_uitleg, 
-  #              "In heel Nederland gaat dit om van", sample_dat$sample_size, sample_dat$sample, 
-  #              "geboren in ", sample_dat$geboortejaar_start, "en", sample_dat$geboortejaar_end,  
-  #              "Dit figuur gebruikt gegevens van", format(N1, big.mark = "."), sample_dat$sample, "uit", input$geografie1, "en", 
-  #              format(N2, big.mark = "."), sample_dat$sample, "uit", input$geografie2, "."))
-  # })
-  # 
-  # # gradient explanation
-  # output$gradient_uitleg <- renderPrint({ 
-  #   sample <- subset(uitkomst_dat$sample, uitkomst_dat$uitkomstmaat == input$outcome)
-  #   gradient_uitleg <- subset(uitkomst_dat$gradient_uitleg, uitkomst_dat$uitkomstmaat == input$outcome)
-  # 
-  #   dat1 <- gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie1, 
-  #                                   geslacht == input$geslacht1)
-  #   N1 <- format(round(mean(dat1$N)), big.mark = ".")
-  #   
-  #   dat2 <- gradient_dat %>% filter(uitkomst == input$outcome, geografie ==input$geografie2, 
-  #                                   geslacht == input$geslacht2)
-  #   N2 <- format(round(mean(dat2$N)), big.mark = ".")
-  #   
-  #   HTML(paste("Iedere stip in het figuur toont op de verticale as het percentage",
-  #               gradient_uitleg, "per 5 procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor",
-  #               input$geografie1, "zijn dit", N1, sample, "per stip (blauw) en voor", input$geografie2,
-  #              "zijn dit", N2, sample, "per stip (groen)."))
-  # })
+  # sample explanation
+  output$sample_uitleg <- renderPrint({
+    
+    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    
+    N1 <- subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
+                   gradient_dat$geografie == input$geografie1 &
+                   gradient_dat$geslacht == input$geslacht1 & 
+                   gradient_dat$migratieachtergrond == input$migratie1 &
+                   gradient_dat$huishouden == input$huishouden1)
+    N1 <- format(sum(N1), big.mark = ".", decimal.mark = ",")
+    
+    N2 <- subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
+                   gradient_dat$geografie == input$geografie2 &
+                   gradient_dat$geslacht == input$geslacht2 &
+                   gradient_dat$migratieachtergrond == input$migratie2 &
+                   gradient_dat$huishouden == input$huishouden2)
+    N2 <- format(sum(N2), big.mark = ".", decimal.mark = ",")
+    
   
+    HTML(paste0("Voor de uitkomst ", input$outcome, " gebruiken we gegevens van ", sample_dat$population,
+               ". In heel Nederland gaat dit om  ", sample_dat$sample_size, " ", sample_dat$population,
+               " geboren in ", sample_dat$birth_year, ". Dit figuur gebruikt gegevens van ", 
+               N1, " ", sample_dat$population, " uit ", input$geografie1, " en ",
+               N2, " ", sample_dat$population, " uit ", input$geografie2, "."))
+  })
   
   
   ##### FIGURE #####
@@ -173,13 +179,13 @@ server <- function(input, output, session) {
                                                   "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ",", big.mark = "."),
                                                   "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
                                                   "</br>Aantal mensen: ", format(round(N), decimal.mark = ",", big.mark = "."))),
-                   color = "#3E87CF", size = 3) +
+                   color = "#3498db", size = 3) +
         geom_point(data = dat2, aes(x = parents_income, y = mean,
                                     text = paste0("<b>", input$geografie2, "</b></br>",
                                                   "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ",", big.mark = "."),
                                                   "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
                                                   "</br>Aantal mensen: ", format(round(N), big.mark = ".", decimal.mark = ","))),
-                   color = "#4CAA88", size = 3) +
+                   color = "#18bc9c", size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
           labels = function(x) paste0(sign1, x, sign2)) +
@@ -205,12 +211,12 @@ server <- function(input, output, session) {
         
         # create figure
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
-                                text = paste0("<b>", input$geografie1, "</b></br>",
+                                text = paste0("<b>", geografie, "</b></br>",
                                               "</br>opleiding ouders: ", opleiding_ouders,
                                               "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
                                               "</br>Aantal mensen: ", format(round(N), decimal.mark = ",", big.mark = ".")))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
-          scale_fill_manual(values=c("#3E87CF", "#4CAA88")) + 
+          scale_fill_manual(values=c("#3498db", "#18bc9c")) + 
           scale_y_continuous(labels = function(x) paste0(sign1, x, sign2)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +

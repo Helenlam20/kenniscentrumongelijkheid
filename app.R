@@ -41,7 +41,7 @@ rm(bins_20, bins_10, bins_5, total, parents_edu)
 
 #### RUN APP ####
 setwd("./code")
-source("ModuleChangeThemes.R")
+source("Theme_PoorMansFlatly.R")
 source("ui.R")
 source("server.R")
 

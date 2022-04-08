@@ -44,8 +44,8 @@ sidebar <-
 
 
 
-body <-   dashboardBody(
-  uiChangeThemeOutput(),
+body <- dashboardBody(
+  theme_poor_mans_flatly,
   tabItems(
     # gradient
     tabItem(tabName = "gradient",
@@ -53,14 +53,14 @@ body <-   dashboardBody(
               column(width = 9,
                      fluidRow(
                        column(width = 5,
-                              box(height = NULL, title = "Uitkomstmaat", width = NULL, 
+                              box(height = 280, title = "Uitkomstmaat", width = NULL, 
                                   status = "primary", solidHeader = TRUE,
                                   selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
                                               choices = sort(outcome_dat$outcome_name),
                                               selected = "Persoonlijk inkomen"),
                                   HTML("<b>Selecteer hier een optie:</b>"),
                                   checkboxGroupInput(inputId = "line_options", label = "",
-                                                     choices = c("Fitted lijn", "Gemiddelde lijn"), 
+                                                     choices = c("Lijn", "Gemiddelde"), 
                                                      inline = TRUE),
                                   HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
                                   radioButtons(inputId = "parents_options", label = "",
@@ -70,9 +70,9 @@ body <-   dashboardBody(
                        ),
                        column(width = 7,
                               tabBox(
-                                id = "tabset1", height = NULL, width = NULL, 
-                                tabPanel("Figuur beschrijving", htmlOutput("selected_outcome"),),
-                                tabPanel("Gegevens van figuur", "Test 2"),
+                                id = "tabset1", height = 280, width = NULL, 
+                                tabPanel("Beschrijving", htmlOutput("selected_outcome")),
+                                tabPanel("Gegevens van figuur", htmlOutput("sample_uitleg")),
                                 tabPanel("Causaliteit", 
                                          "Het dashboard brengt de samenhang in beeld tussen de omstandigheden
                               waarin kinderen opgroeien — zoals samenstelling van het huishouden,
@@ -81,46 +81,44 @@ body <-   dashboardBody(
                               samen met andere factoren waar niet voor te controleren valt. We meten hier
                               dus alleen een samenhang met omstandigheden en geen causaal effect van
                               bijvoorbeeld inkomen van de ouders op uitkomsten."),
-                                selected = "Figuur beschrijving"),
+                                selected = "Beschrijving"),
                        ),
                      ),
-                     
-                     box(collapsible = FALSE, 
+                     box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
-                         status = "primary",
                          plotlyOutput("main_figure", height = 430),
                      ),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = "Demografie (1)", width = NULL, status = "info", solidHeader = TRUE,
-                         selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied",
+                         title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
+                         selectizeInput(inputId = "geografie1", label = "Gebied",
                                         choices  = unique(gradient_dat$geografie),
                                         selected = unique(gradient_dat$geografie)[4]),
-                         selectizeInput(inputId = "geslacht1", label = "Selecteer hier een geslacht",
+                         selectizeInput(inputId = "geslacht1", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "migratie1", label = "Selecteer hier een migratie",
+                         selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
                                         choices = c("Totaal", "Nederland", "Turkije", "Marokko", 
                                                     "Suriname", "Nederlandse Antillen"), 
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "huishouden1", label = "Selecteer hier een huishouden",
+                         selectizeInput(inputId = "huishouden1", label = "Aantal ouders in een gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal")
                      ),
                      box(height = NULL,
-                         title = "Demografie (2)", width = NULL, status = "success", solidHeader = TRUE,
-                         selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied",
+                         title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
+                         selectizeInput(inputId = "geografie2", label = "Gebied",
                                         choices  = unique(gradient_dat$geografie),
                                         selected = unique(gradient_dat$geografie)[2]),
-                         selectizeInput(inputId = "geslacht2", label = "Selecteer hier een geslacht",
+                         selectizeInput(inputId = "geslacht2", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "migratie2", label = "Selecteer hier een migratie",
+                         selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
                                         choices = c("Totaal", "Nederland", "Turkije", "Marokko", 
                                                    "Suriname", "Nederlandse Antillen"), 
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "huishouden2", label = "Selecteer hier een huishouden",
+                         selectizeInput(inputId = "huishouden2", label = "Aantal ouders in een gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal")
                      ),
@@ -135,8 +133,7 @@ body <-   dashboardBody(
     
     # contact tab content
     tabItem(tabName = "contact",
-            includeMarkdown("www/contact.Rmd"),
-            uiChangeThemeDropdown()
+            includeMarkdown("www/contact.Rmd")
     )
     
   )
