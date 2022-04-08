@@ -134,23 +134,12 @@ server <- function(input, output, session) {
                    gradient_dat$migratieachtergrond == input$migratie2 &
                    gradient_dat$huishouden == input$huishouden2)
     
-    
-    # dat1 <- subset(gradient_dat,
-    #                gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
-    #                  gradient_dat$geografie == "Nederland" &
-    #                  gradient_dat$geslacht == "Totaal" &
-    #                  gradient_dat$migratieachtergrond == "Totaal" &
-    #                  gradient_dat$huishouden == "Totaal")
-    # 
-    # dat2 <- subset(gradient_dat,
-    #                gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
-    #                  gradient_dat$geografie == "Amsterdam" &
-    #                  gradient_dat$geslacht == "Totaal" &
-    #                  gradient_dat$migratieachtergrond == "Totaal" &
-    #                  gradient_dat$huishouden == "Totaal")
-    
-    
     if (input$parents_options == "Inkomen ouders") {
+      
+      # get average of the groups
+      total_group1 <- dat1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group2 <- dat2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      
       
       # use bins that are available for both subgroups
       if ("bins_20" %in% unique(dat1$type) & "bins_20" %in% unique(dat2$type)) {
@@ -171,8 +160,7 @@ server <- function(input, output, session) {
         
       }
       
-      if ((nrow(dat1) + nrow(dat2)) != 0) {
-      
+
       plot <- ggplot() +
         geom_point(data = dat1, aes(x = parents_income, y = mean,
                                     text = paste0("<b>", input$geografie1, "</b></br>",
@@ -191,13 +179,34 @@ server <- function(input, output, session) {
           labels = function(x) paste0(sign1, x, sign2)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (x € 1.000)", y ="") +
-        thema
-      
-    } else {
-      plot <- ggplot() 
-      
-    }
-      
+        thema 
+
+        # if (!is.null(input$line_options)) {
+        # 
+        #   if (input$line_options == "Lijn") {
+        #     
+        #     if (nrow(dat1) == 5) {
+        #       polynom <- 2
+        #     } else {
+        #       polynom <- 3
+        #     }
+        #     
+        #     plot + geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
+        #                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
+        #       geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
+        #                   se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c")
+        #     
+        #   }
+        #   
+        #   if (input$line_options == "Gemiddelde") {
+        # 
+        #     plot + geom_abline(aes(intercept = total_group1$mean, slope = 0),
+        #                        linetype="longdash", size=0.5, color = "#3498db") +
+        #       geom_abline(aes(intercept = total_group2$mean, slope = 0),
+        #                   linetype="longdash", size=0.5, color = "#18bc9c")
+        #   }
+        # }
+  
       ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
 
       
@@ -224,10 +233,9 @@ server <- function(input, output, session) {
         
       } else {
         plot <- ggplot() 
-        
       }
-    
-      ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
+ 
+    ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
       
       
     }
