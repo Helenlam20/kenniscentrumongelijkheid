@@ -5,6 +5,9 @@
 #
 # (c) Erasmus School of Economics 2022
 
+
+
+#### STYLING ####
 thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
                                          vjust = 1, margin = margin(0,0,20,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
@@ -26,6 +29,17 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
                panel.grid.major.x = element_blank(),
                panel.grid.minor.x = element_blank())
 
+# hovertext
+font <- list(
+  family = "Helvetica",
+  size = 14,
+  color = "white"
+)
+label <- list(
+  bordercolor = "transparent",
+  font = font
+)
+
 
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
@@ -39,26 +53,36 @@ server <- function(input, output, session) {
   output$selected_outcome <- renderPrint({
     
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    uitleg <- subset(outcome_dat$definition, outcome_dat$outcome_name == input$outcome)
     
-    N1 <- round(mean(subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
-                              gradient_dat$geografie == input$geografie1 &
-                              gradient_dat$geslacht == input$geslacht1 &
-                              gradient_dat$migratieachtergrond == input$migratie1 &
-                              gradient_dat$huishouden == input$huishouden1)))
-    N1 <- format(N1, big.mark = ".", decimal.mark = ",")
+    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie1 &
+                     gradient_dat$geslacht == input$geslacht1 & 
+                     gradient_dat$migratieachtergrond == input$migratie1 &
+                     gradient_dat$huishouden == input$huishouden1)
+    N1 <- format(round(mean(dat1$N)), big.mark = ".", decimal.mark = ",")
     
+    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie2 &
+                     gradient_dat$geslacht == input$geslacht2 &
+                     gradient_dat$migratieachtergrond == input$migratie2 &
+                     gradient_dat$huishouden == input$huishouden2)
+    N2 <- format(round(mean(dat2$N)), big.mark = ".", decimal.mark = ",")
     
-    N2 <- round(mean(subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
-                              gradient_dat$geografie == input$geografie2 & 
-                              gradient_dat$geslacht == input$geslacht2 &
-                              gradient_dat$migratieachtergrond == input$migratie2 & 
-                              gradient_dat$huishouden == input$huishouden2)))
-    N1 <- format(N1, big.mark = ".", decimal.mark = ",")
+    # use bins that are available for both subgroups
+    if ("bins_20" %in% unique(dat1$type) & "bins_20" %in% unique(dat2$type)) {
+      bin <- "5"
+    } else if ("bins_10" %in% unique(dat1$type) & "bins_10" %in% unique(dat2$type)) {
+      bin <- "10"
+    } else if ("bins_5" %in% unique(dat1$type) & "bins_5" %in% unique(dat2$type)) {
+      bin <- "20"
+    } else if ("total" %in% unique(dat1$type) & "total" %in% unique(dat2$type)) {
+      bin <- "100"
+    }
 
-    HTML(paste0("<b>", input$outcome, ":</b> ", uitleg, "<br><br>",
+    
+    HTML(paste0("<b>", input$outcome, ":</b> ", sample_dat$definition, "<br><br>",
                 "Iedere stip in het figuur toont op de verticale as het percentage ", sample_dat$population, 
-                " per 5 procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor ",
+                " per ", bin,"  procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor ",
                 input$geografie1, " zijn dit ", N1, " ", sample_dat$population, 
                 " per stip (blauw) en voor ", input$geografie2, " zijn dit ", N2, " ",
                 sample_dat$population, " per stip (groen)."))
@@ -70,22 +94,21 @@ server <- function(input, output, session) {
     
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     
-    N1 <- subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
-                   gradient_dat$geografie == input$geografie1 &
-                   gradient_dat$geslacht == input$geslacht1 & 
-                   gradient_dat$migratieachtergrond == input$migratie1 &
-                   gradient_dat$huishouden == input$huishouden1)
-    N1 <- format(sum(N1), big.mark = ".", decimal.mark = ",")
+    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie1 &
+                     gradient_dat$geslacht == input$geslacht1 & 
+                     gradient_dat$migratieachtergrond == input$migratie1 &
+                     gradient_dat$huishouden == input$huishouden1)
+    N1 <- format(sum(dat1$N), big.mark = ".", decimal.mark = ",")
     
-    N2 <- subset(gradient_dat$N, gradient_dat$uitkomst_NL == input$outcome &
-                   gradient_dat$geografie == input$geografie2 &
-                   gradient_dat$geslacht == input$geslacht2 &
-                   gradient_dat$migratieachtergrond == input$migratie2 &
-                   gradient_dat$huishouden == input$huishouden2)
-    N2 <- format(sum(N2), big.mark = ".", decimal.mark = ",")
-    
+    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie2 &
+                     gradient_dat$geslacht == input$geslacht2 &
+                     gradient_dat$migratieachtergrond == input$migratie2 &
+                     gradient_dat$huishouden == input$huishouden2)
+    N2 <- format(sum(dat2$N), big.mark = ".", decimal.mark = ",")
   
-    HTML(paste0("Voor de uitkomst ", input$outcome, " gebruiken we gegevens van ", sample_dat$population,
+    HTML(paste0("Voor de uitkomst <b>", input$outcome, "</b> gebruiken we gegevens van ", sample_dat$population,
                ". In heel Nederland gaat dit om  ", sample_dat$sample_size, " ", sample_dat$population,
                " geboren in ", sample_dat$birth_year, ". Dit figuur gebruikt gegevens van ", 
                N1, " ", sample_dat$population, " uit ", input$geografie1, " en ",
@@ -120,20 +143,20 @@ server <- function(input, output, session) {
       sign2 <- "%"
     }
 
-    dat1 <- subset(gradient_dat, 
-                   gradient_dat$uitkomst_NL == input$outcome &
+    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                    gradient_dat$geografie == input$geografie1 &
                    gradient_dat$geslacht == input$geslacht1 & 
                    gradient_dat$migratieachtergrond == input$migratie1 &
                    gradient_dat$huishouden == input$huishouden1)
 
-    dat2 <- subset(gradient_dat, 
-                   gradient_dat$uitkomst_NL == input$outcome &
+    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                    gradient_dat$geografie == input$geografie2 &
                    gradient_dat$geslacht == input$geslacht2 &
                    gradient_dat$migratieachtergrond == input$migratie2 &
                    gradient_dat$huishouden == input$huishouden2)
     
+    
+    #### GRADIENT ####
     if (input$parents_options == "Inkomen ouders") {
       
       # get average of the groups
@@ -207,9 +230,13 @@ server <- function(input, output, session) {
         #   }
         # }
   
-      ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
+      ggplotly(x = plot, tooltip = c("text"))  %>% 
+        config(displayModeBar = F, scrollZoom = F) %>%
+        style(hoverlabel = label) %>%
+        layout(font = font)
 
       
+      #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
       dat1 <- dat1 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
@@ -234,9 +261,12 @@ server <- function(input, output, session) {
       } else {
         plot <- ggplot() 
       }
- 
-    ggplotly(x = plot, tooltip = c("text"))  %>% config(displayModeBar = F, scrollZoom = F)
       
+    
+      ggplotly(x = plot, tooltip = c("text"))  %>% 
+        config(displayModeBar = F, scrollZoom = F) %>%
+        style(hoverlabel = label) %>%
+        layout(font = font)      
       
     }
     
