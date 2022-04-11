@@ -16,9 +16,10 @@ sidebar <-
         "<br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
+      # menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
-
+      
       HTML(paste0(
         "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>",
         "<table style='margin-left:auto; margin-right:auto;'>",
@@ -53,27 +54,27 @@ body <- dashboardBody(
               column(width = 9,
                      fluidRow(
                        column(width = 5,
-                              box(height = 280, title = "Uitkomstmaat", width = NULL, 
+                              box(height = 280, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
                                               choices = sort(outcome_dat$outcome_name),
                                               selected = "Persoonlijk inkomen"),
                                   HTML("<b>Selecteer hier een optie:</b>"),
                                   checkboxGroupInput(inputId = "line_options", label = "",
-                                                     choices = c("Lijn", "Gemiddelde"), 
+                                                     choices = c("Lijn", "Gemiddelde"),
                                                      inline = TRUE),
                                   HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
                                   radioButtons(inputId = "parents_options", label = "",
-                                               choices = c("Inkomen ouders", "Opleiding ouders"), 
+                                               choices = c("Inkomen ouders", "Opleiding ouders"),
                                                inline = TRUE, selected = "Inkomen ouders")
                               ),
                        ),
                        column(width = 7,
                               tabBox(
-                                id = "tabset1", height = 280, width = NULL, 
+                                id = "tabset1", height = 280, width = NULL,
                                 tabPanel("Beschrijving", htmlOutput("selected_outcome")),
                                 tabPanel("Gegevens van figuur", htmlOutput("sample_uitleg")),
-                                tabPanel("Causaliteit", 
+                                tabPanel("Causaliteit",
                                          "Het dashboard brengt de samenhang in beeld tussen de omstandigheden
                               waarin kinderen opgroeien — zoals samenstelling van het huishouden,
                               inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de
@@ -85,9 +86,8 @@ body <- dashboardBody(
                        ),
                      ),
                      box(collapsible = FALSE, status = "primary",
-                         title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
-                         plotlyOutput("main_figure", height = 430),
-                     ),
+                         title = textOutput("title_plot"), width = NULL, solidHeader = TRUE,
+                         plotlyOutput("main_figure", height = 430)),
               ),
               column(width = 3,
                      box(height = NULL,
@@ -99,8 +99,8 @@ body <- dashboardBody(
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko", 
-                                                    "Suriname", "Nederlandse Antillen"), 
+                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                                    "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in een gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
@@ -115,8 +115,8 @@ body <- dashboardBody(
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko", 
-                                                   "Suriname", "Nederlandse Antillen"), 
+                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                                    "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden2", label = "Aantal ouders in een gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
@@ -153,6 +153,3 @@ ui <- dashboardPage(
   body  
   
 )
-
-
-

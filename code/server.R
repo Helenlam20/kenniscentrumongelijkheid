@@ -36,9 +36,21 @@ font <- list(
   color = "white"
 )
 label <- list(
-  bordercolor = "transparent",
+  # bordercolor = "transparent",
+  bordercolor = "white",
   font = font
 )
+
+# function decimals and thousand seperator
+decimal0 <- function(x) {
+  num <- format(round(x), big.mark = ".", decimal.mark = ",")
+}
+
+
+decimal2 <- function(x) {
+  num <- format(round(x, 2), decimal.mark = ",", big.mark = ".")
+  }
+
 
 
 #### DEFINE SERVER ####
@@ -59,14 +71,14 @@ server <- function(input, output, session) {
                      gradient_dat$geslacht == input$geslacht1 & 
                      gradient_dat$migratieachtergrond == input$migratie1 &
                      gradient_dat$huishouden == input$huishouden1)
-    N1 <- format(round(mean(dat1$N)), big.mark = ".", decimal.mark = ",")
+    N1 <- decimal0(mean(dat1$N))
     
     dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                      gradient_dat$geografie == input$geografie2 &
                      gradient_dat$geslacht == input$geslacht2 &
                      gradient_dat$migratieachtergrond == input$migratie2 &
                      gradient_dat$huishouden == input$huishouden2)
-    N2 <- format(round(mean(dat2$N)), big.mark = ".", decimal.mark = ",")
+    N2 <- decimal0(mean(dat2$N))
     
     # use bins that are available for both subgroups
     if ("bins_20" %in% unique(dat1$type) & "bins_20" %in% unique(dat2$type)) {
@@ -99,15 +111,15 @@ server <- function(input, output, session) {
                      gradient_dat$geslacht == input$geslacht1 & 
                      gradient_dat$migratieachtergrond == input$migratie1 &
                      gradient_dat$huishouden == input$huishouden1)
-    N1 <- format(sum(dat1$N), big.mark = ".", decimal.mark = ",")
+    N1 <- decimal0(sum(dat1$N))
     
     dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                      gradient_dat$geografie == input$geografie2 &
                      gradient_dat$geslacht == input$geslacht2 &
                      gradient_dat$migratieachtergrond == input$migratie2 &
                      gradient_dat$huishouden == input$huishouden2)
-    N2 <- format(sum(dat2$N), big.mark = ".", decimal.mark = ",")
-  
+    N2 <- decimal0(sum(dat2$N))
+    
     HTML(paste0("Voor de uitkomst <b>", input$outcome, "</b> gebruiken we gegevens van ", sample_dat$population,
                ". In heel Nederland gaat dit om  ", sample_dat$sample_size, " ", sample_dat$population,
                " geboren in ", sample_dat$birth_year, ". Dit figuur gebruikt gegevens van ", 
@@ -120,11 +132,7 @@ server <- function(input, output, session) {
   
   # title plot widget
   output$title_plot <- renderPrint({
-    if (input$outcome == "Persoonlijk inkomen" | input$outcome == "Vermogen") {
-      HTML(input$outcome, " (x € 1.000)")
-    } else {
-      HTML(input$outcome)
-    }
+    HTML(input$outcome)
   })
 
   
@@ -182,54 +190,69 @@ server <- function(input, output, session) {
         dat2 <- dat2 %>% filter(type == "total")
         
       }
-      
 
       plot <- ggplot() +
         geom_point(data = dat1, aes(x = parents_income, y = mean,
                                     text = paste0("<b>", input$geografie1, "</b></br>",
-                                                  "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ",", big.mark = "."),
-                                                  "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
-                                                  "</br>Aantal mensen: ", format(round(N), decimal.mark = ",", big.mark = "."))),
+                                                  "</br>Inkomen ouders: €", decimal2(parents_income),
+                                                  "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                                  "</br>Aantal mensen: ", decimal2(N))),
                    color = "#3498db", size = 3) +
         geom_point(data = dat2, aes(x = parents_income, y = mean,
                                     text = paste0("<b>", input$geografie2, "</b></br>",
-                                                  "</br>Inkomen ouders: €", format(round(parents_income, 2), decimal.mark = ",", big.mark = "."),
-                                                  "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
-                                                  "</br>Aantal mensen: ", format(round(N), big.mark = ".", decimal.mark = ","))),
+                                                  "</br>Inkomen ouders: €", decimal2(parents_income),
+                                                  "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                                  "</br>Aantal mensen: ", decimal2(N))),
                    color = "#18bc9c", size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
-          labels = function(x) paste0(sign1, x, sign2)) +
+          labels = function(x) paste0(sign1, decimal0(x), sign2)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (x € 1.000)", y ="") +
         thema 
 
-        # if (!is.null(input$line_options)) {
-        # 
-        #   if (input$line_options == "Lijn") {
-        #     
-        #     if (nrow(dat1) == 5) {
-        #       polynom <- 2
-        #     } else {
-        #       polynom <- 3
-        #     }
-        #     
-        #     plot + geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
-        #                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
-        #       geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
-        #                   se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c")
-        #     
-        #   }
-        #   
-        #   if (input$line_options == "Gemiddelde") {
-        # 
-        #     plot + geom_abline(aes(intercept = total_group1$mean, slope = 0),
-        #                        linetype="longdash", size=0.5, color = "#3498db") +
-        #       geom_abline(aes(intercept = total_group2$mean, slope = 0),
-        #                   linetype="longdash", size=0.5, color = "#18bc9c")
-        #   }
-        # }
-  
+      
+      # if user selected checkbox
+        if (!is.null(input$line_options)) {
+          
+          line <- "Lijn"  %in% input$line_options
+          mean <- "Gemiddelde" %in% input$line_options
+ 
+          # regression line
+          if (nrow(dat1) == 5) {
+            polynom <- 2
+          } else {
+            polynom <- 3
+          }
+          
+          if (line & mean) {
+           plot +  
+              geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
+              geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") + 
+              geom_abline(aes(intercept = total_group1$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = "#3498db") +
+              geom_abline(aes(intercept = total_group2$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = "#18bc9c")
+            
+          } else if (line){
+           plot +  
+              geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
+              geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c")
+            
+          } else if (mean){
+            plot + 
+              geom_abline(aes(intercept = total_group1$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = "#3498db") +
+              geom_abline(aes(intercept = total_group2$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = "#18bc9c")
+            
+          }
+        }
+      
       ggplotly(x = plot, tooltip = c("text"))  %>% 
         config(displayModeBar = F, scrollZoom = F) %>%
         style(hoverlabel = label) %>%
@@ -249,8 +272,8 @@ server <- function(input, output, session) {
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>opleiding ouders: ", opleiding_ouders,
-                                              "</br>Uitkomst: ", sign1, format(round(mean, 2), decimal.mark = ",", big.mark = "."), sign2,
-                                              "</br>Aantal mensen: ", format(round(N), decimal.mark = ",", big.mark = ".")))) +
+                                              "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                              "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
           scale_fill_manual(values=c("#3498db", "#18bc9c")) + 
           scale_y_continuous(labels = function(x) paste0(sign1, x, sign2)) +
