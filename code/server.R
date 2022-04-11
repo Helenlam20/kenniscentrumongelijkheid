@@ -9,9 +9,9 @@
 
 #### STYLING ####
 thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
-                                         vjust = 1, margin = margin(0,0,20,0)),
+                                         vjust = 1, margin = margin(0,0,10,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
-                                            vjust = 1, margin = margin(0,0,20,0)),
+                                            vjust = 1, margin = margin(0,0,10,0)),
                legend.text = element_text(colour = "grey20", size = 16),
                legend.position = "none",
                axis.title.y = element_text(size = 16, face = "italic",
@@ -56,6 +56,9 @@ decimal2 <- function(x) {
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
 
+  observeEvent(input$update, {
+    updateBoxSidebar("mycardsidebar")
+  })
   
   # GRADIENT ----------------------------------------------------------
   
@@ -137,6 +140,12 @@ server <- function(input, output, session) {
 
   
   output$main_figure <- renderPlotly({
+    withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
+                   for (i in 1:5) {
+                     incProgress(1/5)
+                     Sys.sleep(0.25)
+                   }
+                 })
     
     sign1 <- ""
     sign2 <- ""

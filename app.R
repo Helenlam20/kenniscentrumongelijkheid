@@ -6,7 +6,7 @@
 #
 # (c) Erasmus School of Economics 2022
 
-
+ 
 # clear workspace
 rm(list=ls())
 
@@ -16,6 +16,8 @@ library(tidyverse)
 library(shinydashboard)
 library(dashboardthemes)
 library(shinydashboardPlus)
+library(shinyjqui)
+library(shinyWidgets)
 library(plotly)
 library(readxl)
 
