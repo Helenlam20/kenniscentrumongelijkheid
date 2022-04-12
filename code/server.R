@@ -43,12 +43,11 @@ label <- list(
 
 # function decimals and thousand seperator
 decimal0 <- function(x) {
-  num <- format(round(x), big.mark = ".", decimal.mark = ",")
+  num <- format(round(x), big.mark = ".", decimal.mark = ",", scientific = F)
 }
 
-
 decimal2 <- function(x) {
-  num <- format(round(x, 2), decimal.mark = ",", big.mark = ".")
+  num <- format(round(x, 2), decimal.mark = ",", big.mark = ".", scientific = F)
   }
 
 
@@ -56,11 +55,30 @@ decimal2 <- function(x) {
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
 
-  observeEvent(input$update, {
-    updateBoxSidebar("mycardsidebar")
-  })
   
+  # REACTIVE ----------------------------------------------------------
+  
+  dataInput1 <- reactive({
+    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie1 & 
+                     gradient_dat$geslacht == input$geslacht1 &
+                     gradient_dat$migratieachtergrond == input$migratie1 & 
+                     gradient_dat$huishouden == input$huishouden1)
+  })
+
+  dataInput2 <- reactive({
+    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                     gradient_dat$geografie == input$geografie2 & 
+                     gradient_dat$geslacht == input$geslacht2 &
+                     gradient_dat$migratieachtergrond == input$migratie2 & 
+                     gradient_dat$huishouden == input$huishouden2)
+
+})
+  
+ 
+
   # GRADIENT ----------------------------------------------------------
+
   
   ##### WIDGETS #####
 
@@ -69,18 +87,10 @@ server <- function(input, output, session) {
     
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     
-    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                     gradient_dat$geografie == input$geografie1 &
-                     gradient_dat$geslacht == input$geslacht1 & 
-                     gradient_dat$migratieachtergrond == input$migratie1 &
-                     gradient_dat$huishouden == input$huishouden1)
+    dat1 <- dataInput1()
     N1 <- decimal0(mean(dat1$N))
     
-    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                     gradient_dat$geografie == input$geografie2 &
-                     gradient_dat$geslacht == input$geslacht2 &
-                     gradient_dat$migratieachtergrond == input$migratie2 &
-                     gradient_dat$huishouden == input$huishouden2)
+    dat2 <- dataInput2()
     N2 <- decimal0(mean(dat2$N))
     
     # use bins that are available for both subgroups
@@ -108,19 +118,9 @@ server <- function(input, output, session) {
   output$sample_uitleg <- renderPrint({
     
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    
-    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                     gradient_dat$geografie == input$geografie1 &
-                     gradient_dat$geslacht == input$geslacht1 & 
-                     gradient_dat$migratieachtergrond == input$migratie1 &
-                     gradient_dat$huishouden == input$huishouden1)
+    dat1 <- dataInput1()
     N1 <- decimal0(sum(dat1$N))
-    
-    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                     gradient_dat$geografie == input$geografie2 &
-                     gradient_dat$geslacht == input$geslacht2 &
-                     gradient_dat$migratieachtergrond == input$migratie2 &
-                     gradient_dat$huishouden == input$huishouden2)
+    dat2 <- dataInput2()
     N2 <- decimal0(sum(dat2$N))
     
     HTML(paste0("Voor de uitkomst <b>", input$outcome, "</b> gebruiken we gegevens van ", sample_dat$population,
@@ -138,15 +138,18 @@ server <- function(input, output, session) {
     HTML(input$outcome)
   })
 
+
   
+  # Create plot
   output$main_figure <- renderPlotly({
+
     withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
                    for (i in 1:5) {
                      incProgress(1/5)
-                     Sys.sleep(0.25)
+                     Sys.sleep(0.15)
                    }
                  })
-    
+
     sign1 <- ""
     sign2 <- ""
     if (input$outcome == "Persoonlijk inkomen" | input$outcome == "Uurloon" |
@@ -160,17 +163,9 @@ server <- function(input, output, session) {
       sign2 <- "%"
     }
 
-    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                   gradient_dat$geografie == input$geografie1 &
-                   gradient_dat$geslacht == input$geslacht1 & 
-                   gradient_dat$migratieachtergrond == input$migratie1 &
-                   gradient_dat$huishouden == input$huishouden1)
-
-    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                   gradient_dat$geografie == input$geografie2 &
-                   gradient_dat$geslacht == input$geslacht2 &
-                   gradient_dat$migratieachtergrond == input$migratie2 &
-                   gradient_dat$huishouden == input$huishouden2)
+    # subset data
+    dat1 <- dataInput1()
+    dat2 <- dataInput2()
     
     
     #### GRADIENT ####
@@ -215,7 +210,7 @@ server <- function(input, output, session) {
                    color = "#18bc9c", size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
-          labels = function(x) paste0(sign1, decimal0(x), sign2)) +
+          labels = function(x) paste0(sign1, decimal2(x), sign2)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (x € 1.000)", y ="") +
         thema 
@@ -285,7 +280,7 @@ server <- function(input, output, session) {
                                               "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
           scale_fill_manual(values=c("#3498db", "#18bc9c")) + 
-          scale_y_continuous(labels = function(x) paste0(sign1, x, sign2)) +
+          scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
           thema
@@ -294,15 +289,36 @@ server <- function(input, output, session) {
         plot <- ggplot() 
       }
       
-    
       ggplotly(x = plot, tooltip = c("text"))  %>% 
         config(displayModeBar = F, scrollZoom = F) %>%
         style(hoverlabel = label) %>%
         layout(font = font)      
       
     }
-    
+  }) # end plot
+  
+  
+  
+  #### DOWNLOAD ####
+  # download data
+  output$downloadData <- downloadHandler(
+    filename = function() { 
+      paste("dataset-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(mtcars, file)
+    })
+  
 
-  })
+  # download plot
+  output$downloadPlot <- downloadHandler(
+    filename = function() { paste(input$dataset, '.png', sep='') },
+    content = function(file) {
+      png(file)
+      print(plotInput())
+      dev.off()
+    })
+  
+  
   
 }

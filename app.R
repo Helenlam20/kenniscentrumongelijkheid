@@ -15,8 +15,9 @@ library(shiny)
 library(tidyverse)
 library(shinydashboard)
 library(dashboardthemes)
-library(shinydashboardPlus)
-library(shinyjqui)
+# library(shinydashboardPlus)
+# library(shinyjqui)
+library(NestedMenu)
 library(shinyWidgets)
 library(plotly)
 library(readxl)
@@ -24,7 +25,9 @@ library(readxl)
 
 #### LOAD DATA ####
 setwd("/Users/helenlam20/GitHub/kco_dashboard/")
-outcome_dat <- read_excel("./data/outcome_table.xlsx")
+outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
+area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
+
 
 for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
   
