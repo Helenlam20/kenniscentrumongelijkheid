@@ -65,15 +65,13 @@ body <- dashboardBody(
                               tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
                                 tabPanel("Algemeen", htmlOutput("selected_outcome")),
-                                tabPanel("Wat zien we hier?", htmlOutput("sample_uitleg")),
+                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
                                 tabPanel("Causaliteit",
-                                         "Het dashboard brengt de samenhang in beeld tussen de omstandigheden
-                              waarin kinderen opgroeien — zoals samenstelling van het huishouden,
-                              inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de
-                              levensloop. Echter, omstandigheden hangen vaak met elkaar samen en hangen
-                              samen met andere factoren waar niet voor te controleren valt. We meten hier
-                              dus alleen een samenhang met omstandigheden en geen causaal effect van
-                              bijvoorbeeld inkomen van de ouders op uitkomsten."),
+                                         "Het dashboard toont de samenhang tussen de omstandigheden 
+                                         waarin kinderen opgroeien en hun uitkomsten over de levensloop. 
+                                         Maar die omstandigheden hangen samen met eindeloos veel factoren 
+                                         die ook van invloed zijn en waarvoor niet te controleren valt. 
+                                         Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."),
                                 selected = "Algemeen"),
                        ),
                      ),
@@ -83,8 +81,8 @@ body <- dashboardBody(
                            h4("INPUT FOR THE Y-AXIS RANGE"),
                            br(), br(), "test test", 
                            inline = TRUE, circle = F, 
-                           icon = icon("gear"), width = "300px",
-                           tooltip = tooltipOptions(title = "Aanpassen Y-as")
+                           icon = icon("gear"), width = "300px"
+                           # tooltip = tooltipOptions(title = "Aanpassen Y-as")
                          ),
                          actionButton("table", label = "Bekijk de data"),
                          downloadButton(outputId = "downloadData", label = "Download data"),
@@ -109,7 +107,9 @@ body <- dashboardBody(
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in een gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
-                                        selected = "Totaal")
+                                        selected = "Totaal"),
+                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
+                                      status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL,
                          title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,

@@ -8,47 +8,7 @@
 
 
 #### STYLING ####
-thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
-                                         vjust = 1, margin = margin(0,0,10,0)),
-               plot.subtitle = element_text(hjust = 0, size = 16,
-                                            vjust = 1, margin = margin(0,0,10,0)),
-               legend.text = element_text(colour = "grey20", size = 16),
-               legend.position = "none",
-               axis.title.y = element_text(size = 16, face = "italic",
-                                           margin = margin(0,15,0,0)),
-               axis.title.x = element_text(size = 16, face = "italic",
-                                           margin = margin(15,0,15,0), vjust = 1),
-               axis.text.y = element_text(size = 16, color="#000000",  hjust = 0.5,
-                                          margin = margin(0,5,0,0)),
-               axis.text.x = element_text(size = 16, color="#000000", margin = margin(5,0,10,0)),
-               axis.line.x = element_line(color= "#000000", size = 0.5),
-               axis.line.y = element_line(color = "#000000", size = 0.5),
-               axis.ticks.x = element_line(color = "#000000", size = 0.5),
-               axis.ticks.y = element_line(color = "#000000", size = 0.5),
-               axis.ticks.length = unit(1.5, "mm"),
-               panel.grid.major.x = element_blank(),
-               panel.grid.minor.x = element_blank())
-
-# hovertext
-font <- list(
-  family = "Helvetica",
-  size = 14,
-  color = "white"
-)
-label <- list(
-  # bordercolor = "transparent",
-  bordercolor = "white",
-  font = font
-)
-
-# function decimals and thousand seperator
-decimal0 <- function(x) {
-  num <- format(round(x), big.mark = ".", decimal.mark = ",", scientific = F)
-}
-
-decimal2 <- function(x) {
-  num <- format(round(x, 2), decimal.mark = ",", big.mark = ".", scientific = F)
-  }
+source("server_options.R")
 
 
 
@@ -59,7 +19,7 @@ server <- function(input, output, session) {
   # REACTIVE ----------------------------------------------------------
   
   dataInput1 <- reactive({
-    dat1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                      gradient_dat$geografie == input$geografie1 & 
                      gradient_dat$geslacht == input$geslacht1 &
                      gradient_dat$migratieachtergrond == input$migratie1 & 
@@ -67,77 +27,123 @@ server <- function(input, output, session) {
   })
 
   dataInput2 <- reactive({
-    dat2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
                      gradient_dat$geografie == input$geografie2 & 
                      gradient_dat$geslacht == input$geslacht2 &
                      gradient_dat$migratieachtergrond == input$migratie2 & 
                      gradient_dat$huishouden == input$huishouden2)
 
 })
+
+
+
+  # HTML TEXT ----------------------------------------------------------
   
- 
-
-  # GRADIENT ----------------------------------------------------------
-
-  
-  ##### WIDGETS #####
-
-  # Outcome widget
+  #### ALGEMEEN ####
   output$selected_outcome <- renderPrint({
     
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    stat <- get_stat_per_outcome_html(sample_dat)
     
-    dat1 <- dataInput1()
-    N1 <- decimal0(mean(dat1$N))
+    data_group1 <- dataInput1()
+    N1 <- decimal0(sum(data_group1$N))
+    bin <- get_perc_per_bin_html(data_group1)
     
-    dat2 <- dataInput2()
-    N2 <- decimal0(mean(dat2$N))
-    
-    # use bins that are available for both subgroups
-    if ("bins_20" %in% unique(dat1$type) & "bins_20" %in% unique(dat2$type)) {
-      bin <- "5"
-    } else if ("bins_10" %in% unique(dat1$type) & "bins_10" %in% unique(dat2$type)) {
-      bin <- "10"
-    } else if ("bins_5" %in% unique(dat1$type) & "bins_5" %in% unique(dat2$type)) {
-      bin <- "20"
-    } else if ("total" %in% unique(dat1$type) & "total" %in% unique(dat2$type)) {
-      bin <- "100"
+    data_group2 <- data.frame()
+    if (!(input$OnePlot)) {
+      data_group2 <- dataInput2()
+      N2 <- decimal0(sum(data_group2$N))
+      bin <- get_bin_html(data_group1, data_group2)
     }
-
     
-    HTML(paste0("<b>", input$outcome, ":</b> ", sample_dat$definition, "<br><br>",
-                "Iedere stip in het figuur toont op de verticale as het percentage ", sample_dat$population, 
-                " per ", bin,"  procent van de ouderlijke inkomensverdeling van laag naar hoog inkomen. Voor ",
-                input$geografie1, " zijn dit ", N1, " ", sample_dat$population, 
-                " per stip (blauw) en voor ", input$geografie2, " zijn dit ", N2, " ",
-                sample_dat$population, " per stip (groen)."))
+    if (input$parents_options == "Inkomen ouders") {
+      axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin, " procent van de ", 
+                               sample_dat$population, " gerangschikt van laag naar hoog ouderlijk inkomen.   
+                              De verticale as toont het eigen", stat, tolower(input$outcome), 
+                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
+      
+    } else if(input$parents_options == "Opleiding ouders") {
+      axis_text <- HTML(paste0("Elke staaf in het figuur toont het", stat, tolower(input$outcome), " van ", 
+                               sample_dat$population, 
+                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
+    }
+    
+    sex1 <- subset(html_text$html_text, html_text$input_text == input$geslacht1)
+    if (input$migratie1 != "Totaal") {
+      mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " achtergrond")
+    } else {mig1 <- ""}
+    if (input$huishouden1 != "Totaal") {
+      hh1 <- paste0("in een ", tolower(input$huishouden1))
+    } else {hh1 <- ""}
+    
+    group1_text <- HTML(paste0("De blauwe groep (groep 1) bestaat uit ", N1, " ", sex1, " ", 
+                sample_dat$population, " ", mig1, " die zijn opgegroeid ", hh1, " in ", 
+                input$geografie1, "."))
+    
+    
+    if (!(input$OnePlot)) {
+      sex2 <- subset(html_text$html_text, html_text$input_text == input$geslacht2)
+      if (input$migratie2 != "Totaal") {
+        mig2 <- paste0("met een ", subset(html_text$html_text, html_text$input_text == input$migratie2), " achtergrond")
+      } else {mig2 <- ""}
+      if (input$huishouden2 != "Totaal") {
+        hh2 <- paste0("in een ", tolower(input$huishouden2))
+      } else {hh2 <- ""}
+      
+      group2_text <- HTML(paste0("De groene groep (groep 2) bestaat uit ", N2, " ", sex2, " ", 
+                                 sample_dat$population, " ", mig2, " die zijn opgegroeid ", hh2, 
+                                 " in ", input$geografie2, "."))
+      
+    } else {group2_text <- ""}
+    
+    # output
+    HTML(paste0("<p><b>", input$outcome, "</b> is ", sample_dat$definition, ".</p>", 
+                "<p>", axis_text, "</p>", 
+                "<p>", group1_text, " ", group2_text, "</p>"))
+    
   })
+  
+  
+  #### WAT ZIE JE? ####
+  # output$sample_uitleg <- renderPrint({
+  #   
+  #   sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+  #   data_group1 <- dataInput1()
+  #   data_group2 <- dataInput2()
+  #   
+  #   # get total 
+  #   total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+  #   total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+  # 
+  #   
+  #   bin1 <- get_perc_per_bin_html(data_group1)
+  #   if (!is.null(data_group2)) {bin2 <- get_perc_per_bin_html(data_group2)} else {bin <- 0}
+  #   bin <- as.character(max(bin1, bin2))
+  #   
+  #   stat <- get_stat_per_outcome_html(sample_dat)
+  #   
+  #   # if user has clicked on the mean button
+  #   if (input$line_options == "Gemiddelde") {
+  #     mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van groep 1 is ", 
+  #                              total_group1$N, ". het gemiddelde van groep 2 is ", total_group2$N))
+  #     
+  #   }
+  #   
+  #   HTML(paste0("Voor de uitkomst <b>", input$outcome, "</b> gebruiken we gegevens van ", sample_dat$population,
+  #               ". In heel Nederland gaat dit om  ", sample_dat$sample_size, " ", sample_dat$population,
+  #               " geboren in ", sample_dat$birth_year, ". Dit figuur gebruikt gegevens van ", 
+  #               N1, " ", sample_dat$population, " uit ", input$geografie1, " en ",
+  #               N2, " ", sample_dat$population, " uit ", input$geografie2, "."))
+  # })
+  
+  
+  # GRADIENT ----------------------------------------------------------
 
-  
-  # sample explanation
-  output$sample_uitleg <- renderPrint({
-    
-    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    dat1 <- dataInput1()
-    N1 <- decimal0(sum(dat1$N))
-    dat2 <- dataInput2()
-    N2 <- decimal0(sum(dat2$N))
-    
-    HTML(paste0("Voor de uitkomst <b>", input$outcome, "</b> gebruiken we gegevens van ", sample_dat$population,
-               ". In heel Nederland gaat dit om  ", sample_dat$sample_size, " ", sample_dat$population,
-               " geboren in ", sample_dat$birth_year, ". Dit figuur gebruikt gegevens van ", 
-               N1, " ", sample_dat$population, " uit ", input$geografie1, " en ",
-               N2, " ", sample_dat$population, " uit ", input$geografie2, "."))
-  })
-  
-  
-  ##### FIGURE #####
   
   # title plot widget
   output$title_plot <- renderPrint({
     HTML(input$outcome)
   })
-
 
   
   # Create plot
@@ -164,56 +170,55 @@ server <- function(input, output, session) {
     }
 
     # subset data
-    dat1 <- dataInput1()
-    dat2 <- dataInput2()
-    
+    data_group1 <- dataInput1()
+    if (!(input$OnePlot)) {data_group2 <- dataInput2()} else (data_group2 <- data.frame())
     
     #### GRADIENT ####
     if (input$parents_options == "Inkomen ouders") {
       
       # get average of the groups
-      total_group1 <- dat1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      total_group2 <- dat2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      
-      
-      # use bins that are available for both subgroups
-      if ("bins_20" %in% unique(dat1$type) & "bins_20" %in% unique(dat2$type)) {
-        dat1 <- dat1 %>% filter(type == "bins_20")
-        dat2 <- dat2 %>% filter(type == "bins_20")
-        
-      } else if ("bins_10" %in% unique(dat1$type) & "bins_10" %in% unique(dat2$type)) {
-        dat1 <- dat1 %>% filter(type == "bins_10")
-        dat2 <- dat2 %>% filter(type == "bins_10")
-        
-      } else if ("bins_5" %in% unique(dat1$type) & "bins_5" %in% unique(dat2$type)) {
-        dat1 <- dat1 %>% filter(type == "bins_5")
-        dat2 <- dat2 %>% filter(type == "bins_5")
-        
-      } else if ("total" %in% unique(dat1$type) & "total" %in% unique(dat2$type)) {
-        dat1 <- dat1 %>% filter(type == "total")
-        dat2 <- dat2 %>% filter(type == "total")
-        
+      total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      if (!(input$OnePlot)) {
+        total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       }
-
+      
+      # filter data with bin
+      if (!(input$OnePlot)) {
+        bin <- get_bin(data_group1, data_group2)
+        data_group1 <- data_group1 %>% filter(type == bin)
+        data_group2 <- data_group2 %>% filter(type == bin)
+        } else {
+          bin <- get_perc_per_bin(data_group1)
+          data_group1 <- data_group1 %>% filter(type == bin)
+          }
+      
+      # make plot
       plot <- ggplot() +
-        geom_point(data = dat1, aes(x = parents_income, y = mean,
-                                    text = paste0("<b>", input$geografie1, "</b></br>",
-                                                  "</br>Inkomen ouders: €", decimal2(parents_income),
-                                                  "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
-                                                  "</br>Aantal mensen: ", decimal2(N))),
+        geom_point(data = data_group1, 
+                   aes(x = parents_income, y = mean,
+                       text = paste0("<b>", input$geografie1, "</b></br>",
+                                     "</br>Inkomen ouders: €", decimal2(parents_income),
+                                     "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                     "</br>Aantal mensen: ", decimal2(N))
+                       ),
                    color = "#3498db", size = 3) +
-        geom_point(data = dat2, aes(x = parents_income, y = mean,
-                                    text = paste0("<b>", input$geografie2, "</b></br>",
-                                                  "</br>Inkomen ouders: €", decimal2(parents_income),
-                                                  "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
-                                                  "</br>Aantal mensen: ", decimal2(N))),
-                   color = "#18bc9c", size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
           labels = function(x) paste0(sign1, decimal2(x), sign2)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (x € 1.000)", y ="") +
         thema 
+      
+      if (!(input$OnePlot)) {
+        
+        plot + geom_point(data = data_group2, 
+                          aes(x = parents_income, y = mean,
+                              text = paste0("<b>", input$geografie2, "</b></br>",
+                                            "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                            "</br>Aantal mensen: ", decimal2(N))),
+                          color = "#18bc9c", size = 3) 
+      }
+
 
       
       # if user selected checkbox
@@ -223,7 +228,7 @@ server <- function(input, output, session) {
           mean <- "Gemiddelde" %in% input$line_options
  
           # regression line
-          if (nrow(dat1) == 5) {
+          if (nrow(data_group1) == 5) {
             polynom <- 2
           } else {
             polynom <- 3
@@ -231,9 +236,9 @@ server <- function(input, output, session) {
           
           if (line & mean) {
            plot +  
-              geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
+              geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
                           se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
-              geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
+              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
                           se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") + 
               geom_abline(aes(intercept = total_group1$mean, slope = 0),
                           linetype="longdash", size=0.5, color = "#3498db") +
@@ -242,9 +247,9 @@ server <- function(input, output, session) {
             
           } else if (line){
            plot +  
-              geom_smooth(data = dat1, aes(x = parents_income, y = mean),  method = "lm",
+              geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
                           se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
-              geom_smooth(data = dat2, aes(x = parents_income, y = mean),  method = "lm",
+              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
                           se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c")
             
           } else if (mean){
@@ -266,9 +271,9 @@ server <- function(input, output, session) {
       #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
-      dat1 <- dat1 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
-      dat2 <- dat2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
-      dat <- rbind(dat1, dat2)
+      data_group1 <- data_group1 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
+      data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
+      dat <- rbind(data_group1, data_group2)
       
       if (nrow(dat) == 3 | nrow(dat) == 6) {
         
