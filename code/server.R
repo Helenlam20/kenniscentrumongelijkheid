@@ -187,10 +187,11 @@ server <- function(input, output, session) {
         bin <- get_bin(data_group1, data_group2)
         data_group1 <- data_group1 %>% filter(type == bin)
         data_group2 <- data_group2 %>% filter(type == bin)
+        
         } else {
-          bin <- get_perc_per_bin(data_group1)
-          data_group1 <- data_group1 %>% filter(type == bin)
-          }
+        bin <- get_perc_per_bin(data_group1)
+        data_group1 <- data_group1 %>% filter(type == bin)
+        }
       
       # make plot
       plot <- ggplot() +
@@ -199,19 +200,18 @@ server <- function(input, output, session) {
                        text = paste0("<b>", input$geografie1, "</b></br>",
                                      "</br>Inkomen ouders: €", decimal2(parents_income),
                                      "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
-                                     "</br>Aantal mensen: ", decimal2(N))
-                       ),
+                                     "</br>Aantal mensen: ", decimal2(N))),
                    color = "#3498db", size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
           labels = function(x) paste0(sign1, decimal2(x), sign2)) +
         theme_minimal() +
-        labs(x ="Jaarlijks inkomen ouders (x € 1.000)", y ="") +
+        labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
         thema 
       
       if (!(input$OnePlot)) {
         
-        plot + geom_point(data = data_group2, 
+        plot <- plot + geom_point(data = data_group2, 
                           aes(x = parents_income, y = mean,
                               text = paste0("<b>", input$geografie2, "</b></br>",
                                             "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
@@ -235,29 +235,39 @@ server <- function(input, output, session) {
           }
           
           if (line & mean) {
-           plot +  
-              geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
+          plot <- plot + 
+            geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
                           se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
-              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") + 
-              geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#3498db") +
-              geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#18bc9c")
+            geom_abline(aes(intercept = total_group1$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = "#3498db") 
+            
+            if (!(input$OnePlot)) {
+              plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
+                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") +
+                geom_abline(aes(intercept = total_group2$mean, slope = 0),
+                            linetype="longdash", size=0.5, color = "#18bc9c")
+            }
+            
             
           } else if (line){
-           plot +  
+            plot <- plot + 
               geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
-              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c")
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") 
+            
+            if (!(input$OnePlot)) {
+              plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
+                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") 
+            }
             
           } else if (mean){
-            plot + 
+            plot <- plot + 
               geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#3498db") +
-              geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#18bc9c")
+                          linetype="longdash", size=0.5, color = "#3498db")
+            
+            if (!(input$OnePlot)) {
+              plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
+                            linetype="longdash", size=0.5, color = "#18bc9c")
+            }
             
           }
         }

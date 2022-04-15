@@ -17,7 +17,7 @@ sidebar <-
         "<br><br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
+      # menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon"))
     )  # end sidebar menu
@@ -92,7 +92,7 @@ body <- dashboardBody(
               column(width = 3,
                      box(height = NULL,
                          title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
-                         pickerInput("geografie1", label = "Gebied", selected = "Metropool Amsterdam",
+                         pickerInput("geografie1", label = "Gebied", selected = "Amsterdam",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
                                                     `Stadsdeel Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
@@ -105,7 +105,7 @@ body <- dashboardBody(
                                         choices = c("Totaal", "Nederland", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "huishouden1", label = "Aantal ouders in een gezin",
+                         selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal"),
                          prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
@@ -115,9 +115,9 @@ body <- dashboardBody(
                          title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
                          pickerInput("geografie2", label = "Gebied", selected = "Almere",
                                      choices = list("Nederland", "Metropool Amsterdam",
-                                                    `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                                                    `Stadsdeel Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Wijk Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                                    `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
+                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                                                    `Wijken in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht2", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
@@ -126,7 +126,7 @@ body <- dashboardBody(
                                         choices = c("Totaal", "Nederland", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
-                         selectizeInput(inputId = "huishouden2", label = "Aantal ouders in een gezin",
+                         selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal")
                      ),
