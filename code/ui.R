@@ -8,157 +8,140 @@
 
 sidebar <- 
   dashboardSidebar(
-    width = 300,
+    width = 250,
+    collapsed = F,
     sidebarMenu(
       HTML(paste0(
         "<br>",
         "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='temp_home.png' width = '186'>",
-        "<br>"
+        "<br><br>"
       )),
-      menuItem("Home", tabName = "home", icon = icon("home")),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Staafdiagram", tabName = "bar", icon = icon("stats", lib = "glyphicon")),
-      menuItem("Info", tabName = "info", icon = icon("question")),
-      menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon")),
-      
-      HTML(paste0("<br>")),
-      
-      sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
-                        label = "Search..."),
-      
-      HTML(paste0(
-        "<br><br><br><br><br><br><br><br><br>",
-        "<table style='margin-left:auto; margin-right:auto;'>",
-        "<tr>",
-        "<td style='padding: 5px;'><a href='https://www.facebook.com/' target='_blank'><i class='fab fa-facebook-square fa-lg'></i></a></td>",
-        "<td style='padding: 5px;'><a href='https://www.youtube.com/' target='_blank'><i class='fab fa-youtube fa-lg'></i></a></td>",
-        "<td style='padding: 5px;'><a href='https://www.twitter.com/' target='_blank'><i class='fab fa-twitter fa-lg'></i></a></td>",
-        "<td style='padding: 5px;'><a href='https://www.github.com/' target='_blank'><i class='fab fa-github'></i></a></td>",
-        "<td style='padding: 5px;'><a HREF='mailto:helenlam@hotmail.nl'target='_blank'><i class='far fa-envelope'></i></a></td>",
-        "</tr>",
-        "</table>",
-        "<br>"),
-        HTML(paste0(
-          "<script>",
-          "var today = new Date();",
-          "var yyyy = today.getFullYear();",
-          "</script>",
-          "<p style = 'text-align: center;'><small>&copy; - Erasmus School of Economics - <script>document.write(yyyy);</script></small></p>"
-          ))
-        ) # end html
-      ) # end sidebar menu
-    ) # end shinydashboard
+      # menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
+      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
+      menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon"))
+    )  # end sidebar menu
+  ) # end shinydashboard
 
 
 
-body <-   dashboardBody(
-  uiChangeThemeOutput(),
+body <- dashboardBody(
+  tags$script(HTML("$('body').addClass('sidebar-mini');")),
+  theme_poor_mans_flatly,
   tabItems(
-    # home tab content
-    tabItem(tabName = "home",
-            # home section
-            includeMarkdown("www/home.Rmd")
-    ),
-    
     # gradient
     tabItem(tabName = "gradient",
             fluidRow(
-              column(width = 4, 
-                     box(height = 220, 
-                         title = "Uitkomstmaat", width = NULL, status = "primary", solidHeader = TRUE,
-                         selectInput(inputId = "outcome", label = "Selecteer hier een uitkomstmaat",
-                                     choices = sort(unique(gradient_dat$uitkomst)),
-                                     selected = unique(gradient_dat$uitkomst)[1]),
-                         htmlOutput("selected_outcome")
-                     ),
-              ),
-              column(width = 4,
-                     box(height = 220, 
-                       title = "Demografie (1)", width = NULL, status = "info", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie1", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[1],
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       selectizeInput(inputId = "geslacht1", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
-                     ),
-              ),
-              column(width = 4,
-                     box(height = 220, 
-                       title = "Demografie (2)", width = NULL, status = "success", solidHeader = TRUE,
-                       selectizeInput(inputId = "geografie2", label = "Selecteer hier een gebied", 
-                                      choices  = unique(gradient_dat$geografie),
-                                      selected = unique(gradient_dat$geografie)[6],
-                                      multiple = FALSE,
-                                      options = list(maxItems = 1, placeholder = "Demografie", 
-                                                     plugins = list('remove_button', 'drag_drop'))),
-                       selectizeInput(inputId = "geslacht2", label = "Selecteer hier een geslacht",
-                                    choices = unique(gradient_dat$geslacht), 
-                                    selected = unique(gradient_dat$geslacht)[1])
+              column(width = 9,
+                     fluidRow(
+                       column(width = 5,
+                              box(height = NULL, title = "Uitkomstmaat", width = NULL,
+                                  status = "primary", solidHeader = TRUE,
+                                  pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
+                                              selected = "Persoonlijk inkomen",
+                                              choices = list(`Geld` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Geld")),
+                                                   `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
+                                                   `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
+                                                   `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
+                                                   options = list(`live-search` = T, style = "", size = 10)),
+                              prettyCheckboxGroup(
+                                inputId = "line_options",
+                                label = HTML("<b>Selecteer hier een optie:</b>"),
+                                choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
+                                icon = icon("check-square-o"), status = "primary",
+                                outline = TRUE, inline = TRUE, animation = "jelly"
+                                ),
+                              prettyRadioButtons(
+                                inputId = "parents_options",
+                                label = HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                choices = c("Inkomen ouders", "Opleiding ouders"),
+                                icon = icon("check"), inline = TRUE,
+                                bigger = TRUE, selected = "Inkomen ouders",
+                                status = "info", animation = "jelly"
+                                )
+                              ),
+                       ),
+                       column(width = 7,
+                              tabBox(
+                                id = "tabset1", height = NULL, width = NULL,
+                                tabPanel("Algemeen", htmlOutput("selected_outcome")),
+                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
+                                tabPanel("Causaliteit",
+                                         "Het dashboard toont de samenhang tussen de omstandigheden 
+                                         waarin kinderen opgroeien en hun uitkomsten over de levensloop. 
+                                         Maar die omstandigheden hangen samen met eindeloos veel factoren 
+                                         die ook van invloed zijn en waarvoor niet te controleren valt. 
+                                         Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."),
+                                selected = "Algemeen"),
                        ),
                      ),
-              # column(width = 2,
-              #        box(height = 220, 
-              #          title = "Options", width = NULL, status = "primary", solidHeader = TRUE,
-              #          checkboxInput("smooth_line", label = "Smoothed line", value = TRUE),
-              #          checkboxInput("mean_line", label = "mean line", value = TRUE)
-              #        ),
-              # ),
+                     box(collapsible = FALSE, status = "primary",
+                         title = textOutput("title_plot"), width = NULL, solidHeader = T,
+                         dropdownButton(
+                           h4("INPUT FOR THE Y-AXIS RANGE"),
+                           br(), br(), "test test", 
+                           inline = TRUE, circle = F, 
+                           icon = icon("gear"), width = "300px"
+                           # tooltip = tooltipOptions(title = "Aanpassen Y-as")
+                         ),
+                         actionButton("table", label = "Bekijk de data"),
+                         downloadButton(outputId = "downloadData", label = "Download data"),
+                         downloadButton(outputId = "downloadPlot", label = "Download figuur"),
+                         plotlyOutput("main_figure", height = "420")),
               ),
-            fluidRow(
-            column(width = 8,
-                   box(collapsible = FALSE, 
-                     title = textOutput("title_plot"), width = NULL, solidHeader = TRUE, 
-                     status = "primary",
-                     plotlyOutput("gradient", height = 460)
-                     )
-                   ),
-            
-              column(width = 4,
-                     box(height = NULL, collapsible = TRUE,
-                         width = NULL, background = "light-blue",
-                         title = "Welke gegevens gebruikt dit figuur?",
-                         textOutput("sample_uitleg")),
-                     
-                     box(height = NULL, collapsible = TRUE,
-                       width = NULL, background = "olive",
-                       title = "Wat laat het figuur zien?",
-                       textOutput("gradient_uitleg")),
-                     
+              column(width = 3,
                      box(height = NULL,
-                         width = NULL, background = "purple",
-                         title = "Causaliteit", collapsible = TRUE,
-                         "Het dashboard brengt de samenhang in beeld tussen de omstandigheden 
-                         waarin kinderen opgroeien — zoals samenstelling van het huishouden, 
-                         inkomen van de ouders en migratieachtergrond — en hun uitkomsten over de 
-                         levensloop. Echter, omstandigheden hangen vaak met elkaar samen en hangen 
-                         samen met andere factoren waar niet voor te controleren valt. We meten hier 
-                         dus alleen een samenhang met omstandigheden en geen causaal effect van 
-                         bijvoorbeeld inkomen van de ouders op uitkomsten.")
-                     )
-            )
-            
-            
+                         title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
+                         pickerInput("geografie1", label = "Gebied", selected = "Amsterdam",
+                                     choices = list("Nederland", "Metropool Amsterdam",
+                                                    `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
+                                                    `Stadsdeel Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                                                    `Wijk Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                     options = list(`live-search` = TRUE, style = "", size = 10)),
+                         selectizeInput(inputId = "geslacht1", label = "Geslacht",
+                                        choices = c("Totaal", "Mannen", "Vrouwen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
+                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                                    "Suriname", "Nederlandse Antillen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
+                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
+                                        selected = "Totaal"),
+                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
+                                      status = "primary", inline = TRUE, fill = T, bigger = T)
+                     ),
+                     box(height = NULL,
+                         title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
+                         pickerInput("geografie2", label = "Gebied", selected = "Almere",
+                                     choices = list("Nederland", "Metropool Amsterdam",
+                                                    `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
+                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                                                    `Wijken in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                     options = list(`live-search` = TRUE, style = "", size = 10)),
+                         selectizeInput(inputId = "geslacht2", label = "Geslacht",
+                                        choices = c("Totaal", "Mannen", "Vrouwen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
+                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                                    "Suriname", "Nederlandse Antillen"),
+                                        selected = "Totaal"),
+                         selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
+                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
+                                        selected = "Totaal")
+                     ),
+              )
+            ),
     ),
-    
-    # barplot tab content
-    # tabItem(tabName = "bar",  br(),
-    #         h2("Staafdiagrammen over Kansenongelijkheid in Amsterdam"), br(), br(),
-    #         h2("COMING SOON!!")
-    # ),
     
     # info tab content
-    tabItem(tabName = "info", 
-            includeMarkdown("www/info.Rmd")
+    tabItem(tabName = "werkwijze",
+            includeMarkdown("www/werkwijze.Rmd")
     ),
-
+    
     # contact tab content
     tabItem(tabName = "contact",
-            includeMarkdown("www/contact.Rmd"),
-            uiChangeThemeDropdown()
+            includeMarkdown("www/contact.Rmd")
     )
     
   )
@@ -167,16 +150,17 @@ body <-   dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
-  dashboardHeader(title = shinyDashboardLogo(
-    theme = "poor_mans_flatly",
-    boldText = "KCO Dashboard",
-    mainText = "",
-    badgeText = "BETA"), titleWidth = 300),
+  header = dashboardHeader(
+    title = tagList(
+      tags$span(
+        class = "logo-mini", "KCO Dashboard"
+      ),
+      tags$span(
+        class = "logo-lg", "KCO Dashboard"
+      )
+    )
+  ),
+  sidebar = sidebar,
+  body = body  
   
-sidebar,
-body  
-
 )
-
-
-
