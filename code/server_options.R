@@ -54,7 +54,7 @@ get_perc_per_bin_html <- function(data_group) {
     bin <- 10
   } else if ("5" %in% unique(data_group$type)) {
     bin <- 20
-  } else if ("total" %in% unique(data_group$type)) {
+  } else if ("100" %in% unique(data_group$type)) {
     bin <- 100
   }
   return(bin)
@@ -63,7 +63,7 @@ get_perc_per_bin_html <- function(data_group) {
 # get bin 
 get_bin_html <- function(data_group1, data_group2) {
   bin1 <- get_perc_per_bin_html(data_group1)
-  if (!is.null(data_group2)) {bin2 <- get_perc_per_bin_html(data_group2)} else {bin <- 0}
+  if (!is.null(data_group2)) {bin2 <- get_perc_per_bin_html(data_group2)} else {bin2 <- 0}
   bin <- as.character(max(bin1, bin2))
   return(bin)
 }
@@ -77,6 +77,34 @@ get_stat_per_outcome_html <- function(sample_dat){
   }
   return(stat)
 } 
+
+
+# get signs for the outcomes
+sign1_func <- function(outcome) {
+  sign1 <- ""
+  if (outcome == "Persoonlijk inkomen" | outcome == "Uurloon" |
+      outcome == "Zorgkosten" | outcome == "Vermogen" |
+      outcome == "Jeugd zorgkosten van tieners" |
+      outcome == "Jeugd zorgkosten van kinderen" ) {
+    sign1 <- "€ "
+  } 
+  return(sign1)
+}
+
+sign2_func <- function(outcome) {
+  sign2 <- ""
+  if (outcome != "Uren werk per week" &
+      outcome != "Woonoppervlak per lid huishouden van kinderen" &
+      outcome != "Woonoppervlak per lid huishouden van tieners" & 
+      outcome != "Persoonlijk inkomen" & outcome != "Uurloon"&
+      outcome != "Zorgkosten" & outcome != "Vermogen" &
+      outcome != "Jeugd zorgkosten van tieners" &
+      outcome != "Jeugd zorgkosten van kinderen") {
+    sign2 <- "%"
+  }
+  return(sign2)
+}
+
 
 #### FIGURE PLOT ####
 
@@ -124,8 +152,8 @@ get_perc_per_bin <- function(data_group) {
     bin <- 10
   } else if ("5" %in% unique(data_group$type)) {
     bin <- 5
-  } else if ("total" %in% unique(data_group$type)) {
-    bin <- "total"
+  } else if ("100" %in% unique(data_group$type)) {
+    bin <- 100
   }
   return(bin)
 }
@@ -133,25 +161,30 @@ get_perc_per_bin <- function(data_group) {
 # get bin 
 get_bin <- function(data_group1, data_group2) {
   bin1 <- get_perc_per_bin(data_group1)
-  if (!is.null(data_group2)) {bin2 <- get_perc_per_bin(data_group2)} else {bin <- 0}
+  if (!is.null(data_group2)) {bin2 <- get_perc_per_bin(data_group2)} else {bin2 <- 0}
   bin <- as.character(max(bin1, bin2))
   return(bin)
 }
 
 
 
+
 # TEST
 
-data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Amsterdam" & 
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" & 
-                        gradient_dat$huishouden == "Totaal")
-
-
-data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Almere" & 
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" & 
-                        gradient_dat$huishouden == "Totaal")
-
+# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+#                         gradient_dat$geografie == "Amsterdam" &
+#                         gradient_dat$geslacht == "Totaal" &
+#                         gradient_dat$migratieachtergrond == "Totaal" &
+#                         gradient_dat$huishouden == "Totaal") %>%
+#   filter(opleiding_ouders == "Totaal")
+# 
+# 
+# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+#                         gradient_dat$geografie == "Nederland" &
+#                         gradient_dat$geslacht == "Totaal" &
+#                         gradient_dat$migratieachtergrond == "Totaal" &
+#                         gradient_dat$huishouden == "Totaal") %>%
+#   filter(opleiding_ouders == "Totaal")
+# 
+# 
+# rm(data_group1, data_group2)

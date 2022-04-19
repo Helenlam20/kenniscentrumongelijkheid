@@ -33,7 +33,7 @@ for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
 }
 rm(i)
 
-# combins gradient data
+# combines gradient data
 gradient_dat <- bind_rows(bins_20, bins_10) 
 gradient_dat <- bind_rows(gradient_dat, bins_5)
 gradient_dat <- bind_rows(gradient_dat, total)
