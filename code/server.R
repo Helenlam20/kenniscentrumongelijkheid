@@ -157,39 +157,44 @@ server <- function(input, output, session) {
     # filter data with bin
     if (!(input$OnePlot)) {
       bin <- get_bin(data_group1, data_group2)
+      bin_html <- get_bin_html(data_group1, data_group2)
       data_group1 <- data_group1 %>% dplyr::filter(type == bin)
       data_group2 <- data_group2 %>% dplyr::filter(type == bin)
 
     } else {
       bin <- get_perc_per_bin(data_group1)
+      bin_html <- get_perc_per_bin_html(data_group1)
       data_group1 <- data_group1 %>% dplyr::filter(type == bin)
     }
 
     if (bin != "100") {
 
-      blue_text <- paste("De meest linker blauwe stip (groep 1) laat zien dat voor de", sample_dat$population,
-                         "het", stat, tolower(input$outcome), paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
-                         De meest rechter blauwe stip (groep 1) laat zien dat voor de", sample_dat$population,
+      blue_text <- paste("De meest linker blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+                         sample_dat$population, "het", stat, tolower(input$outcome), 
+                         paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
+                         De meest rechter blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+                         sample_dat$population,
                          "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
 
 
-      green_text <- paste("De meest linker groene stip (groep 2) laat zien dat voor de", sample_dat$population,
-                         "het", stat, tolower(input$outcome), paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
-                         De meest rechter groene stip (groep 2) laat zien dat voor de", sample_dat$population,
-                         "het", stat, tolower(input$outcome),
+      green_text <- paste("De meest linker groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+                          sample_dat$population, "het", stat, tolower(input$outcome), 
+                          paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
+                         De meest rechter groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+                          sample_dat$population, "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
 
 
 
     } else if (bin == "100") {
 
-      blue_text <- paste("De blauwe stip (groep 1) laat zien dat voor de", sample_dat$population,
-                         " het", stat, tolower(input$outcome),
+      blue_text <- paste("De blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+                         sample_dat$population, " het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean), sign2), "was.")
 
-      green_text <- paste("De groene stip (groep 2) laat zien dat voor de", sample_dat$population,
-                          "het", stat, tolower(input$outcome),
+      green_text <- paste("De groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+                          sample_dat$population, "het", stat, tolower(input$outcome),
                           paste0(sign1, decimal2(data_group2$mean), sign2), "was.")
 
 
