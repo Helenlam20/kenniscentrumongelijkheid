@@ -8,7 +8,7 @@
 
 sidebar <- 
   dashboardSidebar(
-    width = 250,
+    width = 225,
     collapsed = F,
     sidebarMenu(
       HTML(paste0(

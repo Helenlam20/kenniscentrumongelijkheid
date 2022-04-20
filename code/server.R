@@ -236,7 +236,7 @@ server <- function(input, output, session) {
     withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
                    for (i in 1:5) {
                      incProgress(1/5)
-                     Sys.sleep(0.15)
+                     Sys.sleep(0.1)
                    }
                  })
 
