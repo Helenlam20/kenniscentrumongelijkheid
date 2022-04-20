@@ -7,6 +7,11 @@
 
 #### GENERAL ####
 
+# data group colors
+data_group1_color <- "#3498db"
+data_group2_color <- "#18bc9c" 
+
+
 # function decimals and thousand seperator
 decimal0 <- function(x) {
   num <- format(round(x), big.mark = ".", decimal.mark = ",", scientific = F)
@@ -196,3 +201,20 @@ data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortege
 
 
 # rm(data_group1, data_group2)
+
+
+# Add color functions
+add_text_color_html <- function(text, color) {
+  # Constructs a string of the form: <span style='color:[[text_color]]'>[[text]]</span>'
+  formatted_string <- paste0("<span style='color:", color, "'>", text, "</span>")
+  return(formatted_string)
+}
+
+add_bold_text_html <- function(text, color) {
+  if (missing(color)) {
+    formatted_string <-  paste0("<b>", text, "</b>")
+  } else {
+    formatted_string <-  paste0("<b style='color:", color, "'>", text, "</b>")
+  }
+  return(formatted_string)
+}
