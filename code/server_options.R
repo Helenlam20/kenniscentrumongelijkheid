@@ -162,7 +162,17 @@ get_perc_per_bin <- function(data_group) {
 get_bin <- function(data_group1, data_group2) {
   bin1 <- get_perc_per_bin(data_group1)
   if (!is.null(data_group2)) {bin2 <- get_perc_per_bin(data_group2)} else {bin2 <- 0}
-  bin <- as.character(max(bin1, bin2))
+  
+  if (bin1 == 100 | bin2 == 100) {
+    bin <- 100
+  } else if (bin1 < bin2) {
+    bin <- bin1
+  } else if (bin1 > bin2) {
+    bin <- bin2
+  } else if (bin1 == bin2) {
+    bin <- bin1
+  }
+  bin <- as.character(bin)
   return(bin)
 }
 
@@ -171,20 +181,18 @@ get_bin <- function(data_group1, data_group2) {
 
 # TEST
 
-# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-#                         gradient_dat$geografie == "Amsterdam" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal") %>%
-#   filter(opleiding_ouders == "Totaal")
-# 
-# 
-# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-#                         gradient_dat$geografie == "Nederland" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal") %>%
-#   filter(opleiding_ouders == "Totaal")
-# 
-# 
+data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Amsterdam" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
+
+
+data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Nederland" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
+
+
 # rm(data_group1, data_group2)
