@@ -1,0 +1,2 @@
+source("app.R")
+runApp()
