@@ -101,13 +101,14 @@ server <- function(input, output, session) {
 
     sex1 <- subset(html_text$html_text, html_text$input_text == input$geslacht1)
     if (input$migratie1 != "Totaal") {
-      mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " achtergrond")
+      mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " migratieachtergrond")
     } else {mig1 <- ""}
     if (input$huishouden1 != "Totaal") {
       hh1 <- paste0("in een ", tolower(input$huishouden1))
     } else {hh1 <- ""}
 
-    group1_text <- HTML(paste0("De blauwe groep (groep 1) bestaat uit ", N1, " ", sex1, " ",
+    group1_text <- HTML(paste0("De ", add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                               " bestaat uit ", N1, " ", sex1, " ",
                 sample_dat$population, " ", mig1, " die zijn opgegroeid ", hh1, " in ",
                 input$geografie1, "."))
 
@@ -115,13 +116,14 @@ server <- function(input, output, session) {
     if (!(input$OnePlot)) {
       sex2 <- subset(html_text$html_text, html_text$input_text == input$geslacht2)
       if (input$migratie2 != "Totaal") {
-        mig2 <- paste0("met een ", subset(html_text$html_text, html_text$input_text == input$migratie2), " achtergrond")
+        mig2 <- paste0("met een ", subset(html_text$html_text, html_text$input_text == input$migratie2), " migratieachtergrond")
       } else {mig2 <- ""}
       if (input$huishouden2 != "Totaal") {
         hh2 <- paste0("in een ", tolower(input$huishouden2))
       } else {hh2 <- ""}
 
-      group2_text <- HTML(paste0("De groene groep (groep 2) bestaat uit ", N2, " ", sex2, " ",
+      group2_text <- HTML(paste0("De ", add_bold_text_html(text="groene groep", color=data_group2_color),
+                                 "  bestaat uit ", N2, " ", sex2, " ",
                                  sample_dat$population, " ", mig2, " die zijn opgegroeid ", hh2,
                                  " in ", input$geografie2, "."))
 
@@ -169,34 +171,37 @@ server <- function(input, output, session) {
 
     if (bin != "100") {
 
-      blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+      blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                          sample_dat$population, "het", stat, tolower(input$outcome), 
                          paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                          sample_dat$population,
                          "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
 
 
-      green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+      green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome), 
                           paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
 
 
 
     } else if (bin == "100") {
-
-      blue_text <- paste("De blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+      
+      blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
+                         "laat zien dat voor de", paste0(bin_html, "%"), 
                          sample_dat$population, " het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean), sign2), "was.")
-
-      green_text <- paste("De groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+      
+      green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
+                          "laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome),
                           paste0(sign1, decimal2(data_group2$mean), sign2), "was.")
-
+      
+      
 
     }
     mean_text <- ""
@@ -205,9 +210,9 @@ server <- function(input, output, session) {
     # 
     #   if (input$line_options == "Gemiddelde") {
     # 
-    #     mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van groep 1 is ",
+    #     mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de blauwe groep is ",
     #                              paste0(sign1, decimal2(total_group1$mean), sign2), ". 
-    #                              het gemiddelde van groep 2 is ", 
+    #                              het gemiddelde van de groene groep is ", 
     #                              paste0(sign1, decimal2(total_group2$mean), sign2, ".")))
     #   }
     # }
@@ -293,7 +298,7 @@ server <- function(input, output, session) {
                                             "</br>Inkomen ouders: €", decimal2(parents_income),
                                             "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
                                             "</br>Aantal mensen: ", decimal2(N))),
-                          color = data_group2_color, size = 3) 
+                          color = data_group2_color, size = 3, shape = 18) 
       }
 
 

@@ -84,14 +84,13 @@ body <- dashboardBody(
                            icon = icon("gear"), width = "300px"
                            # tooltip = tooltipOptions(title = "Aanpassen Y-as")
                          ),
-                         actionButton("table", label = "Bekijk de data"),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
                          plotlyOutput("main_figure", height = "420")),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
+                         title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
                          pickerInput("geografie1", label = "Gebied", selected = "Nederland",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
@@ -112,7 +111,7 @@ body <- dashboardBody(
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL,
-                         title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
+                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE,
                          pickerInput("geografie2", label = "Gebied", selected = "Amsterdam",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
@@ -153,10 +152,10 @@ ui <- dashboardPage(
   header = dashboardHeader(
     title = tagList(
       tags$span(
-        class = "logo-mini", "KCO Dashboard"
+        class = "logo-mini", "Dashboard Ongelijkheid in de stad"
       ),
       tags$span(
-        class = "logo-lg", "KCO Dashboard"
+        class = "logo-lg", "Dashboard Ongelijkheid in de stad"
       )
     )
   ),
