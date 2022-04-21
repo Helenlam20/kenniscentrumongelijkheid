@@ -169,19 +169,19 @@ server <- function(input, output, session) {
 
     if (bin != "100") {
 
-      blue_text <- paste("De meest linker blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+      blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
                          sample_dat$population, "het", stat, tolower(input$outcome), 
                          paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
-                         De meest rechter blauwe stip (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " (groep 1) laat zien dat voor de", paste0(bin_html, "%"), 
                          sample_dat$population,
                          "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
 
 
-      green_text <- paste("De meest linker groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+      green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome), 
                           paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
-                         De meest rechter groene stip (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " (groep 2) laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
 
@@ -277,7 +277,7 @@ server <- function(input, output, session) {
                                      "</br>Inkomen ouders: €", decimal2(parents_income),
                                      "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
                                      "</br>Aantal mensen: ", decimal2(N))),
-                   color = "#3498db", size = 3) +
+                   color = data_group1_color, size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(
           labels = function(x) paste0(sign1, decimal2(x), sign2)) +
@@ -293,7 +293,7 @@ server <- function(input, output, session) {
                                             "</br>Inkomen ouders: €", decimal2(parents_income),
                                             "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
                                             "</br>Aantal mensen: ", decimal2(N))),
-                          color = "#18bc9c", size = 3) 
+                          color = data_group2_color, size = 3) 
       }
 
 
@@ -314,36 +314,36 @@ server <- function(input, output, session) {
           if (line & mean) {
           plot <- plot + 
             geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") +
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group1_color) +
             geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#3498db") 
+                          linetype="longdash", size=0.5, color = data_group1_color) 
             
             if (!(input$OnePlot)) {
               plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") +
+                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) +
                 geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                            linetype="longdash", size=0.5, color = "#18bc9c")
+                            linetype="longdash", size=0.5, color = data_group2_color)
             }
             
             
           } else if (line){
             plot <- plot + 
               geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#3498db") 
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group1_color) 
             
             if (!(input$OnePlot)) {
               plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = "#18bc9c") 
+                            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) 
             }
             
           } else if (mean){
             plot <- plot + 
               geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = "#3498db")
+                          linetype="longdash", size=0.5, color = data_group1_color)
             
             if (!(input$OnePlot)) {
               plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                            linetype="longdash", size=0.5, color = "#18bc9c")
+                            linetype="longdash", size=0.5, color = data_group2_color)
             }
             
           }
@@ -371,7 +371,7 @@ server <- function(input, output, session) {
                                               "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
                                               "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
-          scale_fill_manual(values=c("#3498db", "#18bc9c")) + 
+          scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
           scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
