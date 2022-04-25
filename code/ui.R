@@ -17,7 +17,6 @@ sidebar <-
         "<br><br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon"))
     )  # end sidebar menu
@@ -51,14 +50,23 @@ body <- dashboardBody(
                                 icon = icon("check-square-o"), status = "primary",
                                 outline = TRUE, inline = TRUE, animation = "jelly"
                                 ),
-                              prettyRadioButtons(
-                                inputId = "parents_options",
-                                label = HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
-                                choices = c("Inkomen ouders", "Opleiding ouders"),
-                                icon = icon("check"), inline = TRUE,
-                                bigger = TRUE, selected = "Inkomen ouders",
-                                status = "info", animation = "jelly"
-                                )
+                                  prettyRadioButtons(
+                                    inputId = "parents_options",
+                                    label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                               tags$style(type = "text/css", "#q1 {vertical-align: middle;}"),
+                                               bsButton("q1", label = "", icon = icon("question"), size = "extra-small")
+                                    ),
+                                    choices = c("Inkomen ouders", "Opleiding ouders"),
+                                    icon = icon("check"), inline = TRUE,
+                                    bigger = TRUE, selected = "Inkomen ouders",
+                                    status = "info", animation = "jelly"
+                                  ),
+                              bsPopover(id = "q1", title = "Opleiding ouders",
+                                        content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
+                                        placement = "right", 
+                                        trigger = "hover", 
+                                        options = list(container = "body")
+                              ),
                               ),
                        ),
                        column(width = 7,
@@ -81,8 +89,8 @@ body <- dashboardBody(
                            h4("INPUT FOR THE Y-AXIS RANGE"),
                            br(), br(), "test test", 
                            inline = TRUE, circle = F, 
-                           icon = icon("gear"), width = "300px"
-                           # tooltip = tooltipOptions(title = "Aanpassen Y-as")
+                           icon = icon("gear"), width = "300px",
+                           tooltip = tooltipOptions(title = "Y-as range aanpassen")
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
@@ -150,6 +158,7 @@ body <- dashboardBody(
 #### DEFINE UI ####
 ui <- dashboardPage(
   header = dashboardHeader(
+    titleWidth = 325, 
     title = tagList(
       tags$span(
         class = "logo-mini", "Dashboard Ongelijkheid in de stad"
