@@ -8,7 +8,7 @@
 
 sidebar <- 
   dashboardSidebar(
-    width = 250,
+    width = 225,
     collapsed = F,
     sidebarMenu(
       HTML(paste0(
@@ -84,25 +84,24 @@ body <- dashboardBody(
                            icon = icon("gear"), width = "300px"
                            # tooltip = tooltipOptions(title = "Aanpassen Y-as")
                          ),
-                         actionButton("table", label = "Bekijk de data"),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
                          plotlyOutput("main_figure", height = "420")),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
+                         title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
                          pickerInput("geografie1", label = "Gebied", selected = "Nederland",
                                      choices = list("Nederland", "Metropool Amsterdam",
-                                                    `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                                                    `Stadsdeel Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Wijk Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                                    `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
+                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                                                    `22 gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht1", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
@@ -112,18 +111,18 @@ body <- dashboardBody(
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL,
-                         title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
+                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE,
                          pickerInput("geografie2", label = "Gebied", selected = "Amsterdam",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
                                                     `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Wijken in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                                    `22 gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht2", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
@@ -153,10 +152,10 @@ ui <- dashboardPage(
   header = dashboardHeader(
     title = tagList(
       tags$span(
-        class = "logo-mini", "KCO Dashboard"
+        class = "logo-mini", "Dashboard Ongelijkheid in de stad"
       ),
       tags$span(
-        class = "logo-lg", "KCO Dashboard"
+        class = "logo-lg", "Dashboard Ongelijkheid in de stad"
       )
     )
   ),
