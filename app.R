@@ -21,7 +21,6 @@ library(readxl)
 
 
 #### LOAD DATA ####
-#setwd("/Users/helenlam20/GitHub/kco_dashboard/")
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
 
@@ -43,7 +42,6 @@ rm(bins_20, bins_10, bins_5, total, parents_edu)
 
 
 #### RUN APP ####
-#setwd("./code")
 source("./code/Theme_PoorMansFlatly.R")
 source("./code/ui.R")
 source("./code/server.R")

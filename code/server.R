@@ -44,6 +44,7 @@ server <- function(input, output, session) {
 
     # select outcome from outcome_dat
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == "Laag geboortegewicht")
     stat <- get_stat_per_outcome_html(sample_dat)
 
     # get data
@@ -67,7 +68,6 @@ server <- function(input, output, session) {
         N1 <- decimal0(sum(data_group1$N))
         N2 <- decimal0(sum(data_group2$N))
 
-
         # if user clicked on showing only one group
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
@@ -78,9 +78,13 @@ server <- function(input, output, session) {
 
       }
 
+      if (bin != "100") {
+        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen.")
+      } else {range <- "."}
+      
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin_html, " procent van de ",
-                               sample_dat$population, " gerangschikt van laag naar hoog ouderlijk inkomen.
-                              De verticale as toont het eigen", stat, tolower(input$outcome),
+                               sample_dat$population, range, 
+                               " De verticale as toont het eigen", stat, tolower(input$outcome),
                                ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
 
     } else if(input$parents_options == "Opleiding ouders") {
@@ -98,7 +102,6 @@ server <- function(input, output, session) {
                                sample_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     }
-
     sex1 <- subset(html_text$html_text, html_text$input_text == input$geslacht1)
     if (input$migratie1 != "Totaal") {
       mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " migratieachtergrond")
@@ -140,21 +143,19 @@ server <- function(input, output, session) {
   #### WAT ZIE JE? ####
   output$sample_uitleg <- renderPrint({
 
-    # get total
-    # total_group1 <- data_group1 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
-    # total_group2 <- data_group2 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
-    
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     data_group1 <- dataInput1() %>% dplyr::filter(opleiding_ouders == "Totaal")
     data_group2 <- dataInput2() %>% dplyr::filter(opleiding_ouders == "Totaal")
     
-    
-    stat <- get_stat_per_outcome_html(sample_dat)
+    # get total
+    total_group1 <- data_group1 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    total_group2 <- data_group2 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
+
 
     # get signs for outcomes
     sign1 <- sign1_func(input$outcome)
     sign2 <- sign2_func(input$outcome)
-
+    stat <- get_stat_per_outcome_html(sample_dat)
     
     # filter data with bin
     if (!(input$OnePlot)) {
@@ -164,7 +165,7 @@ server <- function(input, output, session) {
       data_group2 <- data_group2 %>% dplyr::filter(type == bin)
 
     } else {
-      bin <- get_perc_per_bin(data_group1)
+      bin <- as.character(get_perc_per_bin(data_group1))
       bin_html <- get_perc_per_bin_html(data_group1)
       data_group1 <- data_group1 %>% dplyr::filter(type == bin)
     }
@@ -179,14 +180,14 @@ server <- function(input, output, session) {
                          "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
 
-
+      if (!(input$OnePlot)) {
       green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome), 
                           paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
                          De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
-
+      } else {green_text <- ""}
 
 
     } else if (bin == "100") {
@@ -196,26 +197,38 @@ server <- function(input, output, session) {
                          sample_dat$population, " het", stat, tolower(input$outcome),
                          paste0(sign1, decimal2(data_group1$mean), sign2), "was.")
       
+      if (!(input$OnePlot)) {
       green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
                           "laat zien dat voor de", paste0(bin_html, "%"), 
                           sample_dat$population, "het", stat, tolower(input$outcome),
                           paste0(sign1, decimal2(data_group2$mean), sign2), "was.")
       
-      
+      } else {green_text <- ""}
 
     }
     mean_text <- ""
     # if user has clicked on the mean button
-    # if (!is.null(input$line_options)) {
-    # 
-    #   if (input$line_options == "Gemiddelde") {
-    # 
-    #     mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de blauwe groep is ",
-    #                              paste0(sign1, decimal2(total_group1$mean), sign2), ". 
-    #                              het gemiddelde van de groene groep is ", 
-    #                              paste0(sign1, decimal2(total_group2$mean), sign2, ".")))
-    #   }
-    # }
+    if (!is.null(input$line_options)) {
+
+      if (input$line_options == "Gemiddelde") {
+
+        mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
+                                 add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
+                                 paste0(sign1, decimal2(total_group1$mean), sign2), "."))
+        
+        
+        if (!(input$OnePlot)) {
+          mean_text <- 
+            HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
+                        add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
+                        paste0(sign1, decimal2(total_group1$mean), sign2), ". Het totale ", 
+                        stat, " ", tolower(input$outcome), " van de ",
+                        add_bold_text_html(text="groene groep", color=data_group2_color), " is ",
+                        paste0(sign1, decimal2(total_group2$mean), sign2), "."))
+          
+        } 
+      }
+    }
     
 
  HTML(paste0("<p>", blue_text, "</p>",
@@ -292,13 +305,14 @@ server <- function(input, output, session) {
       
       if (!(input$OnePlot)) {
         
-        plot <- plot + geom_point(data = data_group2, 
-                          aes(x = parents_income, y = mean,
-                              text = paste0("<b>", input$geografie2, "</b></br>",
-                                            "</br>Inkomen ouders: €", decimal2(parents_income),
-                                            "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
-                                            "</br>Aantal mensen: ", decimal2(N))),
-                          color = data_group2_color, size = 3, shape = 18) 
+        plot <- plot +
+          geom_point(data = data_group2, 
+                     aes(x = parents_income, y = mean,
+                         text = paste0("<b>", input$geografie2, "</b></br>",
+                                       "</br>Inkomen ouders: €", decimal2(parents_income),
+                                       "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                       "</br>Aantal mensen: ", decimal2(N))),
+                     color = data_group2_color, size = 3, shape = 18) 
       }
 
 
@@ -372,7 +386,6 @@ server <- function(input, output, session) {
         # create figure
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>opleiding ouders: ", opleiding_ouders,
                                               "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
                                               "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +

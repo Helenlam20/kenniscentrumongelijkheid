@@ -182,27 +182,6 @@ get_bin <- function(data_group1, data_group2) {
 }
 
 
-
-
-# TEST
-
-data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Amsterdam" &
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" &
-                        gradient_dat$huishouden == "Totaal")
-
-
-data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Nederland" &
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" &
-                        gradient_dat$huishouden == "Totaal")
-
-
-# rm(data_group1, data_group2)
-
-
 # Add color functions
 add_text_color_html <- function(text, color) {
   # Constructs a string of the form: <span style='color:[[text_color]]'>[[text]]</span>'
@@ -218,3 +197,21 @@ add_bold_text_html <- function(text, color) {
   }
   return(formatted_string)
 }
+
+
+
+
+
+# TEST
+data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Amsterdam" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
+
+
+data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Nederland" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
