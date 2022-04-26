@@ -6,6 +6,27 @@
 # (c) Erasmus School of Economics 2022
 
 
+# radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+# 
+#   options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+#   options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+#   bsTag <- shiny::tags$script(shiny::HTML(paste0("
+#     $(document).ready(function() {
+#       setTimeout(function() {
+#         $('input', $('#", id, "')).each(function(){
+#           if(this.getAttribute('value') == '", choice, "') {
+#             opts = $.extend(", options, ", {html: true});
+#             $(this.parentElement).tooltip('destroy');
+#             $(this.parentElement).tooltip(opts);
+#           }
+#         })
+#       }, 500)
+#     });
+#   ")))
+#   htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+# }
+
+
 sidebar <- 
   dashboardSidebar(
     width = 225,
@@ -42,7 +63,8 @@ body <- dashboardBody(
                                                    `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
                                                    `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
                                                    `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
-                                                   options = list(`live-search` = T, style = "", size = 10)),
+                                                   options = list(`live-search` = T, style = "", size = 10),
+                                              choicesOpt = list(subtext = outcome_dat$population)),
                               prettyCheckboxGroup(
                                 inputId = "line_options",
                                 label = HTML("<b>Selecteer hier een optie:</b>"),
@@ -54,7 +76,7 @@ body <- dashboardBody(
                                     inputId = "parents_options",
                                     label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
                                                tags$style("#q1 {vertical-align: middle; width: 25px;
-                                                          height: 25px; font-size: 11px;  
+                                                          height: 25px; font-size: 11px;
                                                           border: 2px solid #e7e7e7; border-radius: 100%;
                                                           background-color: white; color: #555555;
                                                           line-height: 1pxt; padding: 0px;}"),
@@ -66,6 +88,10 @@ body <- dashboardBody(
                                     bigger = TRUE, selected = "Inkomen ouders",
                                     status = "info", animation = "jelly"
                                   ),
+                              radioTooltip(id = "parents_options", choice = "Opleiding ouders", 
+                                           # title = textOutput("radio_button"), 
+                                           title = "Alleen beschikbaar voor pasgeboren en groep-8 sample", 
+                                           placement = "right", trigger = "hover"),
                               bsPopover(id = "q1", title = "Opleiding ouders",
                                         content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
                                         placement = "right", 

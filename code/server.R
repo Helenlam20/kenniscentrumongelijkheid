@@ -36,6 +36,21 @@ server <- function(input, output, session) {
 })
 
 
+  # UI RADIOBUTTON TOOLTIP ---------------------------------------------
+  
+  
+  output$radio_button <- renderText({
+
+    if(input$outcome %in% subset(outcome_dat$outcome_name,
+                                 (outcome_dat$population != "pasgeborenen" &
+                                 outcome_dat$population != "leerlingen van groep 8"))) {
+
+      HTML("Niet beschikbaar voor deze uitkomstmaat!")
+    } else {
+      HTML("Beschikbaar voor deze uitkomst!")
+    }
+  })
+  
 
   # HTML TEXT ----------------------------------------------------------
   
