@@ -53,8 +53,11 @@ body <- dashboardBody(
                                   prettyRadioButtons(
                                     inputId = "parents_options",
                                     label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
-                                               tags$style(type = "text/css", "#q1 {vertical-align: middle;}"),
-                                               bsButton("q1", label = "", icon = icon("question"), size = "extra-small")
+                                               tags$style("#q1 {vertical-align: middle; width: 22px;
+                                                          height: 22px; font-size: 10px; 
+                                                          line-height: 1pxt; padding: 0px;}"),
+                                               bsButton("q1", label = NULL, icon = icon("question"), 
+                                                        size = "extra-small")
                                     ),
                                     choices = c("Inkomen ouders", "Opleiding ouders"),
                                     icon = icon("check"), inline = TRUE,
