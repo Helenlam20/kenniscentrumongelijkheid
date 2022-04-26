@@ -18,6 +18,7 @@ library(dashboardthemes)
 library(shinyWidgets)
 library(plotly)
 library(readxl)
+library(shinyBS)
 
 
 #### LOAD DATA ####

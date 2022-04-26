@@ -168,7 +168,9 @@ get_bin <- function(data_group1, data_group2) {
   bin1 <- get_perc_per_bin(data_group1)
   if (!is.null(data_group2)) {bin2 <- get_perc_per_bin(data_group2)} else {bin2 <- 0}
   
-  if (bin1 == 100 | bin2 == 100) {
+  if (bin2 == 0) {
+    bin <- bin1
+  } else if (bin1 == 100 | bin2 == 100) {
     bin <- 100
   } else if (bin1 < bin2) {
     bin <- bin1

@@ -44,7 +44,6 @@ server <- function(input, output, session) {
 
     # select outcome from outcome_dat
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == "Laag geboortegewicht")
     stat <- get_stat_per_outcome_html(sample_dat)
 
     # get data
@@ -142,7 +141,9 @@ server <- function(input, output, session) {
 
   #### WAT ZIE JE? ####
   output$sample_uitleg <- renderPrint({
-
+  
+    if (input$parents_options == "Inkomen ouders") {
+      
     sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     data_group1 <- dataInput1() %>% dplyr::filter(opleiding_ouders == "Totaal")
     data_group2 <- dataInput2() %>% dplyr::filter(opleiding_ouders == "Totaal")
@@ -236,7 +237,21 @@ server <- function(input, output, session) {
              "<p>", mean_text, "</p>"))
 
 
+    } else if(input$parents_options == "Opleiding ouders") {
+      
+      data_group1 <- data_group1 %>% dplyr::filter(opleiding_ouders != "Totaal") 
+      if (!(input$OnePlot)) {
+        data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") 
+      }
+      
+
+      HTML(paste0("<p>HIER KOMT EEN TEKST VOOR DE STAAFDIAGRAMMEN. </p>"))
+      
+    }
+    
   })
+  
+ 
   
   
   # GRADIENT ----------------------------------------------------------
@@ -378,12 +393,12 @@ server <- function(input, output, session) {
     } else if(input$parents_options == "Opleiding ouders") {
       
       data_group1 <- data_group1 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
-      data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
-      dat <- rbind(data_group1, data_group2)
-      
-      if (nrow(dat) == 3 | nrow(dat) == 6) {
+
+      if (!(input$OnePlot)) {
         
-        # create figure
+        data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
+        dat <- rbind(data_group1, data_group2)
+        
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
@@ -395,9 +410,20 @@ server <- function(input, output, session) {
           theme_minimal() +
           thema
         
-      } else {
-        plot <- ggplot() 
-      }
+      } else if (input$OnePlot) {
+        
+        plot <- ggplot(data_group1, aes(x = opleiding_ouders, y = mean, fill = group, 
+                                text = paste0("<b>", geografie, "</b></br>",
+                                              "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                              "</br>Aantal mensen: ", decimal2(N)))) +
+          geom_bar(stat="identity", position=position_dodge(), width = 0.4) +
+          scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
+          scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
+          labs(x ="Hoogst behaalde opleiding ouders", y ="") +
+          theme_minimal() +
+          thema
+      
+      } 
       
       ggplotly(x = plot, tooltip = c("text"))  %>% 
         config(displayModeBar = F, scrollZoom = F) %>%
