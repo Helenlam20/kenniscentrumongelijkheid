@@ -53,8 +53,10 @@ body <- dashboardBody(
                                   prettyRadioButtons(
                                     inputId = "parents_options",
                                     label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
-                                               tags$style("#q1 {vertical-align: middle; width: 22px;
-                                                          height: 22px; font-size: 10px; 
+                                               tags$style("#q1 {vertical-align: middle; width: 25px;
+                                                          height: 25px; font-size: 11px;  
+                                                          border: 2px solid #e7e7e7; border-radius: 100%;
+                                                          background-color: white; color: #555555;
                                                           line-height: 1pxt; padding: 0px;}"),
                                                bsButton("q1", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
