@@ -219,7 +219,7 @@ server <- function(input, output, session) {
       # if user has clicked on the mean button
       if (!is.null(input$line_options)) {
         
-        if (input$line_options == "Gemiddelde") {
+        if (is.element("Gemiddelde", input$line_options)) {
           
           mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
                                    add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
