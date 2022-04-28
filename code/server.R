@@ -74,7 +74,7 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {
         bin <- get_bin(data_group1, data_group2)
         bin_html <- get_bin_html(data_group1, data_group2)
-
+        
         data_group1 <- data_group1 %>% dplyr::filter(type == bin)
         data_group2 <- data_group2 %>% dplyr::filter(type == bin)
         
@@ -310,6 +310,7 @@ server <- function(input, output, session) {
         data_group1 <- data_group1 %>% dplyr::filter(type == bin)
         data_group2 <- data_group2 %>% dplyr::filter(type == bin)
         dat <- bind_rows(data_group1, data_group2)
+
         
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
@@ -398,6 +399,15 @@ server <- function(input, output, session) {
                                color = data_group2_color, linetype = "longdash") +
               geom_abline(aes(intercept = total_group2$mean, slope = 0),
                           linetype="twodash", size=0.5, color = data_group2_color)
+                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group1_color) +
+            geom_abline(aes(intercept = total_group1$mean, slope = 0),
+                        linetype="longdash", size=0.5, color = data_group1_color) 
+          
+          if (!(input$OnePlot)) {
+            plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
+                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) +
+              geom_abline(aes(intercept = total_group2$mean, slope = 0),
+                          linetype="longdash", size=0.5, color = data_group2_color)
           }
           
           
@@ -411,6 +421,7 @@ server <- function(input, output, session) {
             plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
                                se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
                                color = data_group2_color, linetype = "longdash") 
+            
           }
           
         } else if (mean){
@@ -421,6 +432,7 @@ server <- function(input, output, session) {
           if (!(input$OnePlot)) {
             plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
                                linetype = "twodash", size=0.5, color = data_group2_color)
+                        linetype="longdash", size=0.5, color = data_group1_color)
           }
           
         }
@@ -542,8 +554,7 @@ server <- function(input, output, session) {
     contentType = "application/zip"
   )
   
-  
-  
+
   # download plot
   output$downloadPlot <- downloadHandler(
     filename = function() { paste(input$dataset, '.png', sep='') },
