@@ -74,7 +74,7 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {
         bin <- get_bin(data_group1, data_group2)
         bin_html <- get_bin_html(data_group1, data_group2)
-        
+
         data_group1 <- data_group1 %>% dplyr::filter(type == bin)
         data_group2 <- data_group2 %>% dplyr::filter(type == bin)
         
@@ -226,7 +226,7 @@ server <- function(input, output, session) {
       # if user has clicked on the mean button
       if (!is.null(input$line_options)) {
         
-        if (input$line_options == "Gemiddelde") {
+        if ("Gemiddelde" %in% input$line_options) {
           
           mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
                                    add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
@@ -309,10 +309,12 @@ server <- function(input, output, session) {
         bin <- get_bin(data_group1, data_group2)
         data_group1 <- data_group1 %>% dplyr::filter(type == bin)
         data_group2 <- data_group2 %>% dplyr::filter(type == bin)
+        dat <- bind_rows(data_group1, data_group2)
         
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
         data_group1 <- data_group1 %>% dplyr::filter(type == bin)
+        dat <- data_group1
       }
       
       # make plot
@@ -325,8 +327,7 @@ server <- function(input, output, session) {
                                      "</br>Aantal mensen: ", decimal2(N))),
                    color = data_group1_color, size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
-        scale_y_continuous(
-          labels = function(x) paste0(sign1, decimal2(x), sign2)) +
+        scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
         thema 
@@ -386,36 +387,40 @@ server <- function(input, output, session) {
         if (line & mean) {
           plot <- plot + 
             geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group1_color) +
+                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                        color = data_group1_color, linetype = "longdash") +
             geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                        linetype="longdash", size=0.5, color = data_group1_color) 
+                        linetype = "twodash", size=0.5, color = data_group1_color) 
           
           if (!(input$OnePlot)) {
             plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) +
+                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                               color = data_group2_color, linetype = "longdash") +
               geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = data_group2_color)
+                          linetype="twodash", size=0.5, color = data_group2_color)
           }
           
           
         } else if (line){
           plot <- plot + 
             geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group1_color) 
+                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                        color = data_group1_color, linetype = "longdash") 
           
           if (!(input$OnePlot)) {
             plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) 
+                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                               color = data_group2_color, linetype = "longdash") 
           }
           
         } else if (mean){
           plot <- plot + 
             geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                        linetype="longdash", size=0.5, color = data_group1_color)
+                        linetype="twodash", size=0.5, color = data_group1_color)
           
           if (!(input$OnePlot)) {
             plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                               linetype="longdash", size=0.5, color = data_group2_color)
+                               linetype = "twodash", size=0.5, color = data_group2_color)
           }
           
         }
@@ -435,7 +440,7 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {
         
         data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
-        dat <- rbind(data_group1, data_group2)
+        dat <- bind_rows(data_group1, data_group2)
         
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
@@ -474,14 +479,69 @@ server <- function(input, output, session) {
   
   
   #### DOWNLOAD ####
+  
+  
+  
+  download_dat <- reactive({
+    
+    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                            gradient_dat$geografie == input$geografie1 & 
+                            gradient_dat$geslacht == input$geslacht1 &
+                            gradient_dat$migratieachtergrond == input$migratie1 & 
+                            gradient_dat$huishouden == input$huishouden1)
+    
+    if (!(input$OnePlot)) {
+      data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                              gradient_dat$geografie == input$geografie2 & 
+                              gradient_dat$geslacht == input$geslacht2 &
+                              gradient_dat$migratieachtergrond == input$migratie2 & 
+                              gradient_dat$huishouden == input$huishouden2)
+      
+      bin <- get_bin(data_group1, data_group2)
+      data_group1 <- data_group1 %>% dplyr::filter(type == bin)
+      data_group2 <- data_group2 %>% dplyr::filter(type == bin)
+      
+      dat <- bind_rows(data_group1, data_group2)
+      
+    } else {
+      bin <- as.character(get_perc_per_bin(data_group1))
+      dat <- data_group1 %>% dplyr::filter(type == bin)
+    }
+
+    
+  })
+  
+
   # download data
   output$downloadData <- downloadHandler(
-    filename = function() { 
-      paste("dataset-", Sys.Date(), ".csv", sep="")
+    filename = function() {
+      paste0("data-", Sys.time(), ".zip")
     },
     content = function(file) {
-      write.csv(mtcars, file)
-    })
+      temp_txt <- paste(readLines("data/README.txt"))
+      
+      # set temporary dir
+      tmpdir <- tempdir()
+      setwd(tempdir())
+      zip_files <- c()
+      
+      # get files
+      csv_name <- paste0("data-", Sys.time(), ".csv")
+      write.csv(download_dat(), csv_name)
+      zip_files <- c(zip_files, csv_name)
+      
+      # write txt file
+      fileConn <- file("README.txt")
+      writeLines(temp_txt, fileConn)
+      close(fileConn)
+      zip_files <- c(zip_files, "README.txt")
+      
+      zip(zipfile=file, files = zip_files)
+      
+    },
+    contentType = "application/zip"
+  )
+  
   
   
   # download plot
