@@ -6,25 +6,25 @@
 # (c) Erasmus School of Economics 2022
 
 
-# radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
-# 
-#   options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
-#   options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
-#   bsTag <- shiny::tags$script(shiny::HTML(paste0("
-#     $(document).ready(function() {
-#       setTimeout(function() {
-#         $('input', $('#", id, "')).each(function(){
-#           if(this.getAttribute('value') == '", choice, "') {
-#             opts = $.extend(", options, ", {html: true});
-#             $(this.parentElement).tooltip('destroy');
-#             $(this.parentElement).tooltip(opts);
-#           }
-#         })
-#       }, 500)
-#     });
-#   ")))
-#   htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
-# }
+radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+
+  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+  bsTag <- shiny::tags$script(shiny::HTML(paste0("
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('input', $('#", id, "')).each(function(){
+          if(this.getAttribute('value') == '", choice, "') {
+            opts = $.extend(", options, ", {html: true});
+            $(this.parentElement).tooltip('destroy');
+            $(this.parentElement).tooltip(opts);
+          }
+        })
+      }, 500)
+    });
+  ")))
+  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+}
 
 
 sidebar <- 
@@ -58,7 +58,7 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "Persoonlijk inkomen",
+                                              selected = "Startkwalificatie behaald",
                                               choices = list(`Geld` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Geld")),
                                                    `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
                                                    `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
@@ -88,10 +88,10 @@ body <- dashboardBody(
                                     bigger = TRUE, selected = "Inkomen ouders",
                                     status = "info", animation = "jelly"
                                   ),
-                              radioTooltip(id = "parents_options", choice = "Opleiding ouders", 
-                                           # title = textOutput("radio_button"), 
-                                           title = "Alleen beschikbaar voor pasgeboren en groep-8 sample", 
-                                           placement = "right", trigger = "hover"),
+                              radioTooltip(id = "parents_options", choice = "Opleiding ouders",
+                              title = textOutput("radio_button"),
+                              # title = "Alleen beschikbaar voor pasgeboren en groep-8 sample",
+                              placement = "right", trigger = "hover"),
                               bsPopover(id = "q1", title = "Opleiding ouders",
                                         content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
                                         placement = "right", 
@@ -189,14 +189,9 @@ body <- dashboardBody(
 #### DEFINE UI ####
 ui <- dashboardPage(
   header = dashboardHeader(
-    titleWidth = 325, 
-    title = tagList(
-      tags$span(
-        class = "logo-mini", "Dashboard Ongelijkheid in de stad"
-      ),
-      tags$span(
-        class = "logo-lg", "Dashboard Ongelijkheid in de stad"
-      )
+    titleWidth = 400, 
+    title = tags$span("Dashboard Ongelijkheid in de stad", 
+                      style = "font-weight: bold;"
     )
   ),
   sidebar = sidebar,
