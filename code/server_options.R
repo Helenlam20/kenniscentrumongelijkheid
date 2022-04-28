@@ -55,11 +55,11 @@ html_text <- data.frame(
 get_perc_per_bin_html <- function(data_group) {
   if ("20" %in% unique(data_group$type)) {
     bin <- 5
-  } else if ("10" %in% unique(data_group1$type)) {
+  } else if ("10" %in% unique(data_group$type)) {
     bin <- 10
   } else if ("5" %in% unique(data_group$type)) {
     bin <- 20
-  } else if ("100" %in% unique(data_group$type)) {
+  } else if ("1" %in% unique(data_group$type)) {
     bin <- 100
   }
   return(bin)
@@ -115,7 +115,7 @@ sign2_func <- function(outcome) {
 
 
 thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
-                                         vjust = 1, margin = margin(0,0,10,0)),
+                                         vjust = 1, margin = margin(10,0,10,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
                                             vjust = 1, margin = margin(0,0,10,0)),
                legend.text = element_text(colour = "grey20", size = 16),
@@ -153,12 +153,12 @@ label <- list(
 get_perc_per_bin <- function(data_group) {
   if ("20" %in% unique(data_group$type)) {
     bin <- 20
-  } else if ("10" %in% unique(data_group1$type)) {
+  } else if ("10" %in% unique(data_group$type)) {
     bin <- 10
   } else if ("5" %in% unique(data_group$type)) {
     bin <- 5
-  } else if ("100" %in% unique(data_group$type)) {
-    bin <- 100
+  } else if ("1" %in% unique(data_group$type)) {
+    bin <- 1
   }
   return(bin)
 }
@@ -170,8 +170,6 @@ get_bin <- function(data_group1, data_group2) {
   
   if (bin2 == 0) {
     bin <- bin1
-  } else if (bin1 == 100 | bin2 == 100) {
-    bin <- 100
   } else if (bin1 < bin2) {
     bin <- bin1
   } else if (bin1 > bin2) {
@@ -202,18 +200,20 @@ add_bold_text_html <- function(text, color) {
 
 
 
-
-
 # TEST
-data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Amsterdam" &
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" &
-                        gradient_dat$huishouden == "Totaal")
+# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+#                         gradient_dat$geografie == "Nederland" &
+#                         gradient_dat$geslacht == "Totaal" &
+#                         gradient_dat$migratieachtergrond == "Totaal" &
+#                         gradient_dat$huishouden == "Totaal")
+# 
+# 
+# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+#                         gradient_dat$geografie == "Amsterdam" &
+#                         gradient_dat$geslacht == "Totaal" &
+#                         gradient_dat$migratieachtergrond == "Totaal" &
+#                         gradient_dat$huishouden == "Totaal")
 
 
-data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-                        gradient_dat$geografie == "Nederland" &
-                        gradient_dat$geslacht == "Totaal" &
-                        gradient_dat$migratieachtergrond == "Totaal" &
-                        gradient_dat$huishouden == "Totaal")
+
+
