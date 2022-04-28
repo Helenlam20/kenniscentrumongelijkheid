@@ -18,10 +18,12 @@ library(dashboardthemes)
 library(shinyWidgets)
 library(plotly)
 library(readxl)
+library(shinyBS)
+# library(ggshadow)
+# library(shadow)
 
 
 #### LOAD DATA ####
-setwd("/Users/helenlam20/GitHub/kco_dashboard/")
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
 
@@ -33,7 +35,7 @@ for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
 }
 rm(i)
 
-# combins gradient data
+# combines gradient data
 gradient_dat <- bind_rows(bins_20, bins_10) 
 gradient_dat <- bind_rows(gradient_dat, bins_5)
 gradient_dat <- bind_rows(gradient_dat, total)
@@ -43,10 +45,15 @@ rm(bins_20, bins_10, bins_5, total, parents_edu)
 
 
 #### RUN APP ####
-setwd("./code")
-source("Theme_PoorMansFlatly.R")
-source("ui.R")
-source("server.R")
+source("./code/Theme_PoorMansFlatly.R")
+source("./code/ui.R")
+source("./code/server.R")
 
 
 shinyApp(ui = ui, server = server)
+
+
+
+
+
+

@@ -1,7 +1,0 @@
----
-output: html_document
----
-
-<br>
-<h2>Contact information is coming soon!</h1>
-<br><br>

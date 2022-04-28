@@ -6,9 +6,30 @@
 # (c) Erasmus School of Economics 2022
 
 
+radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
+
+  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
+  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
+  bsTag <- shiny::tags$script(shiny::HTML(paste0("
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('input', $('#", id, "')).each(function(){
+          if(this.getAttribute('value') == '", choice, "') {
+            opts = $.extend(", options, ", {html: true});
+            $(this.parentElement).tooltip('destroy');
+            $(this.parentElement).tooltip(opts);
+          }
+        })
+      }, 500)
+    });
+  ")))
+  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
+}
+
+
 sidebar <- 
   dashboardSidebar(
-    width = 250,
+    width = 225,
     collapsed = F,
     sidebarMenu(
       HTML(paste0(
@@ -17,7 +38,6 @@ sidebar <-
         "<br><br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Export data", tabName = "table", icon = icon("list", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon"))
     )  # end sidebar menu
@@ -38,12 +58,13 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "Persoonlijk inkomen",
+                                              selected = "Startkwalificatie behaald",
                                               choices = list(`Geld` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Geld")),
                                                    `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
                                                    `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
                                                    `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
-                                                   options = list(`live-search` = T, style = "", size = 10)),
+                                                   options = list(`live-search` = T, style = "", size = 10),
+                                              choicesOpt = list(subtext = outcome_dat$population)),
                               prettyCheckboxGroup(
                                 inputId = "line_options",
                                 label = HTML("<b>Selecteer hier een optie:</b>"),
@@ -51,14 +72,32 @@ body <- dashboardBody(
                                 icon = icon("check-square-o"), status = "primary",
                                 outline = TRUE, inline = TRUE, animation = "jelly"
                                 ),
-                              prettyRadioButtons(
-                                inputId = "parents_options",
-                                label = HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
-                                choices = c("Inkomen ouders", "Opleiding ouders"),
-                                icon = icon("check"), inline = TRUE,
-                                bigger = TRUE, selected = "Inkomen ouders",
-                                status = "info", animation = "jelly"
-                                )
+                                  prettyRadioButtons(
+                                    inputId = "parents_options",
+                                    label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                               tags$style("#q1 {vertical-align: middle; width: 25px;
+                                                          height: 25px; font-size: 11px;
+                                                          border: 2px solid #e7e7e7; border-radius: 100%;
+                                                          background-color: white; color: #555555;
+                                                          line-height: 1pxt; padding: 0px;}"),
+                                               bsButton("q1", label = NULL, icon = icon("question"), 
+                                                        size = "extra-small")
+                                    ),
+                                    choices = c("Inkomen ouders", "Opleiding ouders"),
+                                    icon = icon("check"), inline = TRUE,
+                                    bigger = TRUE, selected = "Inkomen ouders",
+                                    status = "info", animation = "jelly"
+                                  ),
+                              radioTooltip(id = "parents_options", choice = "Opleiding ouders",
+                              title = textOutput("radio_button"),
+                              # title = "Alleen beschikbaar voor pasgeboren en groep-8 sample",
+                              placement = "right", trigger = "hover"),
+                              bsPopover(id = "q1", title = "Opleiding ouders",
+                                        content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
+                                        placement = "right", 
+                                        trigger = "hover", 
+                                        options = list(container = "body")
+                              ),
                               ),
                        ),
                        column(width = 7,
@@ -81,28 +120,27 @@ body <- dashboardBody(
                            h4("INPUT FOR THE Y-AXIS RANGE"),
                            br(), br(), "test test", 
                            inline = TRUE, circle = F, 
-                           icon = icon("gear"), width = "300px"
-                           # tooltip = tooltipOptions(title = "Aanpassen Y-as")
+                           icon = icon("gear"), width = "300px",
+                           tooltip = tooltipOptions(title = "Y-as range aanpassen")
                          ),
-                         actionButton("table", label = "Bekijk de data"),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
                          plotlyOutput("main_figure", height = "420")),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = "Groep 1", width = NULL, status = "info", solidHeader = TRUE,
-                         pickerInput("geografie1", label = "Gebied", selected = "Amsterdam",
+                         title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
+                         pickerInput("geografie1", label = "Gebied", selected = "Nederland",
                                      choices = list("Nederland", "Metropool Amsterdam",
-                                                    `Gemeente` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                                                    `Stadsdeel Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Wijk Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                                    `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
+                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                                                    `22 gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht1", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
@@ -112,18 +150,18 @@ body <- dashboardBody(
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL,
-                         title = "Groep 2", width = NULL, status = "success", solidHeader = TRUE,
-                         pickerInput("geografie2", label = "Gebied", selected = "Almere",
+                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE,
+                         pickerInput("geografie2", label = "Gebied", selected = "Amsterdam",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
                                                     `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Wijken in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                                    `22 gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht2", label = "Geslacht",
                                         choices = c("Totaal", "Mannen", "Vrouwen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Nederland", "Turkije", "Marokko",
+                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
                                                     "Suriname", "Nederlandse Antillen"),
                                         selected = "Totaal"),
                          selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
@@ -151,13 +189,9 @@ body <- dashboardBody(
 #### DEFINE UI ####
 ui <- dashboardPage(
   header = dashboardHeader(
-    title = tagList(
-      tags$span(
-        class = "logo-mini", "KCO Dashboard"
-      ),
-      tags$span(
-        class = "logo-lg", "KCO Dashboard"
-      )
+    titleWidth = 400, 
+    title = tags$span("Dashboard Ongelijkheid in de stad", 
+                      style = "font-weight: bold;"
     )
   ),
   sidebar = sidebar,
