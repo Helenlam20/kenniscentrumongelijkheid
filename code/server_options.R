@@ -110,6 +110,29 @@ sign2_func <- function(outcome) {
   return(sign2)
 }
 
+# Generate text for the "Algemeen" tab
+gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, migratie_input, huishouden_input, geografie_input, populatie_input) {
+  
+  sex_text <- subset(html_text$html_text, html_text$input_text == geslacht_input)
+  migration_text <- ""
+  household_text <- ""
+
+  if (migratie_input != "Totaal" & migratie_input != "Zonder migratieachtergrond")
+    migration_text <- paste("met een", subset(html_text$html_text, html_text$input_text == migratie_input), "migratieachtergrond")
+  else if (migratie_input == "Zonder migratieachtergrond")
+    migration_text <- paste0(("zonder een migratieachtergrond"))
+
+  
+  if (huishouden_input != "Totaal")
+    household_text <- paste("in een", tolower(huishouden_input))
+
+  group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, sex_text, 
+                            populatie_input, migration_text, "die zijn opgegroeid", household_text, 
+                            "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
+  
+  return(group_text)
+}
+
 
 #### FIGURE PLOT ####
 
