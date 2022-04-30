@@ -396,7 +396,8 @@ server <- function(input, output, session) {
     
           if (!(input$OnePlot)) {
             plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) +
+                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                               color = data_group2_color, linetype = "longdash") +
               geom_abline(aes(intercept = total_group2$mean, slope = 0),
                           linetype="longdash", size=0.5, color = data_group2_color)
           }
