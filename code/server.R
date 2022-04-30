@@ -116,36 +116,29 @@ server <- function(input, output, session) {
                                sample_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     }
-    sex1 <- subset(html_text$html_text, html_text$input_text == input$geslacht1)
-    if (input$migratie1 != "Totaal") {
-      mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " migratieachtergrond")
-    } else {mig1 <- ""}
-    if (input$huishouden1 != "Totaal") {
-      hh1 <- paste0("in een ", tolower(input$huishouden1))
-    } else {hh1 <- ""}
     
-    group1_text <- HTML(paste0("De ", add_bold_text_html(text="blauwe groep", color=data_group1_color),
-                               " bestaat uit ", N1, " ", sex1, " ",
-                               sample_dat$population, " ", mig1, " die zijn opgegroeid ", hh1, " in ",
-                               input$geografie1, "."))
+    group1_text <- gen_algemeen_group_text(
+      group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
+      group_data_size = N1,
+      geslacht_input = input$geslacht1,
+      migratie_input = input$migratie1,
+      huishouden_input = input$huishouden1,
+      geografie_input = input$geografie1,
+      populatie_input = sample_dat$population
+    )
     
-    
+    group2_text <- ""
     if (!(input$OnePlot)) {
-      sex2 <- subset(html_text$html_text, html_text$input_text == input$geslacht2)
-      if (input$migratie2 != "Totaal") {
-        mig2 <- paste0("met een ", subset(html_text$html_text, html_text$input_text == input$migratie2), " migratieachtergrond")
-      } else {mig2 <- ""}
-      if (input$huishouden2 != "Totaal") {
-        hh2 <- paste0("in een ", tolower(input$huishouden2))
-      } else {hh2 <- ""}
-      
-      group2_text <- HTML(paste0("De ", add_bold_text_html(text="groene groep", color=data_group2_color),
-                                 "  bestaat uit ", N2, " ", sex2, " ",
-                                 sample_dat$population, " ", mig2, " die zijn opgegroeid ", hh2,
-                                 " in ", input$geografie2, "."))
-      
-    } else {group2_text <- ""}
-    
+      group2_text <- gen_algemeen_group_text(
+        group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
+        group_data_size = N2,
+        geslacht_input = input$geslacht2,
+        migratie_input = input$migratie2,
+        huishouden_input = input$huishouden2,
+        geografie_input = input$geografie2,
+        populatie_input = sample_dat$population
+      )
+    }    
     # output
     HTML(paste0("<p><b>", input$outcome, "</b> is ", sample_dat$definition, "</p>",
                 "<p>", axis_text, "</p>",
@@ -226,7 +219,7 @@ server <- function(input, output, session) {
       # if user has clicked on the mean button
       if (!is.null(input$line_options)) {
         
-        if (input$line_options == "Gemiddelde") {
+        if (is.element("Gemiddelde", input$line_options)) {
           
           mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
                                    add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
