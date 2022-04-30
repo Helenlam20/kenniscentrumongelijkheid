@@ -19,8 +19,6 @@ library(shinyWidgets)
 library(plotly)
 library(readxl)
 library(shinyBS)
-# library(ggshadow)
-# library(shadow)
 
 
 #### LOAD DATA ####
