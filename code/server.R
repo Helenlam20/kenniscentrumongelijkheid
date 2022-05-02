@@ -66,7 +66,7 @@ server <- function(input, output, session) {
         
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
-        dat <- data_group1 %>% filter(type == bin)
+        dat <- data_group1 %>% filter(type == bin) %>% mutate(group = "group1")
       }
       
       
@@ -136,6 +136,7 @@ server <- function(input, output, session) {
       populatie_input = labels_dat$population
     )
     
+    group2_text <- ""
     if (!(input$OnePlot)) {
       group2_text <- gen_algemeen_group_text(
         group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
