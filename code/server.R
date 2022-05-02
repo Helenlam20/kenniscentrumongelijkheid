@@ -126,7 +126,6 @@ server <- function(input, output, session) {
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     }
-    
     group1_text <- gen_algemeen_group_text(
       group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
       group_data_size = N1,
@@ -137,7 +136,6 @@ server <- function(input, output, session) {
       populatie_input = labels_dat$population
     )
     
-    group2_text <- ""
     if (!(input$OnePlot)) {
       group2_text <- gen_algemeen_group_text(
         group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
