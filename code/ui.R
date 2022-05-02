@@ -188,6 +188,7 @@ body <- dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
+  title="Dashboard Ongelijkheid in de stad",
   header = dashboardHeader(
     titleWidth = 400, 
     title = tags$span("Dashboard Ongelijkheid in de stad", 
