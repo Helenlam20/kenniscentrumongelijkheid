@@ -246,6 +246,7 @@ HTML_to_plain_text <- function(txt) {
   pattern <- "</?\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/?>"
   plain_text <- gsub(pattern, " ", txt)
   
+  # TODO: fix pattern to include style. Now it is hardcoded
   style_pattern <- "style='color:#18bc9c'|style='color:#3498db'"
   plain_text <- gsub(style_pattern, "", plain_text)
   plain_text <- gsub("  ", " ", plain_text)
