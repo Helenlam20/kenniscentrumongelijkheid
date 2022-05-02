@@ -90,7 +90,7 @@ server <- function(input, output, session) {
     
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    stat <- get_stat_per_outcome_html(labels_dat)
+    statistic_type_text <- get_stat_per_outcome_html(labels_dat)
     
     # load data
     dat <- filterData()
@@ -116,14 +116,14 @@ server <- function(input, output, session) {
       } else {range <- "."}
       
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin_html, 
-                              " procent van de ", labels_dat$population, range, 
-                              " De verticale as toont het eigen", stat, tolower(input$outcome),
+                              "% van de ", labels_dat$population, range, 
+                              " De verticale as toont het eigen", statistic_type_text, tolower(input$outcome),
                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
       
       
     } else if(input$parents_options == "Opleiding ouders") {
       
-      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", stat, tolower(input$outcome), 
+      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     }
@@ -210,9 +210,10 @@ server <- function(input, output, session) {
       total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       
       
-      # get signs for outcomes
-      sign1 <- sign1_func(input$outcome)
-      sign2 <- sign2_func(input$outcome)
+      # get prefix and postfix for outcomes
+      prefix_text <- get_prefix(input$outcome)
+      postfix_text <- get_postfix(input$outcome)
+      statistic_type_text <- get_stat_per_outcome_html(labels_dat)
       
       # get html bin
       bin_html <- get_perc_per_bin_html(data_group1)
@@ -221,25 +222,21 @@ server <- function(input, output, session) {
       
       if (bin_html != "100") {
         
-        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
-                           " laat zien dat voor de", paste0(bin_html, "%"), 
-                           labels_dat$population, "het", stat, tolower(input$outcome), 
-                           paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
-                           " laat zien dat voor de", paste0(bin_html, "%"), 
+        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+                           labels_dat$population, "het", statistic_type_text, tolower(input$outcome), 
+                           paste0(prefix_text, round(data_group1$mean[1], 2), postfix_text), "was.
+                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
                            labels_dat$population,
-                           "het", stat, tolower(input$outcome),
-                           paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
+                           "het", statistic_type_text, tolower(input$outcome),
+                           paste0(prefix_text, decimal2(data_group1$mean[as.numeric(bin)]), postfix_text), "was.")
         
         if (!(input$OnePlot)) {
-          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat voor de", paste0(bin_html, "%"), 
-                              labels_dat$population, "het", stat, tolower(input$outcome), 
-                              paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat voor de", paste0(bin_html, "%"), 
-                              labels_dat$population, "het", stat, tolower(input$outcome),
-                              paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
+          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome), 
+                              paste0(prefix_text, round(data_group2$mean[1], 2), postfix_text), "was.
+                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
+                              paste0(prefix_text, decimal2(data_group2$mean[as.numeric(bin)]), postfix_text), "was.")
         } else {green_text <- ""}
         
         
@@ -247,14 +244,14 @@ server <- function(input, output, session) {
         
         blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
                            "laat zien dat voor de", paste0(bin_html, "%"), 
-                           labels_dat$population, " het", stat, tolower(input$outcome),
-                           paste0(sign1, decimal2(data_group1$mean), sign2), "was.")
+                           labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
+                           paste0(prefix_text, decimal2(data_group1$mean), postfix_text), "was.")
         
         if (!(input$OnePlot)) {
           green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
                               "laat zien dat voor de", paste0(bin_html, "%"), 
-                              labels_dat$population, "het", stat, tolower(input$outcome),
-                              paste0(sign1, decimal2(data_group2$mean), sign2), "was.")
+                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
+                              paste0(prefix_text, decimal2(data_group2$mean), postfix_text), "was.")
           
         } else {green_text <- ""}
         
@@ -265,18 +262,18 @@ server <- function(input, output, session) {
         
         if ("Gemiddelde" %in% input$line_options) {
           
-          mean_text <- HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
+          mean_text <- HTML(paste0("Het totale ", statistic_type_text, " ", tolower(input$outcome), " van de ",  
                                    add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
-                                   paste0(sign1, decimal2(total_group1$mean), sign2), "."))
+                                   paste0(prefix_text, decimal2(total_group1$mean), postfix_text), "."))
           
           if (!(input$OnePlot)) {
             mean_text <- 
-              HTML(paste0("Het totale ", stat, " ", tolower(input$outcome), " van de ",  
+              HTML(paste0("Het totale ", statistic_type_text, " ", tolower(input$outcome), " van de ",  
                           add_bold_text_html(text="blauwe groep", color=data_group1_color), " is ",
-                          paste0(sign1, decimal2(total_group1$mean), sign2), ". Het totale ", 
-                          stat, " ", tolower(input$outcome), " van de ",
+                          paste0(prefix_text, decimal2(total_group1$mean), postfix_text), ". Het totale ", 
+                          statistic_type_text, " ", tolower(input$outcome), " van de ",
                           add_bold_text_html(text="groene groep", color=data_group2_color), " is ",
-                          paste0(sign1, decimal2(total_group2$mean), sign2), "."))
+                          paste0(prefix_text, decimal2(total_group2$mean), postfix_text), "."))
             
           } 
         }
@@ -318,10 +315,10 @@ server <- function(input, output, session) {
     #   }
     # })
     
-    # get signs for outcomes
-    sign1 <- sign1_func(input$outcome)
-    sign2 <- sign2_func(input$outcome)
-
+    # get prefix and postfix for outcomes
+    prefix_text <- get_prefix(input$outcome)
+    postfix_text <- get_postfix(input$outcome)
+    
     # load data
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "group1")
@@ -343,11 +340,11 @@ server <- function(input, output, session) {
                    aes(x = parents_income, y = mean,
                        text = paste0("<b>", input$geografie1, "</b></br>",
                                      "</br>Inkomen ouders: €", decimal2(parents_income),
-                                     "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                     "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                      "</br>Aantal mensen: ", decimal2(N))),
                    color = data_group1_color, size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
-        scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
+        scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
         thema 
@@ -385,7 +382,7 @@ server <- function(input, output, session) {
                      aes(x = parents_income, y = mean,
                          text = paste0("<b>", input$geografie2, "</b></br>",
                                        "</br>Inkomen ouders: €", decimal2(parents_income),
-                                       "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                       "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                        "</br>Aantal mensen: ", decimal2(N))),
                      color = data_group2_color, size = 3, shape = 18) 
       } 
@@ -461,11 +458,11 @@ server <- function(input, output, session) {
         
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                               "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
           scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
-          scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
+          scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
           thema
@@ -474,11 +471,11 @@ server <- function(input, output, session) {
         
         plot <- ggplot(data_group1, aes(x = opleiding_ouders, y = mean, fill = group, 
                                         text = paste0("<b>", geografie, "</b></br>",
-                                                      "</br>Uitkomst: ", sign1, decimal2(mean), sign2,
+                                                      "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                                       "</br>Aantal mensen: ", decimal2(N)))) +
           geom_bar(stat="identity", position=position_dodge(), width = 0.4) +
           scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
-          scale_y_continuous(labels = function(x) paste0(sign1, decimal2(x), sign2)) +
+          scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
           thema

@@ -107,19 +107,19 @@ get_stat_per_outcome_html <- function(sample_dat){
 
 
 # get signs for the outcomes
-sign1_func <- function(outcome) {
-  sign1 <- ""
+get_prefix <- function(outcome) {
+  prefix <- ""
   if (outcome == "Persoonlijk inkomen" | outcome == "Uurloon" |
       outcome == "Zorgkosten" | outcome == "Vermogen" |
       outcome == "Jeugd zorgkosten van tieners" |
       outcome == "Jeugd zorgkosten van kinderen" ) {
-    sign1 <- "€ "
+    prefix <- "€ "
   } 
-  return(sign1)
+  return(prefix)
 }
 
-sign2_func <- function(outcome) {
-  sign2 <- ""
+get_postfix <- function(outcome) {
+  postfix <- ""
   if (outcome != "Uren werk per week" &
       outcome != "Woonoppervlak per lid huishouden van kinderen" &
       outcome != "Woonoppervlak per lid huishouden van tieners" & 
@@ -127,9 +127,9 @@ sign2_func <- function(outcome) {
       outcome != "Zorgkosten" & outcome != "Vermogen" &
       outcome != "Jeugd zorgkosten van tieners" &
       outcome != "Jeugd zorgkosten van kinderen") {
-    sign2 <- "%"
+    postfix <- "%"
   }
-  return(sign2)
+  return(postfix)
 }
 
 
