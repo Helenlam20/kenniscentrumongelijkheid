@@ -5,12 +5,8 @@
 # (c) Erasmus School of Economics 2022
 
 
-#### GENERAL ####
 
-# data group colors
-data_group1_color <- "#3498db"
-data_group2_color <- "#18bc9c" 
-
+#### DECIMALS ####
 
 # function decimals and thousand seperator
 decimal0 <- function(x) {
@@ -19,6 +15,32 @@ decimal0 <- function(x) {
 
 decimal2 <- function(x) {
   num <- format(round(x, 2), decimal.mark = ",", big.mark = ".", scientific = F)
+}
+
+
+
+
+#### HTML COLOR ####
+
+# data group colors
+data_group1_color <- "#3498db"
+data_group2_color <- "#18bc9c" 
+
+
+# Add color functions
+add_text_color_html <- function(text, color) {
+  # Constructs a string of the form: <span style='color:[[text_color]]'>[[text]]</span>'
+  formatted_string <- paste0("<span style='color:", color, "'>", text, "</span>")
+  return(formatted_string)
+}
+
+add_bold_text_html <- function(text, color) {
+  if (missing(color)) {
+    formatted_string <-  paste0("<b>", text, "</b>")
+  } else {
+    formatted_string <-  paste0("<b style='color:", color, "'>", text, "</b>")
+  }
+  return(formatted_string)
 }
 
 
@@ -49,8 +71,8 @@ html_text <- data.frame(
   html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", "Surinaamse", "Antilliaanse")
 )
 
+#### SIGNS FOR HTML TEXT ####
 
-# function for html text 
 # select percentage based on the data
 get_perc_per_bin_html <- function(data_group) {
   if ("20" %in% unique(data_group$type)) {
@@ -110,8 +132,12 @@ sign2_func <- function(outcome) {
   return(sign2)
 }
 
+
+
 # Generate text for the "Algemeen" tab
-gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, migratie_input, huishouden_input, geografie_input, populatie_input) {
+gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, 
+                                    migratie_input, huishouden_input, geografie_input, 
+                                    populatie_input) {
   
   sex_text <- subset(html_text$html_text, html_text$input_text == geslacht_input)
   migration_text <- ""
@@ -205,20 +231,27 @@ get_bin <- function(data_group1, data_group2) {
 }
 
 
-# Add color functions
-add_text_color_html <- function(text, color) {
-  # Constructs a string of the form: <span style='color:[[text_color]]'>[[text]]</span>'
-  formatted_string <- paste0("<span style='color:", color, "'>", text, "</span>")
-  return(formatted_string)
-}
 
-add_bold_text_html <- function(text, color) {
-  if (missing(color)) {
-    formatted_string <-  paste0("<b>", text, "</b>")
-  } else {
-    formatted_string <-  paste0("<b style='color:", color, "'>", text, "</b>")
-  }
-  return(formatted_string)
+
+
+#### DOWNLOAD DATA AND FIGURE ####
+
+readme_sep <- c("",                                                                                 
+  "================================================================================"
+)
+
+# convert html text to plain txt
+HTML_to_plain_text <- function(txt) {
+  
+  pattern <- "</?\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/?>"
+  plain_text <- gsub(pattern, " ", txt)
+  
+  style_pattern <- "style='color:#18bc9c'|style='color:#3498db'"
+  plain_text <- gsub(style_pattern, "", plain_text)
+  plain_text <- gsub("  ", " ", plain_text)
+  plain_text <- gsub("^ ", "", plain_text)
+  
+  
 }
 
 

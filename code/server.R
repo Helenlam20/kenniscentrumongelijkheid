@@ -36,6 +36,127 @@ server <- function(input, output, session) {
   })
   
   
+  #### FILTER DATA ####
+  filterData <- reactive({
+    
+    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                            gradient_dat$geografie == input$geografie1 & 
+                            gradient_dat$geslacht == input$geslacht1 &
+                            gradient_dat$migratieachtergrond == input$migratie1 & 
+                            gradient_dat$huishouden == input$huishouden1)
+    
+    if (!(input$OnePlot)) {
+      data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+                              gradient_dat$geografie == input$geografie2 & 
+                              gradient_dat$geslacht == input$geslacht2 &
+                              gradient_dat$migratieachtergrond == input$migratie2 & 
+                              gradient_dat$huishouden == input$huishouden2)
+      
+    }
+    
+    if (input$parents_options == "Inkomen ouders") {
+      
+      if (!(input$OnePlot)) {
+        
+        bin <- get_bin(data_group1, data_group2)
+        data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "group1")
+        data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "group2")
+        
+        dat <- bind_rows(data_group1, data_group2)
+        
+      } else {
+        bin <- as.character(get_perc_per_bin(data_group1))
+        dat <- data_group1 %>% filter(type == bin)
+      }
+      
+      
+    } else if (input$parents_options == "Opleiding ouders") {
+      
+      # filter data with bin
+      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "group1")
+      dat <- data_group1
+      
+      if (!(input$OnePlot)) {
+        data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = "group2")
+        dat <- bind_rows(data_group1, data_group2)
+        
+      } 
+    }
+  })
+  
+  
+  # algemeen text
+  algemeen_text <- reactive({
+    
+    # select outcome from outcome_dat
+    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    stat <- get_stat_per_outcome_html(labels_dat)
+    
+    # load data
+    dat <- filterData()
+    data_group1 <- subset(dat, dat$group == "group1")
+    N1 <- decimal0(sum(data_group1$N))
+    
+    if (!(input$OnePlot)) {
+      data_group2 <- subset(dat, dat$group == "group2")
+      N2 <- decimal0(sum(data_group2$N))
+    }
+    
+    
+    if (input$parents_options == "Inkomen ouders") {
+    
+      bin_html <- get_perc_per_bin_html(data_group1)
+      if (!(input$OnePlot)) {bin_html <- get_bin_html(data_group1, data_group2)}
+      
+      
+      # if dat has more than 1 bin then add range to text
+      if (!("100" %in% dat$type)) {
+        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen.")
+      } else {range <- "."}
+      
+      axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin_html, 
+                              " procent van de ", labels_dat$population, range, 
+                              " De verticale as toont het eigen", stat, tolower(input$outcome),
+                              ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
+      
+      
+    } else if(input$parents_options == "Opleiding ouders") {
+      
+      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", stat, tolower(input$outcome), 
+                               " van ", labels_dat$population,
+                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
+    }
+    group1_text <- gen_algemeen_group_text(
+      group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
+      group_data_size = N1,
+      geslacht_input = input$geslacht1,
+      migratie_input = input$migratie1,
+      huishouden_input = input$huishouden1,
+      geografie_input = input$geografie1,
+      populatie_input = labels_dat$population
+    )
+    
+    if (!(input$OnePlot)) {
+      group2_text <- gen_algemeen_group_text(
+        group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
+        group_data_size = N2,
+        geslacht_input = input$geslacht2,
+        migratie_input = input$migratie2,
+        huishouden_input = input$huishouden2,
+        geografie_input = input$geografie2,
+        populatie_input = labels_dat$population
+      )
+    }    
+    
+    # output
+    HTML(paste0("<p><b>", input$outcome, "</b> is ", labels_dat$definition, "</p>",
+                "<p>", axis_text, "</p>",
+                "<p>", group1_text, " ", group2_text, "</p>"))
+    
+    
+  })
+  
+  
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
   
@@ -52,104 +173,13 @@ server <- function(input, output, session) {
   })
   
   
+  
   # HTML TEXT ----------------------------------------------------------
   
   #### ALGEMEEN ####
   output$selected_outcome <- renderPrint({
     
-    # select outcome from outcome_dat
-    sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    stat <- get_stat_per_outcome_html(sample_dat)
-    
-    # get data
-    data_group1 <- dataInput1()
-    if (!(input$OnePlot)) {
-      data_group2 <- dataInput2()
-    } else {data_group2 <- data.frame()}
-    
-    
-    if (input$parents_options == "Inkomen ouders") {
-      
-      # filter data with bin
-      if (!(input$OnePlot)) {
-        bin <- get_bin(data_group1, data_group2)
-        bin_html <- get_bin_html(data_group1, data_group2)
-        
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
-        data_group2 <- data_group2 %>% dplyr::filter(type == bin)
-        
-        # select info from data for html text
-        N1 <- decimal0(sum(data_group1$N))
-        N2 <- decimal0(sum(data_group2$N))
-        
-        # if user clicked on showing only one group
-      } else {
-        bin <- as.character(get_perc_per_bin(data_group1))
-        bin_html <- get_perc_per_bin_html(data_group1)
-        
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
-        N1 <- decimal0(sum(data_group1$N))
-        
-      }
-      
-      if (bin != "100") {
-        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen.")
-      } else {range <- "."}
-      
-      axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin_html, " procent van de ",
-                               sample_dat$population, range, 
-                               " De verticale as toont het eigen", stat, tolower(input$outcome),
-                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
-      
-    } else if(input$parents_options == "Opleiding ouders") {
-      
-      # filter data with bin
-      data_group1 <- data_group1 %>% dplyr::filter(type == "parents_edu")
-      N1 <- decimal0(sum(data_group1$N))
-      
-      if (!(input$OnePlot)) {
-        data_group2 <- data_group2 %>% dplyr::filter(type == "parents_edu")
-        N2 <- decimal0(sum(data_group2$N))
-      }
-      
-      axis_text <- HTML(paste0("Elke staaf in het figuur toont het", stat, tolower(input$outcome), " van ",
-                               sample_dat$population,
-                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
-    }
-    sex1 <- subset(html_text$html_text, html_text$input_text == input$geslacht1)
-    if (input$migratie1 != "Totaal") {
-      mig1 <- paste0(" met een ", subset(html_text$html_text, html_text$input_text == input$migratie1), " migratieachtergrond")
-    } else {mig1 <- ""}
-    if (input$huishouden1 != "Totaal") {
-      hh1 <- paste0("in een ", tolower(input$huishouden1))
-    } else {hh1 <- ""}
-    
-    group1_text <- HTML(paste0("De ", add_bold_text_html(text="blauwe groep", color=data_group1_color),
-                               " bestaat uit ", N1, " ", sex1, " ",
-                               sample_dat$population, " ", mig1, " die zijn opgegroeid ", hh1, " in ",
-                               input$geografie1, "."))
-    
-    
-    if (!(input$OnePlot)) {
-      sex2 <- subset(html_text$html_text, html_text$input_text == input$geslacht2)
-      if (input$migratie2 != "Totaal") {
-        mig2 <- paste0("met een ", subset(html_text$html_text, html_text$input_text == input$migratie2), " migratieachtergrond")
-      } else {mig2 <- ""}
-      if (input$huishouden2 != "Totaal") {
-        hh2 <- paste0("in een ", tolower(input$huishouden2))
-      } else {hh2 <- ""}
-      
-      group2_text <- HTML(paste0("De ", add_bold_text_html(text="groene groep", color=data_group2_color),
-                                 "  bestaat uit ", N2, " ", sex2, " ",
-                                 sample_dat$population, " ", mig2, " die zijn opgegroeid ", hh2,
-                                 " in ", input$geografie2, "."))
-      
-    } else {group2_text <- ""}
-    
-    # output
-    HTML(paste0("<p><b>", input$outcome, "</b> is ", sample_dat$definition, "</p>",
-                "<p>", axis_text, "</p>",
-                "<p>", group1_text, " ", group2_text, "</p>"))
+    algemeen_text()
     
   })
   
@@ -159,49 +189,49 @@ server <- function(input, output, session) {
     
     if (input$parents_options == "Inkomen ouders") {
       
-      sample_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-      data_group1 <- dataInput1() %>% dplyr::filter(opleiding_ouders == "Totaal")
-      data_group2 <- dataInput2() %>% dplyr::filter(opleiding_ouders == "Totaal")
+      labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+      data_group1 <- dataInput1() %>% filter(opleiding_ouders == "Totaal")
+      data_group2 <- dataInput2() %>% filter(opleiding_ouders == "Totaal")
       
       # get total
-      total_group1 <- data_group1 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      total_group2 <- data_group2 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       
       
       # get signs for outcomes
       sign1 <- sign1_func(input$outcome)
       sign2 <- sign2_func(input$outcome)
-      stat <- get_stat_per_outcome_html(sample_dat)
+      stat <- get_stat_per_outcome_html(labels_dat)
       
       # filter data with bin
       if (!(input$OnePlot)) {
         bin <- get_bin(data_group1, data_group2)
         bin_html <- get_bin_html(data_group1, data_group2)
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
-        data_group2 <- data_group2 %>% dplyr::filter(type == bin)
+        data_group1 <- data_group1 %>% filter(type == bin)
+        data_group2 <- data_group2 %>% filter(type == bin)
         
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
         bin_html <- get_perc_per_bin_html(data_group1)
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
+        data_group1 <- data_group1 %>% filter(type == bin)
       }
       
       if (bin != "100") {
         
         blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                           sample_dat$population, "het", stat, tolower(input$outcome), 
+                           labels_dat$population, "het", stat, tolower(input$outcome), 
                            paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
                          De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                           sample_dat$population,
+                           labels_dat$population,
                            "het", stat, tolower(input$outcome),
                            paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
         
         if (!(input$OnePlot)) {
           green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                              sample_dat$population, "het", stat, tolower(input$outcome), 
+                              labels_dat$population, "het", stat, tolower(input$outcome), 
                               paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
                          De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                              sample_dat$population, "het", stat, tolower(input$outcome),
+                              labels_dat$population, "het", stat, tolower(input$outcome),
                               paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
         } else {green_text <- ""}
         
@@ -210,13 +240,13 @@ server <- function(input, output, session) {
         
         blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
                            "laat zien dat voor de", paste0(bin_html, "%"), 
-                           sample_dat$population, " het", stat, tolower(input$outcome),
+                           labels_dat$population, " het", stat, tolower(input$outcome),
                            paste0(sign1, decimal2(data_group1$mean), sign2), "was.")
         
         if (!(input$OnePlot)) {
           green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
                               "laat zien dat voor de", paste0(bin_html, "%"), 
-                              sample_dat$population, "het", stat, tolower(input$outcome),
+                              labels_dat$population, "het", stat, tolower(input$outcome),
                               paste0(sign1, decimal2(data_group2$mean), sign2), "was.")
           
         } else {green_text <- ""}
@@ -252,10 +282,10 @@ server <- function(input, output, session) {
       
     } else if(input$parents_options == "Opleiding ouders") {
       
-      data_group1 <- data_group1 %>% dplyr::filter(opleiding_ouders != "Totaal") 
-      if (!(input$OnePlot)) {
-        data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") 
-      }
+      # data_group1 <- dataInput1() %>% filter(opleiding_ouders != "Totaal") 
+      # if (!(input$OnePlot)) {
+      #   data_group2 <- dataInput2() %>% filter(opleiding_ouders != "Totaal") 
+      # }
       
       
       HTML(paste0("<p>HIER KOMT EEN TEKST VOOR DE STAAFDIAGRAMMEN. </p>"))
@@ -299,22 +329,22 @@ server <- function(input, output, session) {
     if (input$parents_options == "Inkomen ouders") {
       
       # get average of the groups
-      total_group1 <- data_group1 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       if (!(input$OnePlot)) {
-        total_group2 <- data_group2 %>% dplyr::filter(bins == "Totaal", opleiding_ouders == "Totaal")
+        total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       }
       
       # filter data with bin
       if (!(input$OnePlot)) {
         bin <- get_bin(data_group1, data_group2)
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
-        data_group2 <- data_group2 %>% dplyr::filter(type == bin)
+        data_group1 <- data_group1 %>% filter(type == bin)
+        data_group2 <- data_group2 %>% filter(type == bin)
         dat <- bind_rows(data_group1, data_group2)
 
         
       } else {
         bin <- as.character(get_perc_per_bin(data_group1))
-        data_group1 <- data_group1 %>% dplyr::filter(type == bin)
+        data_group1 <- data_group1 %>% filter(type == bin)
         dat <- data_group1
       }
       
@@ -396,7 +426,8 @@ server <- function(input, output, session) {
     
           if (!(input$OnePlot)) {
             plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), color = data_group2_color) +
+                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                               color = data_group2_color, linetype = "longdash") +
               geom_abline(aes(intercept = total_group2$mean, slope = 0),
                           linetype="longdash", size=0.5, color = data_group2_color)
           }
@@ -437,11 +468,12 @@ server <- function(input, output, session) {
       #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
-      data_group1 <- data_group1 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
+      data_group1 <- data_group1 %>% filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
       
       if (!(input$OnePlot)) {
         
-        data_group2 <- data_group2 %>% dplyr::filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
+        data_group2 <- data_group2 %>% filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
+        
         dat <- bind_rows(data_group1, data_group2)
         
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
@@ -481,38 +513,6 @@ server <- function(input, output, session) {
   
   
   #### DOWNLOAD ####
-  
-  
-  
-  download_dat <- reactive({
-    
-    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                            gradient_dat$geografie == input$geografie1 & 
-                            gradient_dat$geslacht == input$geslacht1 &
-                            gradient_dat$migratieachtergrond == input$migratie1 & 
-                            gradient_dat$huishouden == input$huishouden1)
-    
-    if (!(input$OnePlot)) {
-      data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
-                              gradient_dat$geografie == input$geografie2 & 
-                              gradient_dat$geslacht == input$geslacht2 &
-                              gradient_dat$migratieachtergrond == input$migratie2 & 
-                              gradient_dat$huishouden == input$huishouden2)
-      
-      bin <- get_bin(data_group1, data_group2)
-      data_group1 <- data_group1 %>% dplyr::filter(type == bin)
-      data_group2 <- data_group2 %>% dplyr::filter(type == bin)
-      
-      dat <- bind_rows(data_group1, data_group2)
-      
-    } else {
-      bin <- as.character(get_perc_per_bin(data_group1))
-      dat <- data_group1 %>% dplyr::filter(type == bin)
-    }
-
-    
-  })
-  
 
   # download data
   output$downloadData <- downloadHandler(
@@ -520,25 +520,30 @@ server <- function(input, output, session) {
       paste0("data-", Sys.time(), ".zip")
     },
     content = function(file) {
-      temp_txt <- paste(readLines("data/README.txt"))
+      
       
       # set temporary dir
       tmpdir <- tempdir()
-      setwd(tempdir())
+      setwd(tmpdir)
       zip_files <- c()
       
       # get files
       csv_name <- paste0("data-", Sys.time(), ".csv")
-      write.csv(download_dat(), csv_name)
+      write.csv(filterData(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
       fileConn <- file("README.txt")
-      writeLines(temp_txt, fileConn)
+      writeLines(c(temp_txt, readme_sep, 
+                   "ALGEMEEN","", HTML_to_plain_text(algemeen_text()), 
+                   readme_sep, "WAT ZIE IK?", ""),
+                 fileConn)
+      
+      
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
-      zip(zipfile=file, files = zip_files)
+      zip(zipfile = file, files = zip_files)
       
     },
     contentType = "application/zip"
