@@ -85,7 +85,7 @@ server <- function(input, output, session) {
   })
   
   
-  # algemeen text
+  #### ALGEMEEN TEXT ####
   algemeen_text <- reactive({
     
     # select outcome from outcome_dat
@@ -105,6 +105,7 @@ server <- function(input, output, session) {
     
     if (input$parents_options == "Inkomen ouders") {
     
+      # get html bin
       bin_html <- get_perc_per_bin_html(data_group1)
       if (!(input$OnePlot)) {bin_html <- get_bin_html(data_group1, data_group2)}
       
@@ -188,56 +189,61 @@ server <- function(input, output, session) {
   #### WAT ZIE JE? ####
   output$sample_uitleg <- renderPrint({
     
+    # select outcome from outcome_dat
+    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    stat <- get_stat_per_outcome_html(labels_dat)
+    
+    # load data
+    dat <- filterData()
+    data_group1 <- subset(dat, dat$group == "group1")
+    bin <- nrow(data_group1)
+    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
+    
+    
     if (input$parents_options == "Inkomen ouders") {
-      
-      labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-      data_group1 <- dataInput1() %>% filter(opleiding_ouders == "Totaal")
-      data_group2 <- dataInput2() %>% filter(opleiding_ouders == "Totaal")
+
+      # data_group1 <- dataInput1() %>% filter(opleiding_ouders == "Totaal")
+      # data_group2 <- dataInput2() %>% filter(opleiding_ouders == "Totaal")
       
       # get total
-      total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       
       
       # get signs for outcomes
       sign1 <- sign1_func(input$outcome)
       sign2 <- sign2_func(input$outcome)
-      stat <- get_stat_per_outcome_html(labels_dat)
       
-      # filter data with bin
-      if (!(input$OnePlot)) {
-        bin <- get_bin(data_group1, data_group2)
-        bin_html <- get_bin_html(data_group1, data_group2)
-        data_group1 <- data_group1 %>% filter(type == bin)
-        data_group2 <- data_group2 %>% filter(type == bin)
-        
-      } else {
-        bin <- as.character(get_perc_per_bin(data_group1))
-        bin_html <- get_perc_per_bin_html(data_group1)
-        data_group1 <- data_group1 %>% filter(type == bin)
-      }
+      # get html bin
+      bin_html <- get_perc_per_bin_html(data_group1)
+      if (!(input$OnePlot)) {bin_html <- get_bin_html(data_group1, data_group2)}
+   
       
-      if (bin != "100") {
+      if (bin_html != "100") {
         
-        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                           " laat zien dat voor de", paste0(bin_html, "%"), 
                            labels_dat$population, "het", stat, tolower(input$outcome), 
                            paste0(sign1, round(data_group1$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                           " laat zien dat voor de", paste0(bin_html, "%"), 
                            labels_dat$population,
                            "het", stat, tolower(input$outcome),
                            paste0(sign1, decimal2(data_group1$mean[as.numeric(bin)]), sign2), "was.")
         
         if (!(input$OnePlot)) {
-          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), 
+                              " laat zien dat voor de", paste0(bin_html, "%"), 
                               labels_dat$population, "het", stat, tolower(input$outcome), 
                               paste0(sign1, round(data_group2$mean[1], 2), sign2), "was.
-                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
+                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), 
+                              " laat zien dat voor de", paste0(bin_html, "%"), 
                               labels_dat$population, "het", stat, tolower(input$outcome),
                               paste0(sign1, decimal2(data_group2$mean[as.numeric(bin)]), sign2), "was.")
         } else {green_text <- ""}
         
         
-      } else if (bin == "100") {
+      } else if (bin_html == "100") {
         
         blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
                            "laat zien dat voor de", paste0(bin_html, "%"), 
@@ -282,12 +288,7 @@ server <- function(input, output, session) {
       
       
     } else if(input$parents_options == "Opleiding ouders") {
-      
-      # data_group1 <- dataInput1() %>% filter(opleiding_ouders != "Totaal") 
-      # if (!(input$OnePlot)) {
-      #   data_group2 <- dataInput2() %>% filter(opleiding_ouders != "Totaal") 
-      # }
-      
+
       
       HTML(paste0("<p>HIER KOMT EEN TEKST VOOR DE STAAFDIAGRAMMEN. </p>"))
       
@@ -320,35 +321,22 @@ server <- function(input, output, session) {
     # get signs for outcomes
     sign1 <- sign1_func(input$outcome)
     sign2 <- sign2_func(input$outcome)
+
+    # load data
+    dat <- filterData()
+    data_group1 <- subset(dat, dat$group == "group1")
+    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
     
-    
-    # subset data
-    data_group1 <- dataInput1()
-    if (!(input$OnePlot)) {data_group2 <- dataInput2()} else (data_group2 <- data.frame())
     
     #### GRADIENT ####
     if (input$parents_options == "Inkomen ouders") {
       
       # get average of the groups
-      total_group1 <- data_group1 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+      total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       if (!(input$OnePlot)) {
-        total_group2 <- data_group2 %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+        total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       }
-      
-      # filter data with bin
-      if (!(input$OnePlot)) {
-        bin <- get_bin(data_group1, data_group2)
-        data_group1 <- data_group1 %>% filter(type == bin)
-        data_group2 <- data_group2 %>% filter(type == bin)
-        dat <- bind_rows(data_group1, data_group2)
 
-        
-      } else {
-        bin <- as.character(get_perc_per_bin(data_group1))
-        data_group1 <- data_group1 %>% filter(type == bin)
-        dat <- data_group1
-      }
-      
       # make plot
       plot <- ggplot() +
         geom_point(data = data_group1, 
@@ -469,13 +457,7 @@ server <- function(input, output, session) {
       #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
-      data_group1 <- data_group1 %>% filter(opleiding_ouders != "Totaal") %>% mutate(group = "group1")
-      
       if (!(input$OnePlot)) {
-        
-        data_group2 <- data_group2 %>% filter(opleiding_ouders != "Totaal") %>% mutate(group = "group2")
-        
-        dat <- bind_rows(data_group1, data_group2)
         
         plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
                                 text = paste0("<b>", geografie, "</b></br>",
@@ -534,6 +516,7 @@ server <- function(input, output, session) {
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
+      # TODO: enter after a certain number of words
       fileConn <- file("README.txt")
       writeLines(c(temp_txt, readme_sep, 
                    "ALGEMEEN","", HTML_to_plain_text(algemeen_text()), 
