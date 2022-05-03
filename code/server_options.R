@@ -163,7 +163,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
 #### FIGURE PLOT ####
 
 
-thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
+thema <- theme(plot.title = element_text(hjust = 0, size = 18, 
                                          vjust = 1, margin = margin(10,0,10,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
                                             vjust = 1, margin = margin(0,0,10,0)),

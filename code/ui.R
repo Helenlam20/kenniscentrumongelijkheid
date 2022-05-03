@@ -143,7 +143,7 @@ body <- dashboardBody(
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         plotlyOutput("main_figure", height = "420")),
+                         plotlyOutput("main_figure", height = "450")),
               ),
               column(width = 3,
                      box(height = NULL,
