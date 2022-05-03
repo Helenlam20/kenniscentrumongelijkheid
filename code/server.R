@@ -15,6 +15,8 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
+  vals <- reactiveValues()
+  
   
   # REACTIVE ----------------------------------------------------------
   
@@ -36,7 +38,7 @@ server <- function(input, output, session) {
   })
   
   
-  #### FILTER DATA ####
+  # FILTER DATA ----------------------------------------------------
   filterData <- reactive({
     
     data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
@@ -57,11 +59,9 @@ server <- function(input, output, session) {
     if (input$parents_options == "Inkomen ouders") {
       
       if (!(input$OnePlot)) {
-        
         bin <- get_bin(data_group1, data_group2)
         data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "group1")
         data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "group2")
-        
         dat <- bind_rows(data_group1, data_group2)
         
       } else {
@@ -85,8 +85,9 @@ server <- function(input, output, session) {
   })
   
   
-  #### ALGEMEEN TEXT ####
-  algemeen_text <- reactive({
+  # ALGEMEEN TEXT REACTIVE ---------------------------------------------
+  
+  algemeenText <- reactive({
     
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
@@ -102,24 +103,21 @@ server <- function(input, output, session) {
       N2 <- decimal0(sum(data_group2$N))
     }
     
-    
     if (input$parents_options == "Inkomen ouders") {
     
       # get html bin
       bin_html <- get_perc_per_bin_html(data_group1)
       if (!(input$OnePlot)) {bin_html <- get_bin_html(data_group1, data_group2)}
       
-      
       # if dat has more than 1 bin then add range to text
       if (!("100" %in% dat$type)) {
-        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen.")
+        range <- paste0(", gerangschikt van laag naar hoog ouderlijk inkomen.")
       } else {range <- "."}
       
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", bin_html, 
                               "% van de ", labels_dat$population, range, 
                               " De verticale as toont het eigen", statistic_type_text, tolower(input$outcome),
                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
-      
       
     } else if(input$parents_options == "Opleiding ouders") {
       
@@ -159,35 +157,9 @@ server <- function(input, output, session) {
   })
   
   
-  # UI RADIOBUTTON TOOLTIP ---------------------------------------------
+  # WAT ZIE IK TEXT REACTIVE ---------------------------------------------
   
-  
-  output$radio_button <- renderText({
-    
-    if(input$outcome %in% subset(outcome_dat$outcome_name,
-                                 (outcome_dat$population != "pasgeborenen" &
-                                  outcome_dat$population != "leerlingen van groep 8"))) {
-      
-      HTML("Niet beschikbaar voor deze uitkomstmaat!")
-    } else {
-      HTML("Beschikbaar voor deze uitkomst!")
-    }
-  })
-  
-  
-  
-  # HTML TEXT ----------------------------------------------------------
-  
-  #### ALGEMEEN ####
-  output$selected_outcome <- renderPrint({
-    
-    algemeen_text()
-    
-  })
-  
-  
-  #### WAT ZIE JE? ####
-  output$sample_uitleg <- renderPrint({
+  watzieikText <- reactive({
     
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
@@ -201,14 +173,10 @@ server <- function(input, output, session) {
     
     
     if (input$parents_options == "Inkomen ouders") {
-
-      # data_group1 <- dataInput1() %>% filter(opleiding_ouders == "Totaal")
-      # data_group2 <- dataInput2() %>% filter(opleiding_ouders == "Totaal")
       
       # get total
       total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      
       
       # get prefix and postfix for outcomes
       prefix_text <- get_prefix(input$outcome)
@@ -218,38 +186,43 @@ server <- function(input, output, session) {
       # get html bin
       bin_html <- get_perc_per_bin_html(data_group1)
       if (!(input$OnePlot)) {bin_html <- get_bin_html(data_group1, data_group2)}
-   
       
       if (bin_html != "100") {
         
-        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                           labels_dat$population, "het", statistic_type_text, tolower(input$outcome), 
-                           paste0(prefix_text, round(data_group1$mean[1], 2), postfix_text), "was.
-                         De meest rechter ", add_bold_text_html(text="blauwe stip", color=data_group1_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                           labels_dat$population,
-                           "het", statistic_type_text, tolower(input$outcome),
+        blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                           " laat zien dat, voor de", paste0(bin_html, "%"), labels_dat$population, 
+                           " met ouders met de laagste inkomens in de blauwe groep, het",
+                           statistic_type_text, tolower(input$outcome), 
+                           paste0(prefix_text, decimal2(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
+                           add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                           " laat zien dat, voor de", paste0(bin_html, "%"), labels_dat$population,
+                           " met ouders met de hoogste inkomens in de blauwe groep, het", 
+                           statistic_type_text, tolower(input$outcome),
                            paste0(prefix_text, decimal2(data_group1$mean[as.numeric(bin)]), postfix_text), "was.")
         
         if (!(input$OnePlot)) {
-          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome), 
-                              paste0(prefix_text, round(data_group2$mean[1], 2), postfix_text), "was.
-                         De meest rechter ", add_bold_text_html(text="groene stip", color=data_group2_color), " laat zien dat voor de", paste0(bin_html, "%"), 
-                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
+          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), 
+                              " laat zien dat, voor de", paste0(bin_html, "%"), 
+                              labels_dat$population, " met ouders met de laagste inkomens in de groene groep, het",
+                              statistic_type_text, tolower(input$outcome), 
+                              paste0(prefix_text, decimal2(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
+                              add_bold_text_html(text="groene stip", color=data_group2_color), 
+                              " laat zien dat, voor de", paste0(bin_html, "%"), labels_dat$population, 
+                              " met ouders met de hoogste inkomens in de groene groep, het",
+                              statistic_type_text, tolower(input$outcome),
                               paste0(prefix_text, decimal2(data_group2$mean[as.numeric(bin)]), postfix_text), "was.")
         } else {green_text <- ""}
-        
         
       } else if (bin_html == "100") {
         
         blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
-                           "laat zien dat voor de", paste0(bin_html, "%"), 
+                           "laat zien dat, voor de", paste0(bin_html, "%"), 
                            labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
                            paste0(prefix_text, decimal2(data_group1$mean), postfix_text), "was.")
         
         if (!(input$OnePlot)) {
           green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
-                              "laat zien dat voor de", paste0(bin_html, "%"), 
+                              "laat zien dat, voor de", paste0(bin_html, "%"), 
                               labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
                               paste0(prefix_text, decimal2(data_group2$mean), postfix_text), "was.")
           
@@ -274,7 +247,6 @@ server <- function(input, output, session) {
                           statistic_type_text, " ", tolower(input$outcome), " van de ",
                           add_bold_text_html(text="groene groep", color=data_group2_color), " is ",
                           paste0(prefix_text, decimal2(total_group2$mean), postfix_text), "."))
-            
           } 
         }
       }
@@ -285,7 +257,6 @@ server <- function(input, output, session) {
       
       
     } else if(input$parents_options == "Opleiding ouders") {
-
       
       HTML(paste0("<p>HIER KOMT EEN TEKST VOOR DE STAAFDIAGRAMMEN. </p>"))
       
@@ -294,26 +265,9 @@ server <- function(input, output, session) {
   })
   
   
+  # FIGURE PLOT REACTIVE ----------------------------------------------------
   
-  
-  # GRADIENT ----------------------------------------------------------
-  
-  
-  # title plot widget
-  output$title_plot <- renderPrint({
-    HTML(input$outcome)
-  })
-  
-  
-  # Create plot
-  output$main_figure <- renderPlotly({
-    
-    # withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
-    #   for (i in 1:5) {
-    #     incProgress(1/5)
-    #     Sys.sleep(0.1)
-    #   }
-    # })
+  makePlot <- reactive({
     
     # get prefix and postfix for outcomes
     prefix_text <- get_prefix(input$outcome)
@@ -325,7 +279,7 @@ server <- function(input, output, session) {
     if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
     
     
-    #### GRADIENT ####
+    # GRADIENT 
     if (input$parents_options == "Inkomen ouders") {
       
       # get average of the groups
@@ -333,7 +287,7 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {
         total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       }
-
+      
       # make plot
       plot <- ggplot() +
         geom_point(data = data_group1, 
@@ -351,27 +305,27 @@ server <- function(input, output, session) {
       
       # if user clicks on tabbox "Wat zie ik?" highlight left and right points
       if (input$tabset1 == "Wat zie ik?") {
-
+        
         # get min and max of the data for highlighting the blue group
         min_max1 <- data_group1 %>%
           filter(parents_income == min(parents_income) |
                    parents_income == max(parents_income))
-
+        
         plot <- plot +
           geom_point(data = min_max1, aes(x = parents_income, y = mean),
                      color = data_group1_color, size = 9, alpha = 0.35)
-
+        
         # if user shows two groups then also highlight green group
         if (!(input$OnePlot)) {
           
-        min_max2 <- data_group2 %>%
-          filter(parents_income == min(parents_income) |
-                   parents_income == max(parents_income))
-        
-        plot <- plot +
-          geom_point(data = min_max2, aes(x = parents_income, y = mean),
-                     color = data_group2_color, size = 9, alpha = 0.35)
-        
+          min_max2 <- data_group2 %>%
+            filter(parents_income == min(parents_income) |
+                     parents_income == max(parents_income))
+          
+          plot <- plot +
+            geom_point(data = min_max2, aes(x = parents_income, y = mean),
+                       color = data_group2_color, size = 9, alpha = 0.35)
+          
         }
       }
       
@@ -384,7 +338,7 @@ server <- function(input, output, session) {
                                        "</br>Inkomen ouders: €", decimal2(parents_income),
                                        "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                        "</br>Aantal mensen: ", decimal2(N))),
-                     color = data_group2_color, size = 3, shape = 18) 
+                     color = data_group2_color, size = 3, shape = 15) 
       } 
       
       
@@ -409,11 +363,12 @@ server <- function(input, output, session) {
             geom_abline(aes(intercept = total_group1$mean, slope = 0),
                         linetype = "twodash", size=0.5, color = data_group1_color) 
           
-    
+          
           if (!(input$OnePlot)) {
-            plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                               color = data_group2_color, linetype = "longdash") +
+            plot <- plot + 
+              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                          color = data_group2_color, linetype = "longdash") +
               geom_abline(aes(intercept = total_group2$mean, slope = 0),
                           linetype="longdash", size=0.5, color = data_group2_color)
           }
@@ -426,9 +381,10 @@ server <- function(input, output, session) {
                         color = data_group1_color, linetype = "longdash") 
           
           if (!(input$OnePlot)) {
-            plot + geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                               se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                               color = data_group2_color, linetype = "longdash") 
+            plot <- plot + 
+              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm", 
+                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+                          color = data_group2_color, linetype = "longdash") 
             
           }
           
@@ -441,14 +397,8 @@ server <- function(input, output, session) {
             plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
                                linetype = "twodash", size=0.5, color = data_group2_color) 
           }
-          
         }
       }
-      
-      ggplotly(x = plot, tooltip = c("text"))  %>% 
-        config(displayModeBar = F, scrollZoom = F) %>%
-        style(hoverlabel = label) %>%
-        layout(font = font)
       
       
       #### BAR PLOT ####
@@ -481,13 +431,96 @@ server <- function(input, output, session) {
           thema
         
       } 
-      
-      ggplotly(x = plot, tooltip = c("text"))  %>% 
-        config(displayModeBar = F, scrollZoom = F) %>%
-        style(hoverlabel = label) %>%
-        layout(font = font)      
-      
     }
+    
+    vals$plot <- plot
+    
+  })
+  
+  
+  # PLOT FOR DOWNLOAD REACTIVE ----------------------------------------------------
+  
+  # plotDownload <- reactive({
+  #   
+  #   plot <- makePlot()
+  #   
+  #   # add ggtitle to plot
+  #   plot <- plot +
+  #     ggtitle("TEST FOR THE TITLE")
+  #   
+  #   
+  #   vals$plot <- plot
+  #   
+  # })
+  
+  
+
+  
+  # UI RADIOBUTTON TOOLTIP ---------------------------------------------
+  
+  
+  output$radio_button <- renderText({
+    
+    if(input$outcome %in% subset(outcome_dat$outcome_name,
+                                 (outcome_dat$population != "pasgeborenen" &
+                                  outcome_dat$population != "leerlingen van groep 8"))) {
+      
+      HTML("Niet beschikbaar voor deze uitkomstmaat!")
+    } else {
+      HTML("Beschikbaar voor deze uitkomst!")
+    }
+  })
+  
+  
+  
+  # HTML TEXT ----------------------------------------------------------
+  
+  #### ALGEMEEN ####
+  output$selected_outcome <- renderPrint({
+    
+    algemeenText()
+    
+  })
+  
+  
+  #### WAT ZIE JE? ####
+  output$sample_uitleg <- renderPrint({
+ 
+    watzieikText()
+    
+  })
+  
+  
+  
+  # GRADIENT ----------------------------------------------------------
+  
+  
+  # title plot widget
+  output$title_plot <- renderPrint({
+    HTML(input$outcome)
+  })
+  
+  
+  # Create plot
+  output$main_figure <- renderPlotly({
+    
+    # withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
+    #   for (i in 1:5) {
+    #     incProgress(1/5)
+    #     Sys.sleep(0.1)
+    #   }
+    # })
+    
+    # call reactive
+    makePlot()
+    
+    # load plot
+    ggplotly(x = plot, tooltip = c("text"))  %>% 
+      config(displayModeBar = F, scrollZoom = F) %>%
+      style(hoverlabel = label) %>%
+      layout(font = font)  
+    
+   
   }) # end plot
   
   
@@ -501,7 +534,6 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       
-      
       # set temporary dir
       tmpdir <- tempdir()
       setwd(tmpdir)
@@ -513,13 +545,13 @@ server <- function(input, output, session) {
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
-      # TODO: enter after a certain number of words
+      # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
       writeLines(c(temp_txt, readme_sep, 
-                   "ALGEMEEN","", HTML_to_plain_text(algemeen_text()), 
-                   readme_sep, "WAT ZIE IK?", ""),
+                   "ALGEMEEN","", HTML_to_plain_text(algemeenText()), 
+                   readme_sep, "WAT ZIE IK?", "", HTML_to_plain_text(watzieikText()), 
+                   readme_sep, "CAUSALITEIT", "", causal_text),
                  fileConn)
-      
       
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
@@ -533,10 +565,12 @@ server <- function(input, output, session) {
 
   # download plot
   output$downloadPlot <- downloadHandler(
-    filename = function() { paste(input$dataset, '.png', sep='') },
+    filename = function() {
+      paste0("fig-", Sys.time(), ".pdf")
+      },
     content = function(file) {
-      png(file)
-      print(plotInput())
+      pdf(file, encoding = "ISOLatin9.enc",  width = 10, height = 6)
+      print(vals$plot)
       dev.off()
     })
   
