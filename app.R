@@ -22,7 +22,6 @@ library(shinyBS)
 
 
 #### LOAD DATA ####
-# setwd("/Users/helenlam20/GitHub/kco_dashboard")
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
 
@@ -54,9 +53,6 @@ source("./code/server.R")
 
 
 shinyApp(ui = ui, server = server)
-
-
-
 
 
 
