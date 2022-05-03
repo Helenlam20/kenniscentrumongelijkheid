@@ -47,12 +47,11 @@ temp_txt <- paste(readLines("./data/README.txt"))
 
 
 #### RUN APP ####
+setwd("/Users/helenlam20/GitHub/kco_dashboard")
 source("./code/Theme_PoorMansFlatly.R")
 source("./code/ui.R")
 source("./code/server.R")
 
 
 shinyApp(ui = ui, server = server)
-
-
 

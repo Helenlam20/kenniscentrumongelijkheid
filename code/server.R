@@ -269,6 +269,9 @@ server <- function(input, output, session) {
   
   makePlot <- reactive({
     
+    # select outcome from outcome_dat
+    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    
     # get prefix and postfix for outcomes
     prefix_text <- get_prefix(input$outcome)
     postfix_text <- get_postfix(input$outcome)
@@ -349,11 +352,7 @@ server <- function(input, output, session) {
         mean <- "Gemiddelde" %in% input$line_options
         
         # regression line
-        if (nrow(data_group1) == 5) {
-          polynom <- 2
-        } else {
-          polynom <- 3
-        }
+        if (nrow(data_group1) == 5) {polynom <- 2} else {polynom <- 3}
         
         if (line & mean) {
           plot <- plot + 
@@ -433,29 +432,27 @@ server <- function(input, output, session) {
       } 
     }
     
-    vals$plot <- plot
+    vals$plot <- plot 
+    # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
+    
+    
     
   })
   
   
-  # PLOT FOR DOWNLOAD REACTIVE ----------------------------------------------------
+  # DOWNLOAD REACTIVE ----------------------------------------------------
   
-  # plotDownload <- reactive({
-  #   
-  #   plot <- makePlot()
-  #   
-  #   # add ggtitle to plot
-  #   plot <- plot +
-  #     ggtitle("TEST FOR THE TITLE")
-  #   
-  #   
-  #   vals$plot <- plot
-  #   
-  # })
+  txtFile <- reactive({
+    
+    text <- c(temp_txt, readme_sep, 
+              "ALGEMEEN","", HTML_to_plain_text(algemeenText()), 
+              readme_sep, "WAT ZIE IK?", "", HTML_to_plain_text(watzieikText()), 
+              readme_sep, "CAUSALITEIT", "", causal_text)
+    
+  })
   
   
 
-  
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
   
@@ -525,9 +522,8 @@ server <- function(input, output, session) {
   
   
   
-  #### DOWNLOAD ####
+  #### DOWNLOAD DATA ####
 
-  # download data
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("data-", Sys.time(), ".zip")
@@ -547,12 +543,7 @@ server <- function(input, output, session) {
       # write txt file
       # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
-      writeLines(c(temp_txt, readme_sep, 
-                   "ALGEMEEN","", HTML_to_plain_text(algemeenText()), 
-                   readme_sep, "WAT ZIE IK?", "", HTML_to_plain_text(watzieikText()), 
-                   readme_sep, "CAUSALITEIT", "", causal_text),
-                 fileConn)
-      
+      writeLines(txtFile(), fileConn)
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
@@ -563,17 +554,39 @@ server <- function(input, output, session) {
   )
   
 
-  # download plot
+  #### DOWNLOAD PLOT ####
   output$downloadPlot <- downloadHandler(
     filename = function() {
-      paste0("fig-", Sys.time(), ".pdf")
-      },
+      paste0("fig-", Sys.time(), ".zip")
+    },
     content = function(file) {
-      pdf(file, encoding = "ISOLatin9.enc",  width = 10, height = 6)
+      
+      # set temporary dir
+      tmpdir <- tempdir()
+      setwd(tmpdir)
+      zip_files <- c()
+      
+      # get plot
+      fig_name <- paste0("fig-", Sys.time(), ".pdf")
+      pdf(fig_name, encoding = "ISOLatin9.enc", 
+          width = 9, height = 5.5)
       print(vals$plot)
       dev.off()
-    })
+      zip_files <- c(zip_files, fig_name)
+      
+      # write txt file
+      # TODO: enter after a certain number of words and characters
+      fileConn <- file("README.txt")
+      writeLines(txtFile(), fileConn)
+      close(fileConn)
+      zip_files <- c(zip_files, "README.txt")
+      
+      zip(zipfile = file, files = zip_files)
+      
+    },
+    contentType = "application/zip"
+  )
   
   
   
-}
+} # end of server
