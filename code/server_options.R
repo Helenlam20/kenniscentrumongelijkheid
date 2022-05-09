@@ -75,24 +75,25 @@ html_text <- data.frame(
 
 # select percentage based on the data
 get_perc_per_bin_html <- function(data_group) {
+  perc <- NULL
   if ("20" %in% unique(data_group$type)) {
-    bin <- 5
+    perc <- 5
   } else if ("10" %in% unique(data_group$type)) {
-    bin <- 10
+    perc <- 10
   } else if ("5" %in% unique(data_group$type)) {
-    bin <- 20
+    perc <- 20
   } else if ("1" %in% unique(data_group$type)) {
-    bin <- 100
+    perc <- 100
   }
-  return(bin)
+  return(perc)
 }
 
 # get bin 
 get_bin_html <- function(data_group1, data_group2) {
-  bin1 <- get_perc_per_bin_html(data_group1)
-  if (!is.null(data_group2)) {bin2 <- get_perc_per_bin_html(data_group2)} else {bin2 <- 0}
-  bin <- as.character(max(bin1, bin2))
-  return(bin)
+  perc1 <- get_perc_per_bin_html(data_group1)
+  if (!is.null(data_group2)) {perc2 <- get_perc_per_bin_html(data_group2)} else {perc2 <- 0}
+  perc <- as.character(max(perc1, perc2))
+  return(perc)
 }
 
 # select statistics based on an outcome
@@ -139,6 +140,11 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
                                     migratie_input, huishouden_input, geografie_input, 
                                     populatie_input) {
   
+  if (group_data_size <= 0) {
+    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+    return(group_text)
+  }
+
   sex_text <- subset(html_text$html_text, html_text$input_text == geslacht_input)
   migration_text <- ""
   household_text <- ""
@@ -200,6 +206,7 @@ label <- list(
 ## function for plot ##
 # select percentage based on the data
 get_perc_per_bin <- function(data_group) {
+  bin <- 100
   if ("20" %in% unique(data_group$type)) {
     bin <- 20
   } else if ("10" %in% unique(data_group$type)) {
@@ -251,10 +258,58 @@ HTML_to_plain_text <- function(txt) {
   plain_text <- gsub(style_pattern, "", plain_text)
   plain_text <- gsub("  ", " ", plain_text)
   plain_text <- gsub("^ ", "", plain_text)
-  
-  
 }
 
+
+
+
+# Plotting functions
+gen_geom_point <- function(data, input_geography, color, prefix_text, postfix_text) {
+  plot <- geom_point(
+    data=data, 
+    aes(x=parents_income, y=mean, text=paste0("<b>", input_geography, "</b></br>",
+                                     "</br>Inkomen ouders: €", decimal2(parents_income),
+                                     "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                     "</br>Aantal mensen: ", decimal2(N))), 
+    color=color, size=3
+    )
+  return(plot)
+}
+
+gen_highlight_points <- function(data, color) {
+  min_max <- data %>%
+    filter(parents_income == min(parents_income) |
+              parents_income == max(parents_income))
+
+  plot <- geom_point(data = min_max, aes(x = parents_income, y = mean),
+                color = color, size = 9, alpha = 0.35)
+  return(plot)
+}
+
+gen_regression_line <- function(data, color, polynom) {
+  plot <- geom_smooth(data = data, aes(x = parents_income, y = mean),  method = "lm",
+            se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
+            color = color, linetype = "longdash") 
+  return(plot)
+}
+
+
+gen_mean_line <- function(total_group, color) {
+  plot <- geom_abline(
+            aes(intercept = total_group$mean, slope = 0),
+            linetype = "twodash", size=0.5, color = color
+          ) 
+  return(plot)
+}
+
+gen_bar_plot <- function(data, prefix_text, postfix_text) {
+  plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group, 
+                text = paste0("<b>", geografie, "</b></br>",
+                "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                "</br>Aantal mensen: ", decimal2(N)))
+                )
+  return(plot)
+}
 
 
 # TEST

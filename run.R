@@ -1,2 +1,2 @@
 source("app.R")
-runApp()
+runApp(port=4444)
