@@ -169,7 +169,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
 #### FIGURE PLOT ####
 
 
-thema <- theme(plot.title = element_text(hjust = 0, size = 16, face="bold",
+thema <- theme(plot.title = element_text(hjust = 0, size = 18, 
                                          vjust = 1, margin = margin(10,0,10,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
                                             vjust = 1, margin = margin(0,0,10,0)),
@@ -264,14 +264,14 @@ HTML_to_plain_text <- function(txt) {
 
 
 # Plotting functions
-gen_geom_point <- function(data, input_geography, color, prefix_text, postfix_text) {
+gen_geom_point <- function(data, input_geography, color, prefix_text, postfix_text, shape) {
   plot <- geom_point(
     data=data, 
     aes(x=parents_income, y=mean, text=paste0("<b>", input_geography, "</b></br>",
                                      "</br>Inkomen ouders: €", decimal2(parents_income),
                                      "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                      "</br>Aantal mensen: ", decimal2(N))), 
-    color=color, size=3
+    color=color, size=3, shape=shape
     )
   return(plot)
 }

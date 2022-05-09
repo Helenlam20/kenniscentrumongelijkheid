@@ -7,7 +7,7 @@
 
 
 radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
-
+  
   options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
   options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
   bsTag <- shiny::tags$script(shiny::HTML(paste0("
@@ -26,6 +26,14 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
   htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
 }
 
+causal_text <- 
+"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen 
+opgroeien en hun uitkomsten over de levensloop. die ook van invloed zijn 
+en waarvoor niet te controleren valt. Daarom moeten deze patronen niet 
+worden gezien als oorzakelijke verbanden."
+
+
+#### START UI ####
 
 sidebar <- 
   dashboardSidebar(
@@ -61,44 +69,58 @@ body <- dashboardBody(
                                               # selected = "Startkwalificatie behaald",
                                               selected = "Zuigelingensterfte",
                                               choices = list(`Geld` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Geld")),
-                                                   `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
-                                                   `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
-                                                   `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
-                                                   options = list(`live-search` = T, style = "", size = 10),
+                                                             `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
+                                                             `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
+                                                             `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
+                                              options = list(`live-search` = T, style = "", size = 10),
                                               choicesOpt = list(subtext = outcome_dat$population)),
-                              prettyCheckboxGroup(
-                                inputId = "line_options",
-                                label = HTML("<b>Selecteer hier een optie:</b>"),
-                                choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
-                                icon = icon("check-square-o"), status = "primary",
-                                outline = TRUE, inline = TRUE, animation = "jelly"
-                                ),
-                                  prettyRadioButtons(
-                                    inputId = "parents_options",
-                                    label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
-                                               tags$style("#q1 {vertical-align: middle; width: 25px;
+                                  prettyCheckboxGroup(
+                                    inputId = "line_options",
+                                    # label = HTML("<b>Selecteer hier een optie:</b>"), 
+                                    label = h5(HTML("<b>Selecteer hier een optie:</b>"),
+                                               tags$style("#q_line {vertical-align: middle; width: 25px;
                                                           height: 25px; font-size: 11px;
                                                           border: 2px solid #e7e7e7; border-radius: 100%;
                                                           background-color: white; color: #555555;
                                                           line-height: 1pxt; padding: 0px;}"),
-                                               bsButton("q1", label = NULL, icon = icon("question"), 
+                                               bsButton("q_line", label = NULL, icon = icon("question"), 
+                                                        size = "extra-small")
+                                    ),
+                                    choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
+                                    icon = icon("check-square-o"), status = "primary",
+                                    outline = TRUE, inline = TRUE, animation = "smooth"
+                                  ),
+                                  bsPopover(id = "q_line", title = "Lijn opties",
+                                            content = HTML("<i>Lijn</i> is de fitted line door de bollen. <i>Gemiddelde</i> is het gemiddelde van de groep"),
+                                            placement = "right", trigger = "hover", 
+                                            options = list(container = "body")
+                                  ),
+                                  prettyRadioButtons(
+                                    inputId = "parents_options",
+                                    label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                               tags$style("#q_parents {vertical-align: middle; width: 25px;
+                                                          height: 25px; font-size: 11px;
+                                                          border: 2px solid #e7e7e7; border-radius: 100%;
+                                                          background-color: white; color: #555555;
+                                                          line-height: 1pxt; padding: 0px;}"),
+                                               bsButton("q_parents", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
                                     choices = c("Inkomen ouders", "Opleiding ouders"),
                                     icon = icon("check"), inline = TRUE,
                                     bigger = TRUE, selected = "Inkomen ouders",
-                                    status = "info", animation = "jelly"
+                                    status = "info", animation = "smooth"
                                   ),
-                              radioTooltip(id = "parents_options", choice = "Opleiding ouders",
-                              title = textOutput("radio_button"),
-                              # title = "Alleen beschikbaar voor pasgeboren en groep-8 sample",
-                              placement = "right", trigger = "hover"),
-                              bsPopover(id = "q1", title = "Opleiding ouders",
-                                        content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
-                                        placement = "right", 
-                                        trigger = "hover", 
-                                        options = list(container = "body")
-                              ),
+                                  # TODO: dynamic tooltip 
+                                  radioTooltip(id = "parents_options", choice = "Opleiding ouders",
+                                               # title = textOutput("radio_button"),
+                                               title = "Alleen beschikbaar voor pasgeborenen en groep-8",
+                                               placement = "right", trigger = "hover"),
+                                  bsPopover(id = "q_parents", title = "Opleiding ouders",
+                                            content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
+                                            placement = "right", trigger = "hover", 
+                                            options = list(container = "body")
+                                  ),
                               ),
                        ),
                        column(width = 7,
@@ -106,12 +128,7 @@ body <- dashboardBody(
                                 id = "tabset1", height = NULL, width = NULL,
                                 tabPanel("Algemeen", htmlOutput("selected_outcome")),
                                 tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
-                                tabPanel("Causaliteit",
-                                         "Het dashboard toont de samenhang tussen de omstandigheden 
-                                         waarin kinderen opgroeien en hun uitkomsten over de levensloop. 
-                                         Maar die omstandigheden hangen samen met eindeloos veel factoren 
-                                         die ook van invloed zijn en waarvoor niet te controleren valt. 
-                                         Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."),
+                                tabPanel("Causaliteit", causal_text),
                                 selected = "Algemeen"),
                        ),
                      ),
@@ -126,7 +143,7 @@ body <- dashboardBody(
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         plotlyOutput("main_figure", height = "420")),
+                         plotlyOutput("main_figure", height = "450")),
               ),
               column(width = 3,
                      box(height = NULL,
