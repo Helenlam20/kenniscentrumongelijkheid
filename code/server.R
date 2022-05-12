@@ -518,6 +518,7 @@ server <- function(input, output, session) {
       zip_files <- c()
       
       # get plot
+      # TODO: add title and watermark to figure
       fig_name <- paste0("fig-", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 5.5)
