@@ -238,9 +238,6 @@ get_bin <- function(data_group1, data_group2) {
 }
 
 
-
-
-
 #### DOWNLOAD DATA AND FIGURE ####
 
 readme_sep <- c("",                                                                                 
@@ -259,8 +256,6 @@ HTML_to_plain_text <- function(txt) {
   plain_text <- gsub("  ", " ", plain_text)
   plain_text <- gsub("^ ", "", plain_text)
 }
-
-
 
 
 # Plotting functions

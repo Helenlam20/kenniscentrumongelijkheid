@@ -81,7 +81,15 @@ server <- function(input, output, session) {
     }
   })
 
-
+  # filter data for downloading
+  DataDownload <- reactive({
+    
+    dat <- filterData() 
+    dat <- dat %>%
+      select(-c(subgroep, group, type)) %>%
+      relocate(uitkomst_NL)
+    
+  })
   
   
   # ALGEMEEN TEXT REACTIVE ---------------------------------------------
@@ -151,7 +159,6 @@ server <- function(input, output, session) {
     HTML(paste0("<p><b>", input$outcome, "</b> is ", labels_dat$definition, "</p>",
                 "<p>", axis_text, "</p>",
                 "<p>", group1_text, " ", group2_text, "</p>"))
-    
     
   })
   
@@ -299,6 +306,7 @@ server <- function(input, output, session) {
       mean_option_selected <- "Gemiddelde" %in% input$line_options
 
       # regression line
+      # TODO: Add check for data_group2 when data_group1 is empty
       if (nrow(data_group1) == 5) {
         polynom <- 2
       } else {
@@ -321,7 +329,8 @@ server <- function(input, output, session) {
       # Plot for data_group1 
       if (!data_group1_is_empty) {
         # Main plot
-        plot <- plot + gen_geom_point(data_group1, input$geografie1, data_group1_color, prefix_text, postfix_text, shape=19)
+        plot <- plot + gen_geom_point(data_group1, input$geografie1, data_group1_color, 
+                                      prefix_text, postfix_text, shape=19)
         
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
@@ -342,7 +351,8 @@ server <- function(input, output, session) {
       # Plot for data_group2
       if (!data_group2_is_empty) {
         # Main plot
-        plot <- plot + gen_geom_point(data_group2, input$geografie2, data_group2_color, prefix_text, postfix_text, shape=18)
+        plot <- plot + gen_geom_point(data_group2, input$geografie2, data_group2_color, 
+                                      prefix_text, postfix_text, shape=15)
         
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
@@ -379,11 +389,11 @@ server <- function(input, output, session) {
       
     }
     
-    vals$plot <- plot 
+    vals$plot <- plot
     # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
 
     # Return whether or not there are any plots 
-    if (!data_group1_is_empty || !data_group2_is_empty) 
+    if (!data_group1_is_empty || !data_group2_is_empty)
       has_plots = TRUE
     else
       has_plots = FALSE
@@ -467,7 +477,7 @@ server <- function(input, output, session) {
         config(displayModeBar = F, scrollZoom = F) %>%
         style(hoverlabel = label) %>%
         layout(font = font)  
-    }
+    } 
       
   }) # end plot
   
@@ -475,6 +485,20 @@ server <- function(input, output, session) {
   
   #### DOWNLOAD DATA ####
 
+  
+  # PlotDownload <- reactive({
+  #   
+  #   plot <- makePlot()
+  #   
+  #   plot <- plot +
+  #     + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
+  #     
+  #   vals$plot <- plot
+  #   
+  #   
+  # })
+  
+  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("data-", Sys.time(), ".zip")
@@ -488,7 +512,7 @@ server <- function(input, output, session) {
       
       # get files
       csv_name <- paste0("data-", Sys.time(), ".csv")
-      write.csv(filterData(), csv_name)
+      write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
@@ -518,10 +542,11 @@ server <- function(input, output, session) {
       zip_files <- c()
       
       # get plot
+      # TODO: add title and watermark to figure
       fig_name <- paste0("fig-", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 5.5)
-      print(vals$plot)
+          width = 8, height = 5)
+      print(vals$plot + ggtitle("test"))
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
@@ -537,7 +562,5 @@ server <- function(input, output, session) {
     },
     contentType = "application/zip"
   )
-  
-  
   
 } # end of server

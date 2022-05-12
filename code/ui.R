@@ -91,7 +91,7 @@ body <- dashboardBody(
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
-                                            content = HTML("<i>Lijn</i> is de fitted line door de bollen. <i>Gemiddelde</i> is het gemiddelde van de groep"),
+                                            content = HTML("<i>Lijn</i> is de fitted line door de bollen. <i>Gemiddelde</i> is het gemiddelde van de groep."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
