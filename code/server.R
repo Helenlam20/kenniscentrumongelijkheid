@@ -71,18 +71,17 @@ server <- function(input, output, session) {
       
       
     } else if (input$parents_options == "Opleiding ouders") {
-      
-      # filter data with bin
-      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "group1")
-      dat <- data_group1
-      
       if (!(input$OnePlot)) {
+        data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "group1")
         data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = "group2")
         dat <- bind_rows(data_group1, data_group2)
-        
-      } 
+      } else {
+        dat <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "group1")
+      }
     }
   })
+
+
   
   
   # ALGEMEEN TEXT REACTIVE ---------------------------------------------
@@ -280,163 +279,114 @@ server <- function(input, output, session) {
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "group1")
     if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
-    
-    
-    # GRADIENT 
-    if (input$parents_options == "Inkomen ouders") {
-      
-      # get average of the groups
-      total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      if (!(input$OnePlot)) {
-        total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+
+
+    data_group1_is_empty = ifelse(nrow(data_group1) <= 0, TRUE, FALSE)
+
+    if(input$OnePlot) {
+      data_group2_is_empty = TRUE
+    } else {
+      data_group2_is_empty = ifelse(nrow(data_group2) <= 0, TRUE, FALSE)
+    }
+
+
+    # Parse additional input options
+    line_option_selected <- FALSE
+    mean_option_selected <- FALSE
+    if (!is.null(input$line_options)) {
+  
+      line_option_selected <- "Lijn"  %in% input$line_options
+      mean_option_selected <- "Gemiddelde" %in% input$line_options
+
+      # regression line
+      if (nrow(data_group1) == 5) {
+        polynom <- 2
+      } else {
+        polynom <- 3
       }
-      
-      # make plot
+    }
+        
+
+    #### GRADIENT ####
+    if (input$parents_options == "Inkomen ouders") {
+
+      # Initialize plot with formatted axis and theme
       plot <- ggplot() +
-        geom_point(data = data_group1, 
-                   aes(x = parents_income, y = mean,
-                       text = paste0("<b>", input$geografie1, "</b></br>",
-                                     "</br>Inkomen ouders: €", decimal2(parents_income),
-                                     "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                     "</br>Aantal mensen: ", decimal2(N))),
-                   color = data_group1_color, size = 3) +
         scale_x_continuous(labels = function(x) paste0("€ ", x)) +
         scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
         theme_minimal() +
         labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
-        thema 
-      
-      # if user clicks on tabbox "Wat zie ik?" highlight left and right points
-      if (input$tabset1 == "Wat zie ik?") {
+        thema
+
+      # Plot for data_group1 
+      if (!data_group1_is_empty) {
+        # Main plot
+        plot <- plot + gen_geom_point(data_group1, input$geografie1, data_group1_color, prefix_text, postfix_text, shape=19)
         
-        # get min and max of the data for highlighting the blue group
-        min_max1 <- data_group1 %>%
-          filter(parents_income == min(parents_income) |
-                   parents_income == max(parents_income))
-        
-        plot <- plot +
-          geom_point(data = min_max1, aes(x = parents_income, y = mean),
-                     color = data_group1_color, size = 9, alpha = 0.35)
-        
-        # if user shows two groups then also highlight green group
-        if (!(input$OnePlot)) {
-          
-          min_max2 <- data_group2 %>%
-            filter(parents_income == min(parents_income) |
-                     parents_income == max(parents_income))
-          
-          plot <- plot +
-            geom_point(data = min_max2, aes(x = parents_income, y = mean),
-                       color = data_group2_color, size = 9, alpha = 0.35)
-          
+        # Highlight points
+        if (input$tabset1 == "Wat zie ik?")
+          plot <- plot + gen_highlight_points(data_group1, data_group1_color)
+
+        # Plot regression line if it is selected
+        if (line_option_selected)
+          plot <- plot + gen_regression_line(data_group1, data_group1_color, polynom)
+
+        # Plot mean line if it is selected
+        if (mean_option_selected) {
+          # get average of the groups
+          total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          plot <- plot + gen_mean_line(total_group1, data_group1_color)
         }
       }
-      
-      if (!(input$OnePlot)) {
+
+      # Plot for data_group2
+      if (!data_group2_is_empty) {
+        # Main plot
+        plot <- plot + gen_geom_point(data_group2, input$geografie2, data_group2_color, prefix_text, postfix_text, shape=18)
         
-        plot <- plot +
-          geom_point(data = data_group2, 
-                     aes(x = parents_income, y = mean,
-                         text = paste0("<b>", input$geografie2, "</b></br>",
-                                       "</br>Inkomen ouders: €", decimal2(parents_income),
-                                       "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                       "</br>Aantal mensen: ", decimal2(N))),
-                     color = data_group2_color, size = 3, shape = 15) 
-      } 
-      
-      
-      # if user selected checkbox
-      if (!is.null(input$line_options)) {
-        
-        line <- "Lijn"  %in% input$line_options
-        mean <- "Gemiddelde" %in% input$line_options
-        
-        # regression line
-        if (nrow(data_group1) == 5) {polynom <- 2} else {polynom <- 3}
-        
-        if (line & mean) {
-          plot <- plot + 
-            geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                        color = data_group1_color, linetype = "longdash") +
-            geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                        linetype = "twodash", size=0.5, color = data_group1_color) 
-          
-          
-          if (!(input$OnePlot)) {
-            plot <- plot + 
-              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm",
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                          color = data_group2_color, linetype = "longdash") +
-              geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                          linetype="longdash", size=0.5, color = data_group2_color)
-          }
-          
-          
-        } else if (line){
-          plot <- plot + 
-            geom_smooth(data = data_group1, aes(x = parents_income, y = mean),  method = "lm",
-                        se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                        color = data_group1_color, linetype = "longdash") 
-          
-          if (!(input$OnePlot)) {
-            plot <- plot + 
-              geom_smooth(data = data_group2, aes(x = parents_income, y = mean),  method = "lm", 
-                          se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-                          color = data_group2_color, linetype = "longdash") 
-            
-          }
-          
-        } else if (mean){
-          plot <- plot + 
-            geom_abline(aes(intercept = total_group1$mean, slope = 0),
-                        linetype="twodash", size=0.5, color = data_group1_color)
-          
-          if (!(input$OnePlot)) {
-            plot + geom_abline(aes(intercept = total_group2$mean, slope = 0),
-                               linetype = "twodash", size=0.5, color = data_group2_color) 
-          }
+        # Highlight points
+        if (input$tabset1 == "Wat zie ik?")
+          plot <- plot + gen_highlight_points(data_group2, data_group2_color)
+
+        # Plot the additional options
+        if (line_option_selected)
+          plot <- plot + gen_regression_line(data_group2, data_group2_color, polynom)
+
+        if (mean_option_selected) {
+          total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          plot <- plot + gen_mean_line(total_group2, data_group2_color)
         }
-      }
-      
-      
+      }      
       #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
-      if (!(input$OnePlot)) {
-        
-        plot <- ggplot(dat, aes(x = opleiding_ouders, y = mean, fill = group, 
-                                text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Aantal mensen: ", decimal2(N)))) +
+      plot <- ggplot()
+      if (!data_group1_is_empty && !data_group2_is_empty)
+        plot <- gen_bar_plot(dat, prefix_text, postfix_text)
+      else if (!data_group1_is_empty)
+        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text)
+      else if (!data_group2_is_empty)
+        plot <- gen_bar_plot(data_group2, prefix_text, postfix_text)
+
+      plot <- plot +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
           scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
           scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
           thema
-        
-      } else if (input$OnePlot) {
-        
-        plot <- ggplot(data_group1, aes(x = opleiding_ouders, y = mean, fill = group, 
-                                        text = paste0("<b>", geografie, "</b></br>",
-                                                      "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                                      "</br>Aantal mensen: ", decimal2(N)))) +
-          geom_bar(stat="identity", position=position_dodge(), width = 0.4) +
-          scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
-          scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
-          labs(x ="Hoogst behaalde opleiding ouders", y ="") +
-          theme_minimal() +
-          thema
-        
-      } 
+       
+      
     }
     
     vals$plot <- plot 
     # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
-    
-    
-    
+
+    # Return whether or not there are any plots 
+    if (!data_group1_is_empty || !data_group2_is_empty) 
+      has_plots = TRUE
+    else
+      has_plots = FALSE
   })
   
   
@@ -509,15 +459,16 @@ server <- function(input, output, session) {
     # })
     
     # call reactive
-    makePlot()
+    has_plots = makePlot()
     
     # load plot
-    ggplotly(x = plot, tooltip = c("text"))  %>% 
-      config(displayModeBar = F, scrollZoom = F) %>%
-      style(hoverlabel = label) %>%
-      layout(font = font)  
-    
-   
+    if(has_plots) {
+      ggplotly(x = plot, tooltip = c("text"))  %>% 
+        config(displayModeBar = F, scrollZoom = F) %>%
+        style(hoverlabel = label) %>%
+        layout(font = font)  
+    }
+      
   }) # end plot
   
   
