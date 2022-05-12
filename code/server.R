@@ -390,7 +390,6 @@ server <- function(input, output, session) {
     }
     
     vals$plot <- plot
-    # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
 
     # Return whether or not there are any plots 
     if (!data_group1_is_empty || !data_group2_is_empty)
@@ -405,13 +404,14 @@ server <- function(input, output, session) {
   txtFile <- reactive({
     
     text <- c(temp_txt, readme_sep, 
-              "ALGEMEEN","", HTML_to_plain_text(algemeenText()), 
-              readme_sep, "WAT ZIE IK?", "", HTML_to_plain_text(watzieikText()), 
+              "ALGEMEEN","", 
+              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+              readme_sep, "WAT ZIE IK?", "", 
+              paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
               readme_sep, "CAUSALITEIT", "", causal_text)
     
   })
-  
-  
+
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
@@ -485,20 +485,6 @@ server <- function(input, output, session) {
   
   #### DOWNLOAD DATA ####
 
-  
-  # PlotDownload <- reactive({
-  #   
-  #   plot <- makePlot()
-  #   
-  #   plot <- plot +
-  #     + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
-  #     
-  #   vals$plot <- plot
-  #   
-  #   
-  # })
-  
-  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("data-", Sys.time(), ".zip")
@@ -516,7 +502,6 @@ server <- function(input, output, session) {
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
-      # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
       writeLines(txtFile(), fileConn)
       close(fileConn)
@@ -531,6 +516,7 @@ server <- function(input, output, session) {
 
   #### DOWNLOAD PLOT ####
   output$downloadPlot <- downloadHandler(
+    
     filename = function() {
       paste0("fig-", Sys.time(), ".zip")
     },
@@ -542,16 +528,19 @@ server <- function(input, output, session) {
       zip_files <- c()
       
       # get plot
-      # TODO: add title and watermark to figure
+      # TODO: add legend
       fig_name <- paste0("fig-", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 8, height = 5)
-      print(vals$plot + ggtitle("test"))
+          width = 7.5, height = 5)
+      print(vals$plot + 
+              labs(title = input$outcome, 
+                   caption = "test")
+            )
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
+      
       # write txt file
-      # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
       writeLines(txtFile(), fileConn)
       close(fileConn)
