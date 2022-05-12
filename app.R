@@ -9,6 +9,7 @@
  
 # clear workspace
 rm(list=ls())
+setwd("/Users/helenlam20/GitHub/kco_dashboard")
 
 #### PACKAGES ####
 library(shiny)
@@ -19,6 +20,7 @@ library(shinyWidgets)
 library(plotly)
 library(readxl)
 library(shinyBS)
+library(grid)
 
 
 #### LOAD DATA ####
