@@ -9,7 +9,6 @@
  
 # clear workspace
 rm(list=ls())
-setwd("/Users/helenlam20/GitHub/kco_dashboard")
 
 #### PACKAGES ####
 library(shiny)
