@@ -476,15 +476,6 @@ server <- function(input, output, session) {
     
     # call reactive
     makePlot()
-    
-    # load plot
-    # if(!has_plots) {
-    #   plot <- ggplot() + annotate(geom="text", x=3, y=3, label="Geen data beschikbaar") + theme_void() +
-    #     theme(
-    #       axis.line=element_blank(),
-    #       panel.grid.major=element_blank()
-    #     )
-    # }
     ggplotly(x = plot, tooltip = c("text"))  %>% 
       config(displayModeBar = F, scrollZoom = F) %>%
       style(hoverlabel = label) %>%
