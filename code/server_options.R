@@ -75,7 +75,7 @@ html_text <- data.frame(
 
 # select percentage based on the data
 get_perc_per_bin_html <- function(data_group) {
-  perc <- NULL
+  perc <- 0
   if ("20" %in% unique(data_group$type)) {
     perc <- 5
   } else if ("10" %in% unique(data_group$type)) {
@@ -89,9 +89,10 @@ get_perc_per_bin_html <- function(data_group) {
 }
 
 # get bin 
-get_bin_html <- function(data_group1, data_group2) {
+get_perc_html <- function(data_group1, data_group2) {
   perc1 <- get_perc_per_bin_html(data_group1)
-  if (!is.null(data_group2)) {perc2 <- get_perc_per_bin_html(data_group2)} else {perc2 <- 0}
+  perc2 <- get_perc_per_bin_html(data_group2)
+  # if (!is.null(data_group2)) {perc2 <- get_perc_per_bin_html(data_group2)} else {perc2 <- 0}
   perc <- as.character(max(perc1, perc2))
   return(perc)
 }
@@ -163,6 +164,14 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
                             "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
   
   return(group_text)
+}
+
+
+gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
+                          total_group_mean, prefix_text, postfix_text) {
+  text <- HTML(paste0("Het totale ", statistic_type_text, " ", tolower(outcome_input), " van de ",  
+                      group_type_text, " is ",paste0(prefix_text, decimal2(total_group_mean), postfix_text), "."))
+  return(text)
 }
 
 
