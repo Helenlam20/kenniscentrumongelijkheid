@@ -90,6 +90,24 @@ server <- function(input, output, session) {
       relocate(uitkomst_NL)
     
   })
+
+
+  # Flags on whether there is any data
+  data_group1_has_data = reactive({
+    dat <- filterData()
+    data_group1 <- subset(dat, dat$group == "group1")
+    data_group1_has_data = ifelse(nrow(data_group1) > 0, TRUE, FALSE)
+  })
+
+  data_group2_has_data = reactive({
+    if(input$OnePlot) {
+      data_group2_has_data = FALSE
+    } else {
+      dat <- filterData()
+      data_group2 <- subset(dat, dat$group == "group2")
+      data_group2_has_data = ifelse(nrow(data_group2) > 0, TRUE, FALSE)
+    }
+  })
   
   
   # ALGEMEEN TEXT REACTIVE ---------------------------------------------
@@ -288,15 +306,6 @@ server <- function(input, output, session) {
     if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
 
 
-    data_group1_is_empty = ifelse(nrow(data_group1) <= 0, TRUE, FALSE)
-
-    if(input$OnePlot) {
-      data_group2_is_empty = TRUE
-    } else {
-      data_group2_is_empty = ifelse(nrow(data_group2) <= 0, TRUE, FALSE)
-    }
-
-
     # Parse additional input options
     line_option_selected <- FALSE
     mean_option_selected <- FALSE
@@ -327,7 +336,7 @@ server <- function(input, output, session) {
         thema
 
       # Plot for data_group1 
-      if (!data_group1_is_empty) {
+      if (data_group1_has_data()) {
         # Main plot
         plot <- plot + gen_geom_point(data_group1, input$geografie1, data_group1_color, 
                                       prefix_text, postfix_text, shape=19)
@@ -349,7 +358,7 @@ server <- function(input, output, session) {
       }
 
       # Plot for data_group2
-      if (!data_group2_is_empty) {
+      if (data_group2_has_data()) {
         # Main plot
         plot <- plot + gen_geom_point(data_group2, input$geografie2, data_group2_color, 
                                       prefix_text, postfix_text, shape=15)
@@ -371,11 +380,11 @@ server <- function(input, output, session) {
     } else if(input$parents_options == "Opleiding ouders") {
       
       plot <- ggplot()
-      if (!data_group1_is_empty && !data_group2_is_empty)
+      if (data_group1_has_data() && data_group2_has_data())
         plot <- gen_bar_plot(dat, prefix_text, postfix_text)
-      else if (!data_group1_is_empty)
+      else if (data_group1_has_data())
         plot <- gen_bar_plot(data_group1, prefix_text, postfix_text)
-      else if (!data_group2_is_empty)
+      else if (data_group2_has_data())
         plot <- gen_bar_plot(data_group2, prefix_text, postfix_text)
 
       plot <- plot +
@@ -393,7 +402,7 @@ server <- function(input, output, session) {
     # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
 
     # Return whether or not there are any plots 
-    if (!data_group1_is_empty || !data_group2_is_empty)
+    if (data_group1_has_data() || data_group2_has_data())
       has_plots = TRUE
     else
       has_plots = FALSE
