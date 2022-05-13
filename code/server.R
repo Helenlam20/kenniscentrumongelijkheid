@@ -175,9 +175,9 @@ server <- function(input, output, session) {
     # load data
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "group1")
-    bin <- nrow(data_group1)
     # if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
     data_group2 <- subset(dat, dat$group == "group2")
+    num_rows <- max(nrow(data_group1), nrow(data_group2))
     
     
     if (input$parents_options == "Inkomen ouders") {
@@ -207,7 +207,7 @@ server <- function(input, output, session) {
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                             " met ouders met de hoogste inkomens in de blauwe groep, het", 
                             statistic_type_text, tolower(input$outcome),
-                            paste0(prefix_text, decimal2(data_group1$mean[as.numeric(bin)]), postfix_text), "was.")
+                            paste0(prefix_text, decimal2(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         green_text <- ""
         if (data_group2_has_data()) {
@@ -220,7 +220,7 @@ server <- function(input, output, session) {
                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                               " met ouders met de hoogste inkomens in de groene groep, het",
                               statistic_type_text, tolower(input$outcome),
-                              paste0(prefix_text, decimal2(data_group2$mean[as.numeric(bin)]), postfix_text), "was.")
+                              paste0(prefix_text, decimal2(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         
       } else if (perc_html == "100") {
