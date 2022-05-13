@@ -10,6 +10,7 @@
 # clear workspace
 rm(list=ls())
 
+
 #### PACKAGES ####
 library(shiny)
 library(tidyverse)
@@ -49,6 +50,8 @@ temp_txt <- paste(readLines("./data/README.txt"))
 
 #### RUN APP ####
 source("./code/Theme_PoorMansFlatly.R")
+
+setwd("/Users/helenlam20/GitHub/kco_dashboard")
 source("./code/ui.R")
 source("./code/server.R")
 

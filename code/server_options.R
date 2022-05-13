@@ -67,8 +67,10 @@ continuous <- c("c16_living_space_pp", "c11_living_space_pp", "c30_hrs_work_pw",
 
 # html text
 html_text <- data.frame(
-  input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", "Suriname", "Nederlandse Antillen"),
-  html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", "Surinaamse", "Antilliaanse")
+  input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", 
+                 "Suriname", "Nederlandse Antillen"),
+  html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", 
+                "Surinaamse", "Antilliaanse")
 )
 
 #### SIGNS FOR HTML TEXT ####
@@ -150,7 +152,9 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   household_text <- ""
 
   if (migratie_input != "Totaal" & migratie_input != "Zonder migratieachtergrond")
-    migration_text <- paste("met een", subset(html_text$html_text, html_text$input_text == migratie_input), "migratieachtergrond")
+    migration_text <- paste("met een", subset(html_text$html_text, 
+                                              html_text$input_text == migratie_input), 
+                            "migratieachtergrond")
   else if (migratie_input == "Zonder migratieachtergrond")
     migration_text <- paste0(("zonder een migratieachtergrond"))
 
@@ -173,9 +177,10 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 18,
                                          vjust = 1, margin = margin(10,0,10,0)),
                plot.subtitle = element_text(hjust = 0, size = 16,
                                             vjust = 1, margin = margin(0,0,10,0)),
-               plot.caption = element_text(hjust = 0),
+               plot.caption = element_text(hjust = 0, size = 12,
+                                           vjust = 1, margin = margin(0,0,10,0)),
                legend.text = element_text(colour = "grey20", size = 16),
-               legend.position = "none",
+               legend.position="right",
                axis.title.y = element_text(size = 16, face = "italic",
                                            margin = margin(0,15,0,0)),
                axis.title.x = element_text(size = 16, face = "italic",
@@ -244,6 +249,21 @@ get_bin <- function(data_group1, data_group2) {
 readme_sep <- c("",                                                                                 
   "================================================================================"
 )
+
+
+caption_sep <- 
+"\n\n=========================================================================\n"
+caption_license <- paste0(
+"Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats van 
+Erasmus School of Economics, met ondersteuning van Kenniscentrum Ongelijkheid. De 
+figuur en onderliggende data zijn beschikbaar volgens een Creative Commons 
+BY-NC-SA 4.0 licentie, altijd onder vermelding van auteurs en de website 
+website.nl. Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"   
+
+)
+
+      
+
 
 # convert html text to plain txt
 HTML_to_plain_text <- function(txt) {

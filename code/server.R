@@ -482,6 +482,8 @@ server <- function(input, output, session) {
   }) # end plot
   
   
+  # DOWNLOAD --------------------------------------------------------
+
   
   #### DOWNLOAD DATA ####
 
@@ -516,11 +518,22 @@ server <- function(input, output, session) {
 
   #### DOWNLOAD PLOT ####
   output$downloadPlot <- downloadHandler(
-    
+  
     filename = function() {
       paste0("fig-", Sys.time(), ".zip")
     },
     content = function(file) {
+      
+      caption1 <- paste(strwrap(paste("Blauwe groep:", input$geografie1, "-", 
+                                      input$geslacht1, "-", input$migratie1, "-", 
+                                      input$huishouden1), width = 70), collapse = "\n")
+      caption2 <- ""
+      if(!input$OnePlot) {
+        caption2 <- paste(strwrap(paste("Groene groep:", input$geografie2, "-", 
+                                        input$geslacht2, "-", input$migratie2, "-", 
+                                        input$huishouden2), width = 70), collapse = "\n")
+      }
+      
       
       # set temporary dir
       tmpdir <- tempdir()
@@ -529,16 +542,31 @@ server <- function(input, output, session) {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig-", Sys.time(), ".pdf")
+      fig_name <- "fig_with_caption.pdf"
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 7.5, height = 5)
+          width = 9, height = 14)
       print(vals$plot + 
-              labs(title = input$outcome, 
-                   caption = "test")
+            labs(title = input$outcome, caption = 
+                   paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
+                          "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
+                          caption_sep, "WAT ZIE IK?\n\n",
+                          paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"), 
+                          caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
+                 ) 
             )
+      
+      
+      
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
+      # figure no caption 
+      fig_name <- "fig.pdf"
+      pdf(fig_name, encoding = "ISOLatin9.enc", 
+          width = 9, height = 6)
+      print(vals$plot + labs(title = input$outcome))
+      dev.off()
+      zip_files <- c(zip_files, fig_name)
       
       # write txt file
       fileConn <- file("README.txt")
