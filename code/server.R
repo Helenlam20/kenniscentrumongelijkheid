@@ -71,7 +71,7 @@ server <- function(input, output, session) {
     
     dat <- filterData() 
     dat <- dat %>%
-      select(-c(subgroep, group, type)) %>%
+      select(-c(subgroep, group, type, sample)) %>%
       relocate(uitkomst_NL)
     
   })
@@ -383,8 +383,8 @@ server <- function(input, output, session) {
         plot <- gen_bar_plot(data_group2, prefix_text, postfix_text)
 
       plot <- plot +
-          geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
-          scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
+        geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
+        scale_fill_manual("", values=c(data_group1_color, data_group2_color)) + 
           scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +

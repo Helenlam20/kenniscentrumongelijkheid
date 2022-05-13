@@ -328,7 +328,7 @@ gen_mean_line <- function(total_group, color) {
 }
 
 gen_bar_plot <- function(data, prefix_text, postfix_text) {
-  plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group, 
+  plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group,
                 text = paste0("<b>", geografie, "</b></br>",
                 "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                 "</br>Aantal mensen: ", decimal2(N)))
