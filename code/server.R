@@ -144,7 +144,7 @@ server <- function(input, output, session) {
     )
     
     group2_text <- ""
-    if (data_group2_has_data()) {
+    if (!input$OnePlot) {
       group2_text <- gen_algemeen_group_text(
         group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
         group_data_size = N2,
@@ -376,15 +376,14 @@ server <- function(input, output, session) {
       
       plot <- ggplot()
       if (data_group1_has_data() && data_group2_has_data())
-        plot <- gen_bar_plot(dat, prefix_text, postfix_text)
+        plot <- gen_bar_plot(dat, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group1_color, data_group2_color))
       else if (data_group1_has_data())
-        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text)
+        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group1_color))
       else if (data_group2_has_data())
-        plot <- gen_bar_plot(data_group2, prefix_text, postfix_text)
+        plot <- gen_bar_plot(data_group2, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group2_color))
 
       plot <- plot +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
-          scale_fill_manual(values=c(data_group1_color, data_group2_color)) + 
           scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) +
           labs(x ="Hoogst behaalde opleiding ouders", y ="") +
           theme_minimal() +
@@ -393,14 +392,17 @@ server <- function(input, output, session) {
       
     }
     
-    vals$plot <- plot
     # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
 
-    # Return whether or not there are any plots 
-    if (data_group1_has_data() || data_group2_has_data())
-      has_plots = TRUE
-    else
-      has_plots = FALSE
+    if (!data_group1_has_data() && !data_group2_has_data()) {
+      # Return empty plot when there is no data available
+      plot <- ggplot() + annotate(geom="text", x=3, y=3, label="Geen data beschikbaar") + theme_void() +
+        theme(
+          axis.line=element_blank(),
+          panel.grid.major=element_blank()
+        )
+    }
+    vals$plot <- plot
   })
   
   
@@ -473,15 +475,20 @@ server <- function(input, output, session) {
     # })
     
     # call reactive
-    has_plots = makePlot()
+    makePlot()
     
     # load plot
-    if(has_plots) {
-      ggplotly(x = plot, tooltip = c("text"))  %>% 
-        config(displayModeBar = F, scrollZoom = F) %>%
-        style(hoverlabel = label) %>%
-        layout(font = font)  
-    } 
+    # if(!has_plots) {
+    #   plot <- ggplot() + annotate(geom="text", x=3, y=3, label="Geen data beschikbaar") + theme_void() +
+    #     theme(
+    #       axis.line=element_blank(),
+    #       panel.grid.major=element_blank()
+    #     )
+    # }
+    ggplotly(x = plot, tooltip = c("text"))  %>% 
+      config(displayModeBar = F, scrollZoom = F) %>%
+      style(hoverlabel = label) %>%
+      layout(font = font)  
       
   }) # end plot
   
