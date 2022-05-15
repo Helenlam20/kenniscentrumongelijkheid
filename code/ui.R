@@ -136,13 +136,41 @@ body <- dashboardBody(
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
                            h4("INPUT FOR THE Y-AXIS RANGE"),
-                           br(), br(), "test test", 
-                           inline = TRUE, circle = F, 
+                           br(), br(), "test test",
+                           inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px",
                            tooltip = tooltipOptions(title = "Y-as range aanpassen")
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
+                         # actionButton("change_barplot", "Toon alternatief voor staafdiagram"),
+                         # uiOutput("barplot_button"),
+                         conditionalPanel(
+                           condition = "input.parents_options == 'Opleiding ouders'",
+                               # dropdownButton(
+                               #   h4("INPUT FOR THE Y-AXIS RANGE"),
+                               #   br(), br(), "test test",
+                               #   inline = TRUE, circle = F,
+                               #   icon = icon("gear"), width = "300px",
+                               #   tooltip = tooltipOptions(title = "Y-as range aanpassen")
+                               # ),
+                               # downloadButton(outputId = "downloadData", label = "Download data"),
+                               # downloadButton(outputId = "downloadPlot", label = "Download figuur"),
+                           actionButton("change_barplot", "Toon alternatief voor staafdiagram"),
+                         ),
+                     # conditionalPanel(
+                     #   condition = "input.parents_options == 'Inkomen ouders'",
+                     #   dropdownButton(
+                     #     h4("INPUT FOR THE Y-AXIS RANGE"),
+                     #     br(), br(), "test test", 
+                     #     inline = TRUE, circle = F, 
+                     #     icon = icon("gear"), width = "300px",
+                     #     tooltip = tooltipOptions(title = "Y-as range aanpassen")
+                     #   ),
+                     #   downloadButton(outputId = "downloadData", label = "Download data"),
+                     #   downloadButton(outputId = "downloadPlot", label = "Download figuur")
+                     # ),
+                         
                          plotlyOutput("main_figure", height = "450")),
               ),
               column(width = 3,

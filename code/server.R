@@ -15,8 +15,29 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
+  
   vals <- reactiveValues()
   
+  
+  # DYNAMIC UI ----------------------------------------------------------
+  
+  
+  
+  output$barplot_button <- renderUI({
+    
+    if (input$parents_options == "Opleiding ouders") {
+      actionButton("change_barplot", "Toon alternatief voor staafdiagram")
+      # div(style="display:inline-block;text-align: center;",
+      #     actionButton("change_barplot", "Toon alternatief voor staafdiagram"))
+
+    } else {
+      actionButton("change_barplot", "None")
+    }
+    
+  })
+
+
+ 
   
   # REACTIVE ----------------------------------------------------------
   
@@ -555,8 +576,6 @@ server <- function(input, output, session) {
                           caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
                  ) 
             )
-      
-      
       
       dev.off()
       zip_files <- c(zip_files, fig_name)
