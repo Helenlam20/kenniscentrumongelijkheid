@@ -111,11 +111,6 @@ body <- dashboardBody(
                                     bigger = TRUE, selected = "Inkomen ouders",
                                     status = "info", animation = "smooth"
                                   ),
-                                  # TODO: dynamic tooltip 
-                                  radioTooltip(id = "parents_options", choice = "Opleiding ouders",
-                                               # title = textOutput("radio_button"),
-                                               title = "Alleen beschikbaar voor pasgeborenen en groep-8",
-                                               placement = "right", trigger = "hover"),
                                   bsPopover(id = "q_parents", title = "Opleiding ouders",
                                             content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
                                             placement = "right", trigger = "hover", 
