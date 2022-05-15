@@ -23,18 +23,18 @@ server <- function(input, output, session) {
   
   
   
-  output$barplot_button <- renderUI({
-    
-    if (input$parents_options == "Opleiding ouders") {
-      actionButton("change_barplot", "Toon alternatief voor staafdiagram")
-      # div(style="display:inline-block;text-align: center;",
-      #     actionButton("change_barplot", "Toon alternatief voor staafdiagram"))
-
-    } else {
-      actionButton("change_barplot", "None")
-    }
-    
-  })
+  # output$barplot_button <- renderUI({
+  #   
+  #   if (input$parents_options == "Opleiding ouders") {
+  #     actionButton("change_barplot", "Toon alternatief voor staafdiagram")
+  #     # div(style="display:inline-block;text-align: center;",
+  #     #     actionButton("change_barplot", "Toon alternatief voor staafdiagram"))
+  # 
+  #   } else {
+  #     actionButton("change_barplot", "None")
+  #   }
+  #   
+  # })
 
 
  
