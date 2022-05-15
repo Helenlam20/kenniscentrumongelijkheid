@@ -29,8 +29,8 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
 causal_text <- 
 "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen 
 opgroeien en hun uitkomsten over de levensloop. die ook van invloed zijn 
-en waarvoor niet te controleren valt. Daarom moeten deze patronen niet 
-worden gezien als oorzakelijke verbanden."
+en waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
+gezien als oorzakelijke verbanden."
 
 
 #### START UI ####
@@ -131,13 +131,15 @@ body <- dashboardBody(
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
                            h4("INPUT FOR THE Y-AXIS RANGE"),
-                           br(), br(), "test test", 
-                           inline = TRUE, circle = F, 
+                           br(), br(), "test test",
+                           inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px",
                            tooltip = tooltipOptions(title = "Y-as range aanpassen")
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
+                         # actionButton("change_barplot", "Toon alternatief voor staafdiagram"),
+                         # uiOutput("barplot_button"),
                          plotlyOutput("main_figure", height = "450")),
               ),
               column(width = 3,

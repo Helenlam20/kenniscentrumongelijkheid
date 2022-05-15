@@ -15,8 +15,29 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
+  
   vals <- reactiveValues()
   
+  
+  # DYNAMIC UI ----------------------------------------------------------
+  
+  
+  
+  # output$barplot_button <- renderUI({
+  #   
+  #   if (input$parents_options == "Opleiding ouders") {
+  #     actionButton("change_barplot", "Toon alternatief voor staafdiagram")
+  #     # div(style="display:inline-block;text-align: center;",
+  #     #     actionButton("change_barplot", "Toon alternatief voor staafdiagram"))
+  # 
+  #   } else {
+  #     actionButton("change_barplot", "None")
+  #   }
+  #   
+  # })
+
+
+ 
   
   # REACTIVE ----------------------------------------------------------
   
@@ -71,7 +92,7 @@ server <- function(input, output, session) {
     
     dat <- filterData() 
     dat <- dat %>%
-      select(-c(subgroep, group, type)) %>%
+      select(-c(subgroep, group, type, sample)) %>%
       relocate(uitkomst_NL)
     
   })
@@ -376,11 +397,11 @@ server <- function(input, output, session) {
       
       plot <- ggplot()
       if (data_group1_has_data() && data_group2_has_data())
-        plot <- gen_bar_plot(dat, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group1_color, data_group2_color))
+        plot <- gen_bar_plot(dat, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color, data_group2_color))
       else if (data_group1_has_data())
-        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group1_color))
+        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color))
       else if (data_group2_has_data())
-        plot <- gen_bar_plot(data_group2, prefix_text, postfix_text) + scale_fill_manual(values=c(data_group2_color))
+        plot <- gen_bar_plot(data_group2, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group2_color))
 
       plot <- plot +
           geom_bar(stat="identity", position=position_dodge(), width = 0.5) +
@@ -391,8 +412,6 @@ server <- function(input, output, session) {
        
       
     }
-    
-    # + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
 
     if (!data_group1_has_data() && !data_group2_has_data()) {
       # Return empty plot when there is no data available
@@ -411,13 +430,14 @@ server <- function(input, output, session) {
   txtFile <- reactive({
     
     text <- c(temp_txt, readme_sep, 
-              "ALGEMEEN","", HTML_to_plain_text(algemeenText()), 
-              readme_sep, "WAT ZIE IK?", "", HTML_to_plain_text(watzieikText()), 
+              "ALGEMEEN","", 
+              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+              readme_sep, "WAT ZIE IK?", "", 
+              paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
               readme_sep, "CAUSALITEIT", "", causal_text)
     
   })
-  
-  
+
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
@@ -507,23 +527,11 @@ observeEvent(input$outcome,{
   }) # end plot
   
   
+  # DOWNLOAD --------------------------------------------------------
+
   
   #### DOWNLOAD DATA ####
 
-  
-  # PlotDownload <- reactive({
-  #   
-  #   plot <- makePlot()
-  #   
-  #   plot <- plot +
-  #     + ggtitle(paste0(input$outcome, " van ", labels_dat$population))
-  #     
-  #   vals$plot <- plot
-  #   
-  #   
-  # })
-  
-  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("data-", Sys.time(), ".zip")
@@ -541,7 +549,6 @@ observeEvent(input$outcome,{
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
-      # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
       writeLines(txtFile(), fileConn)
       close(fileConn)
@@ -556,10 +563,22 @@ observeEvent(input$outcome,{
 
   #### DOWNLOAD PLOT ####
   output$downloadPlot <- downloadHandler(
+  
     filename = function() {
       paste0("fig-", Sys.time(), ".zip")
     },
     content = function(file) {
+      
+      caption1 <- paste(strwrap(paste("Blauwe groep:", input$geografie1, "-", 
+                                      input$geslacht1, "-", input$migratie1, "-", 
+                                      input$huishouden1), width = 70), collapse = "\n")
+      caption2 <- ""
+      if(!input$OnePlot) {
+        caption2 <- paste(strwrap(paste("Groene groep:", input$geografie2, "-", 
+                                        input$geslacht2, "-", input$migratie2, "-", 
+                                        input$huishouden2), width = 70), collapse = "\n")
+      }
+      
       
       # set temporary dir
       tmpdir <- tempdir()
@@ -567,16 +586,32 @@ observeEvent(input$outcome,{
       zip_files <- c()
       
       # get plot
-      # TODO: add title and watermark to figure
-      fig_name <- paste0("fig-", Sys.time(), ".pdf")
+      # TODO: add legend
+      fig_name <- "fig_with_caption.pdf"
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 8, height = 5)
-      print(vals$plot + ggtitle("test"))
+          width = 9, height = 14)
+      print(vals$plot + 
+            labs(title = input$outcome, caption = 
+                   paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
+                          "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
+                          caption_sep, "WAT ZIE IK?\n\n",
+                          paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"), 
+                          caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
+                 ) 
+            )
+      
+      dev.off()
+      zip_files <- c(zip_files, fig_name)
+      
+      # figure no caption 
+      fig_name <- "fig.pdf"
+      pdf(fig_name, encoding = "ISOLatin9.enc", 
+          width = 9, height = 6)
+      print(vals$plot + labs(title = input$outcome))
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
       # write txt file
-      # TODO: enter after a certain number of words and characters
       fileConn <- file("README.txt")
       writeLines(txtFile(), fileConn)
       close(fileConn)
