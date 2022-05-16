@@ -111,8 +111,8 @@ body <- dashboardBody(
                                     bigger = TRUE, selected = "Inkomen ouders",
                                     status = "info", animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_parents", title = "Opleiding ouders",
-                                            content = HTML("De optie <i>opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten die komen uit de pasgeboren en de groep 8 steekproeven. Zie tabblad <i>werkwijze</i> voor meer informatie."),
+                                  bsPopover(id = "q_parents", title = "Kenmerken van ouders optie",
+                                            content = HTML("<b>Kenmerken van de ouders</b> staan op de horizontale as van de figuur. De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),

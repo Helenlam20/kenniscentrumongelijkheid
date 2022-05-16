@@ -77,16 +77,18 @@ server <- function(input, output, session) {
     
     if (input$parents_options == "Inkomen ouders") {
       bin <- get_bin(data_group1, data_group2)
-      data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "group1")
-      data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "group2")
+      data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "Blauwe groep")
+      data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "Groene groep")
         dat <- bind_rows(data_group1, data_group2)      
     } else if (input$parents_options == "Opleiding ouders") {
-      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "group1")
-      data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = "group2")
+      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "Blauwe groep")
+      data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = "Groene groep")
       dat <- bind_rows(data_group1, data_group2)
     }
   })
 
+  
+  # DOWNLOAD DATA ----------------------------------------------------
   # filter data for downloading
   DataDownload <- reactive({
     
@@ -98,10 +100,25 @@ server <- function(input, output, session) {
   })
 
 
+  # DOWNLOAD REACTIVE ----------------------------------------------------
+  
+  txtFile <- reactive({
+    
+    text <- c(temp_txt, readme_sep, 
+              "ALGEMEEN","", 
+              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+              readme_sep, "WAT ZIE IK?", "", 
+              paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
+              readme_sep, "CAUSALITEIT", "", causal_text)
+    
+  })
+  
+  
+  # CHECK FOR DATA ----------------------------------------------------
   # Flags on whether there is any data
   data_group1_has_data = reactive({
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == "group1")
+    data_group1 <- subset(dat, dat$group == "Blauwe groep")
     data_group1_has_data = ifelse(nrow(data_group1) > 0, TRUE, FALSE)
   })
 
@@ -110,7 +127,7 @@ server <- function(input, output, session) {
       data_group2_has_data = FALSE
     } else {
       dat <- filterData()
-      data_group2 <- subset(dat, dat$group == "group2")
+      data_group2 <- subset(dat, dat$group == "Groene groep")
       data_group2_has_data = ifelse(nrow(data_group2) > 0, TRUE, FALSE)
     }
   })
@@ -126,10 +143,10 @@ server <- function(input, output, session) {
 
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == "group1")
+    data_group1 <- subset(dat, dat$group == "Blauwe groep")
     N1 <- decimal0(sum(data_group1$N))
 
-    data_group2 <- subset(dat, dat$group == "group2")
+    data_group2 <- subset(dat, dat$group == "Groene groep")
     N2 <- decimal0(sum(data_group2$N))
 
     if(!data_group1_has_data() && !data_group2_has_data()) {
@@ -185,7 +202,7 @@ server <- function(input, output, session) {
   })
   
   
-  # WAT ZIE IK TEXT REACTIVE ---------------------------------------------
+  # WAT ZIE IK? TEXT REACTIVE ---------------------------------------------
   
   watzieikText <- reactive({
     
@@ -195,15 +212,15 @@ server <- function(input, output, session) {
     
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == "group1")
-    # if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
-    data_group2 <- subset(dat, dat$group == "group2")
+    data_group1 <- subset(dat, dat$group == "Blauwe groep")
+    # if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "Groene groep")}
+    data_group2 <- subset(dat, dat$group == "Groene groep")
     num_rows <- max(nrow(data_group1), nrow(data_group2))
     
     
     if (input$parents_options == "Inkomen ouders") {
       
-      # get total
+      # get average of total group
       total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
       
@@ -212,7 +229,7 @@ server <- function(input, output, session) {
       postfix_text <- get_postfix(input$outcome)
       statistic_type_text <- get_stat_per_outcome_html(labels_dat)
       
-      # get html bin
+      # get html percentage
       perc_html <- get_perc_per_bin_html(data_group1)
       if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
       
@@ -298,10 +315,28 @@ server <- function(input, output, session) {
       
     } else if(input$parents_options == "Opleiding ouders") {
       
-      HTML(paste0("<p>HIER KOMT EEN TEKST VOOR DE STAAFDIAGRAMMEN. </p>"))
+      if (data_group1_has_data() | data_group2_has_data()) {
+        
+        bar_text <- HTML(paste0("<p>Opleiding Ouders wordt gedefineerd als de hoogst 
+                              behaalde opleiding van één van de ouders. Voor opleiding 
+                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+  
+                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
+                              vanaf 1983 voor wo en vanaf 1986 voor hbo. Gegevens over 
+                              middelbaar beroepsonderwijs (mbo) zijn pas beschikbaar vanaf 2004, 
+                              waardoor we geen categorie voor mbo konden definiëren.</p>"))
+        
+      } else {
+        
+        bar_text <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
+      }
+      
+      HTML(paste0(bar_text))
+    
       
     }
-    
   })
   
   
@@ -318,8 +353,8 @@ server <- function(input, output, session) {
     
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == "group1")
-    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "group2")}
+    data_group1 <- subset(dat, dat$group == "Blauwe groep")
+    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "Groene groep")}
 
 
     # Parse additional input options
@@ -391,7 +426,8 @@ server <- function(input, output, session) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group2, data_group2_color)
         }
-      }      
+      }     
+       
       #### BAR PLOT ####
     } else if(input$parents_options == "Opleiding ouders") {
       
@@ -415,7 +451,8 @@ server <- function(input, output, session) {
 
     if (!data_group1_has_data() && !data_group2_has_data()) {
       # Return empty plot when there is no data available
-      plot <- ggplot() + annotate(geom="text", x=3, y=3, label="Geen data beschikbaar") + theme_void() +
+      plot <- ggplot() + annotate(geom="text", x=3, y=3, size = 10,
+                                  label="Geen data beschikbaar") + theme_void() +
         theme(
           axis.line=element_blank(),
           panel.grid.major=element_blank()
@@ -424,19 +461,6 @@ server <- function(input, output, session) {
     vals$plot <- plot
   })
   
-  
-  # DOWNLOAD REACTIVE ----------------------------------------------------
-  
-  txtFile <- reactive({
-    
-    text <- c(temp_txt, readme_sep, 
-              "ALGEMEEN","", 
-              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
-              readme_sep, "WAT ZIE IK?", "", 
-              paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
-              readme_sep, "CAUSALITEIT", "", causal_text)
-    
-  })
 
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
