@@ -1,3 +1,5 @@
+
+
 #### LOAD DATA ####
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")

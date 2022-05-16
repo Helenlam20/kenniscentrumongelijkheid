@@ -94,8 +94,9 @@ server <- function(input, output, session) {
     
     dat <- filterData() 
     dat <- dat %>%
-      select(-c(subgroep, group, type, sample)) %>%
-      relocate(uitkomst_NL)
+      select(-c(group, type, uitkomst)) %>%
+      relocate(uitkomst_NL) %>%
+      rename(uitkomst = uitkomst_NL)
     
   })
 
@@ -317,7 +318,7 @@ server <- function(input, output, session) {
       
       if (data_group1_has_data() | data_group2_has_data()) {
         
-        bar_text <- HTML(paste0("<p>Opleiding Ouders wordt gedefineerd als de hoogst 
+        bar_text <- HTML(paste0("<p><b>Opleiding Ouders</b> wordt gedefineerd als de hoogst 
                               behaalde opleiding van één van de ouders. Voor opleiding 
                               ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
   

@@ -22,7 +22,6 @@ library(readxl)
 library(shinyBS)
 library(grid)
 library(markdown)
-library(rmdformats)
 
 
 
