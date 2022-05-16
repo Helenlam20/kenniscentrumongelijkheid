@@ -54,6 +54,7 @@ sidebar <-
 
 
 body <- dashboardBody(
+  useShinyjs(),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   theme_poor_mans_flatly,
   tabItems(
@@ -138,8 +139,7 @@ body <- dashboardBody(
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         # actionButton("change_barplot", "Toon alternatief voor staafdiagram"),
-                         # uiOutput("barplot_button"),
+                         actionButton("change_barplot", "Toon alternatief voor staafdiagram"),
                          plotlyOutput("main_figure", height = "450")),
               ),
               column(width = 3,
@@ -164,8 +164,8 @@ body <- dashboardBody(
                          prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
-                     box(height = NULL,
-                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE,
+                     box(height = NULL, id="box_groene_group",
+                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
                          pickerInput("geografie2", label = "Gebied", selected = "Amsterdam",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
@@ -185,6 +185,7 @@ body <- dashboardBody(
                      ),
               )
             ),
+            tags$script(src="script.js")
     ),
     
     # info tab content

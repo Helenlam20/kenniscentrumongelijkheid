@@ -489,6 +489,14 @@ observeEvent(input$outcome,{
   )
 })
 
+observeEvent(input$parents_options,{
+  if (input$parents_options == "Opleiding ouders") {
+    runjs("document.getElementById('change_barplot').style.visibility='visible'")
+  } else {
+    runjs("document.getElementById('change_barplot').style.visibility='hidden'")
+  }
+})
+
   
   output$radio_button <- renderText({
     
