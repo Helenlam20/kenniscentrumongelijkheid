@@ -554,6 +554,8 @@ observeEvent(input$y_axis,{
   }
 })
 
+observeEvent(input$user_reset, {vals$use_user_input=FALSE})
+
 
   
   output$radio_button <- renderText({

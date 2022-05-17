@@ -132,6 +132,7 @@ body <- dashboardBody(
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
                            sliderInput("y_axis", "Y-as:", min=0, max=100, value=c(25,75)),
+                           actionButton("user_reset", "Reset", width = "100%"),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px",
                            tooltip = tooltipOptions(title = "Y-as range aanpassen")
