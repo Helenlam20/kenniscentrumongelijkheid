@@ -502,8 +502,12 @@ observeEvent(input$outcome,{
 observeEvent(input$parents_options,{
   if (input$parents_options == "Opleiding ouders") {
     runjs("document.getElementById('change_barplot').style.visibility='visible'")
+    runjs("document.getElementsByName('line_options')[0].disabled=true")
+    runjs("document.getElementsByName('line_options')[1].disabled=true")
   } else {
     runjs("document.getElementById('change_barplot').style.visibility='hidden'")
+    runjs("document.getElementsByName('line_options')[0].disabled=false")
+    runjs("document.getElementsByName('line_options')[1].disabled=false")
   }
 })
 
