@@ -523,9 +523,10 @@ observeEvent(vals$plot,{
   if(vals$use_user_input == FALSE) {
     vals$use_user_input <- TRUE
     # Get current ylim 
-    vals$ylim <- layer_scales(vals$plot)$y$range$range
+    # ylim <- layer_scales(vals$plot)$y$range$range # This gives a result closer to without ylim however sometimes it results to values outside the plot
+    ylim = ggplot_build(vals$plot)$layout$panel_params[[1]]$y.range
     # Update slider
-    update_yaxis_slider(data_min=vals$ylim[1], data_max=vals$ylim[2])
+    update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
   }
 
 }
