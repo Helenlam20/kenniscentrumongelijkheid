@@ -18,27 +18,6 @@ server <- function(input, output, session) {
   
   vals <- reactiveValues()
   
-  
-  # DYNAMIC UI ----------------------------------------------------------
-  
-  
-  
-  # output$barplot_button <- renderUI({
-  #   
-  #   if (input$parents_options == "Opleiding ouders") {
-  #     actionButton("change_barplot", "Toon alternatief voor staafdiagram")
-  #     # div(style="display:inline-block;text-align: center;",
-  #     #     actionButton("change_barplot", "Toon alternatief voor staafdiagram"))
-  # 
-  #   } else {
-  #     actionButton("change_barplot", "None")
-  #   }
-  #   
-  # })
-
-
- 
-  
   # REACTIVE ----------------------------------------------------------
   
   dataInput1 <- reactive({
@@ -213,25 +192,26 @@ server <- function(input, output, session) {
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
     stat <- get_stat_per_outcome_html(labels_dat)
+    statistic_type_text <- get_stat_per_outcome_html(labels_dat)
+    
+    # get average of total group
+    total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    
+    # get prefix and postfix for outcomes
+    prefix_text <- get_prefix(input$outcome)
+    postfix_text <- get_postfix(input$outcome)
+    
     
     # load data
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "Blauwe groep")
-    # if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == "Groene groep")}
     data_group2 <- subset(dat, dat$group == "Groene groep")
     num_rows <- max(nrow(data_group1), nrow(data_group2))
     
     
     if (input$parents_options == "Inkomen ouders") {
-      
-      # get average of total group
-      total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-      
-      # get prefix and postfix for outcomes
-      prefix_text <- get_prefix(input$outcome)
-      postfix_text <- get_postfix(input$outcome)
-      statistic_type_text <- get_stat_per_outcome_html(labels_dat)
+
       
       # get html percentage
       perc_html <- get_perc_per_bin_html(data_group1)
@@ -337,8 +317,38 @@ server <- function(input, output, session) {
         bar_text <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
       }
       
-      HTML(paste0(bar_text))
-    
+      mean_text <- ""
+      # if user has clicked on the mean button
+      if (!is.null(input$line_options)) {
+        if ("Gemiddelde" %in% input$line_options) {
+          mean_text <- ""
+          if (data_group1_has_data()) {
+            mean_text <- paste(mean_text, gen_mean_text(
+              statistic_type_text, 
+              input$outcome, 
+              add_bold_text_html(text="blauwe groep", color=data_group1_color),
+              total_group1$mean,
+              prefix_text,
+              postfix_text
+            ))
+          }
+          
+          if (data_group2_has_data()) {
+            mean_text <- paste(mean_text, gen_mean_text(
+              statistic_type_text, 
+              input$outcome, 
+              add_bold_text_html(text="groene groep", color=data_group2_color),
+              total_group2$mean,
+              prefix_text,
+              postfix_text
+            ))
+          }
+        }
+      }
+      
+      HTML(paste0("<p>", bar_text, "</p>",
+                  "<p>", mean_text, "</p>"))
+      
       
     }
   })
@@ -448,6 +458,19 @@ server <- function(input, output, session) {
           theme_minimal() +
           thema
        
+      if (mean_option_selected) {
+        # get average of the groups
+        if (data_group1_has_data()) {
+          total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          plot <- plot + gen_mean_line(total_group1, data_group1_color) 
+        }
+        
+        if (data_group2_has_data()) {
+          total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          plot <- plot + gen_mean_line(total_group2, data_group2_color) 
+          
+        }
+      }
       
     }
 
@@ -462,7 +485,7 @@ server <- function(input, output, session) {
 
     if (!data_group1_has_data() && !data_group2_has_data()) {
       # Return empty plot when there is no data available
-      plot <- ggplot() + annotate(geom="text", x=3, y=3, size = 10,
+      plot <- ggplot() + annotate(geom="text", x=3, y=3, size = 8,
                                   label="Geen data beschikbaar") + theme_void() +
         theme(
           axis.line=element_blank(),
@@ -492,22 +515,47 @@ observeEvent(input$outcome,{
     selected = selected_option,
     inline = TRUE,
     prettyOptions = list(
-        icon = icon("check"), 
+        icon = icon("check"),
         bigger = TRUE, selected = "Inkomen ouders",
         status = "info", animation = "smooth"
     ),
   )
+    # parent_choices <- c("Inkomen ouders", "Opleiding ouders")
+    #   if ("pasgeborenen" %in% labels_dat$population || "leerlingen van groep 8" %in% labels_dat$population) {
+    #     selected_option = input$parents_options
+    #     # parent_choices <- c("Inkomen ouders", "Opleiding ouders")
+    #     runjs("document.getElementsByName('parents_options')[1].disabled=false") # disable "Opleiding ouders"
+    #   } else {
+    #     selected_option <- "Inkomen ouders"
+    #     # parent_choices <- "Inkomen ouders"
+    #     runjs("document.getElementsByName('parents_options')[1].disabled=true") # disable "Opleiding ouders"
+    #     # runjs("document.getElementsByName('parents_options')[0].checked=true") # check "Inkomen ouders"
+    #   }
+    # 
+    # updatePrettyRadioButtons(
+    #   session = getDefaultReactiveDomain(),
+    #   inputId = "parents_options",
+    #   choices = parent_choices,
+    #   selected = selected_option,
+    #   inline = TRUE,
+    #   prettyOptions = list(
+    #       icon = icon("check"),
+    #       bigger = TRUE, selected = "Inkomen ouders",
+    #       status = "info", animation = "smooth"
+    #   ),
+    # )
+
 })
 
 observeEvent(input$parents_options,{
   if (input$parents_options == "Opleiding ouders") {
     runjs("document.getElementById('change_barplot').style.visibility='visible'")
     runjs("document.getElementsByName('line_options')[0].disabled=true")
-    runjs("document.getElementsByName('line_options')[1].disabled=true")
+    # runjs("document.getElementsByName('line_options')[1].disabled=true")
   } else {
     runjs("document.getElementById('change_barplot').style.visibility='hidden'")
     runjs("document.getElementsByName('line_options')[0].disabled=false")
-    runjs("document.getElementsByName('line_options')[1].disabled=false")
+    # runjs("document.getElementsByName('line_options')[1].disabled=false")
   }
 })
 

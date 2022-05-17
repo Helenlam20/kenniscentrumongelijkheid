@@ -37,7 +37,7 @@ gezien als oorzakelijke verbanden."
 
 sidebar <- 
   dashboardSidebar(
-    width = 225,
+    width = 300,
     collapsed = F,
     sidebarMenu(
       HTML(paste0(
@@ -92,7 +92,7 @@ body <- dashboardBody(
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
-                                            content = HTML("<i>Lijn</i> is de fitted line door de bollen. <i>Gemiddelde</i> is het gemiddelde van de groep."),
+                                            content = HTML("De optie <i>Lijn</i> is de fitted line door de bollen en is <u>alleen beschikbaar</u> voor de optie <i>Inkomen Ouders</i>.<br><br>De optie <i>Gemiddelde</i> is het gemiddelde van de groep."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -113,7 +113,7 @@ body <- dashboardBody(
                                     status = "info", animation = "smooth"
                                   ),
                                   bsPopover(id = "q_parents", title = "Kenmerken van ouders optie",
-                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur. De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
+                                            content = HTML("<b>Kenmerken van de ouders</b> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
