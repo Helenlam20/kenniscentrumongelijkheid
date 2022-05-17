@@ -23,6 +23,7 @@ library(shinyBS)
 library(grid)
 library(markdown)
 library(shinyjs)
+library(plyr)
 
 
 

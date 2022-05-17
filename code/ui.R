@@ -131,8 +131,7 @@ body <- dashboardBody(
                      box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
-                           h4("INPUT FOR THE Y-AXIS RANGE"),
-                           br(), br(), "test test",
+                           sliderInput("y_axis", "Y-as:", min=0, max=100, value=c(25,75)),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px",
                            tooltip = tooltipOptions(title = "Y-as range aanpassen")
