@@ -337,6 +337,39 @@ gen_bar_plot <- function(data, prefix_text, postfix_text) {
 }
 
 
+get_rounded_slider_steps <- function(data_min, data_max) {
+  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10)
+  steps_between = 50
+
+  # Calculate the size of the step
+  steps_raw <- (data_max - data_min) / steps_between
+  # Round to to the closest possible step
+  steps_rounded <- possible_steps[which.min(abs(possible_steps - steps_raw))]
+  return(steps_rounded)
+}
+
+get_rounded_slider_max <- function(data_max, steps) {
+  num_padding_steps = 20
+  
+  # Calculate the maximum value of the slider to be 20 steps above 
+  # the currently selected max value
+  slider_max_raw <- data_max + steps*num_padding_steps
+  # Round to it to be a multiple of "steps"
+  slider_max_rounded <- round_any(slider_max_raw, steps, f = ceiling)
+  return(slider_max_rounded)
+}
+
+get_rounded_slider_min <- function(data_min, steps) {
+  num_padding_steps = 20
+
+  # Calculate the minimum value of the slider to be 20 steps below 
+  # the currently selected max value
+  slider_min_raw <- data_min - steps*num_padding_steps
+  # Round to it to be a multiple of "steps"
+  slider_min_rounded <- max(round_any(slider_min_raw, steps, f = floor), 0)
+  return(slider_min_rounded)
+}
+
 # TEST
 # data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
 #                         gradient_dat$geografie == "Nederland" &
