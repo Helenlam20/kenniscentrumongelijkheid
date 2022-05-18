@@ -1,0 +1,8 @@
+.dropdown-header {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#change_barplot {
+    visibility: hidden;
+}
