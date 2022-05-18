@@ -55,6 +55,7 @@ server <- function(input, output, session) {
     
     # Flag to check whether to use the user input
     # When false to the UI slider is updated to reflect the new data
+    input$OnePlot # This is just to update the y-axis when oneplot is enabled
     vals$use_user_input <- FALSE
     
     if (input$parents_options == "Inkomen ouders") {
@@ -500,14 +501,14 @@ server <- function(input, output, session) {
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
 observeEvent(input$outcome,{
-    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-    if ("pasgeborenen" %in% labels_dat$population || "leerlingen van groep 8" %in% labels_dat$population) {
-      selected_option = input$parents_options
-      parent_choices <- c("Inkomen ouders", "Opleiding ouders")
-    } else {
-      selected_option <- "Inkomen ouders"
-      parent_choices <- "Inkomen ouders"
-    }
+  labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+  if ("pasgeborenen" %in% labels_dat$population || "leerlingen van groep 8" %in% labels_dat$population) {
+    selected_option = input$parents_options
+    parent_choices <- c("Inkomen ouders", "Opleiding ouders")
+  } else {
+    selected_option <- "Inkomen ouders"
+    parent_choices <- "Inkomen ouders"
+  }
   updatePrettyRadioButtons(
     session = getDefaultReactiveDomain(),
     inputId = "parents_options",
@@ -516,35 +517,11 @@ observeEvent(input$outcome,{
     inline = TRUE,
     prettyOptions = list(
         icon = icon("check"),
-        bigger = TRUE, selected = "Inkomen ouders",
-        status = "info", animation = "smooth"
+        bigger = TRUE,
+        status = "info", 
+        animation = "smooth"
     ),
   )
-    # parent_choices <- c("Inkomen ouders", "Opleiding ouders")
-    #   if ("pasgeborenen" %in% labels_dat$population || "leerlingen van groep 8" %in% labels_dat$population) {
-    #     selected_option = input$parents_options
-    #     # parent_choices <- c("Inkomen ouders", "Opleiding ouders")
-    #     runjs("document.getElementsByName('parents_options')[1].disabled=false") # disable "Opleiding ouders"
-    #   } else {
-    #     selected_option <- "Inkomen ouders"
-    #     # parent_choices <- "Inkomen ouders"
-    #     runjs("document.getElementsByName('parents_options')[1].disabled=true") # disable "Opleiding ouders"
-    #     # runjs("document.getElementsByName('parents_options')[0].checked=true") # check "Inkomen ouders"
-    #   }
-    # 
-    # updatePrettyRadioButtons(
-    #   session = getDefaultReactiveDomain(),
-    #   inputId = "parents_options",
-    #   choices = parent_choices,
-    #   selected = selected_option,
-    #   inline = TRUE,
-    #   prettyOptions = list(
-    #       icon = icon("check"),
-    #       bigger = TRUE, selected = "Inkomen ouders",
-    #       status = "info", animation = "smooth"
-    #   ),
-    # )
-
 })
 
 observeEvent(input$parents_options,{

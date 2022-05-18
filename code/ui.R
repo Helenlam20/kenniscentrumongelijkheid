@@ -56,6 +56,7 @@ sidebar <-
 body <- dashboardBody(
   useShinyjs(),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
+  tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
   theme_poor_mans_flatly,
   tabItems(
     # gradient
