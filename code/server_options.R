@@ -371,18 +371,18 @@ get_rounded_slider_min <- function(data_min, steps) {
 }
 
 # TEST
-# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-#                         gradient_dat$geografie == "Nederland" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal")
-# 
-# 
-# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-#                         gradient_dat$geografie == "Amsterdam" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal")
+data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Nederland" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
+
+
+data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+                        gradient_dat$geografie == "Amsterdam" &
+                        gradient_dat$geslacht == "Totaal" &
+                        gradient_dat$migratieachtergrond == "Totaal" &
+                        gradient_dat$huishouden == "Totaal")
 
 
 
