@@ -27,10 +27,10 @@ radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hov
 }
 
 causal_text <- 
-"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen 
-opgroeien en hun uitkomsten over de levensloop. die ook van invloed zijn 
-en waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
-gezien als oorzakelijke verbanden."
+"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen opgroeien 
+en hun uitkomsten over de levensloop. Maar die omstandigheden hangen samen met 
+eindeloos veel factoren die ook van invloed zijn en waarvoor niet te controleren 
+valt. Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."
 
 
 #### START UI ####
