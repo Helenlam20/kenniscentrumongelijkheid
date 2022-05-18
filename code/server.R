@@ -302,7 +302,7 @@ server <- function(input, output, session) {
       
       if (data_group1_has_data() | data_group2_has_data()) {
         
-        bar_text <- HTML(paste0("<p><b>Opleiding Ouders</b> wordt gedefineerd als de hoogst 
+        bar_text <- HTML(paste0("<p><b>Opleiding Ouders</b> wordt gedefinieerd als de hoogst 
                               behaalde opleiding van één van de ouders. Voor opleiding 
                               ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
   
