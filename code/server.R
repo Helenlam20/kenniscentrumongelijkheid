@@ -55,6 +55,7 @@ server <- function(input, output, session) {
     
     # Flag to check whether to use the user input
     # When false to the UI slider is updated to reflect the new data
+    input$OnePlot # This is just to update the y-axis when oneplot is enabled
     vals$use_user_input <- FALSE
     
     if (input$parents_options == "Inkomen ouders") {
