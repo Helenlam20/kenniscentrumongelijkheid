@@ -191,12 +191,16 @@ body <- dashboardBody(
     
     # info tab content
     tabItem(tabName = "werkwijze",
-            includeMarkdown("www/werkwijze.Rmd")
+            box(status = "primary",
+              includeMarkdown("markdown/werkwijze.Rmd")
+            )
     ),
     
     # contact tab content
     tabItem(tabName = "contact",
-            includeMarkdown("www/contact.Rmd")
+            box(status = "primary",
+              includeMarkdown("markdown/contact.Rmd")
+            )
     )
     
   )
