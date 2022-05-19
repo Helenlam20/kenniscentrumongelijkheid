@@ -153,7 +153,7 @@ server <- function(input, output, session) {
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
       axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
                                " van ", labels_dat$population,
-                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. De"))
+                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     
       } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
       axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
