@@ -402,18 +402,22 @@ server <- function(input, output, session) {
     if (input$parents_options == "Inkomen ouders") {
 
       # Initialize plot with formatted axis and theme
-      plot <- ggplot() +
-        scale_x_continuous(labels = function(x) paste0("€ ", x)) +
-        theme_minimal() +
-        labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
-        thema
+      plot <- ggplot()
+
+      if (data_group1_has_data() && data_group2_has_data())
+        plot <- gen_geom_point(dat, c(data_group1_color, data_group2_color), prefix_text, postfix_text, shape=c(19, 15))
+      else if (data_group1_has_data())
+        plot <- gen_geom_point(data_group1, data_group1_color, prefix_text, postfix_text, shape=19)
+      else if (data_group2_has_data())
+        plot <- gen_geom_point(data_group2, data_group2_color, prefix_text, postfix_text, shape=15)
+
+      plot <- plot + scale_x_continuous(labels = function(x) paste0("€ ", x)) +
+              theme_minimal() +
+              labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
+              thema
 
       # Plot for data_group1 
-      if (data_group1_has_data()) {
-        # Main plot
-        plot <- plot + gen_geom_point(data_group1, input$geografie1, data_group1_color, 
-                                      prefix_text, postfix_text, shape=19)
-        
+      if (data_group1_has_data()) {        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group1, data_group1_color)
@@ -431,11 +435,7 @@ server <- function(input, output, session) {
       }
 
       # Plot for data_group2
-      if (data_group2_has_data()) {
-        # Main plot
-        plot <- plot + gen_geom_point(data_group2, input$geografie2, data_group2_color, 
-                                      prefix_text, postfix_text, shape=15)
-        
+      if (data_group2_has_data()) {        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group2, data_group2_color)

@@ -290,17 +290,16 @@ HTML_to_plain_text <- function(txt) {
 
 
 # Plotting functions
-gen_geom_point <- function(data, input_geography, color, prefix_text, postfix_text, shape) {
-  plot <- geom_point(
-    data=data, 
-    aes(x=parents_income, y=mean, text=paste0("<b>", input_geography, "</b></br>",
-                                     "</br>Inkomen ouders: €", decimal2(parents_income),
-                                     "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                     "</br>Aantal mensen: ", decimal2(N))), 
-    color=color, size=3, shape=shape
-    )
+gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
+  plot <- ggplot() +
+    geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
+                                text = paste0("<b>", geografie, "</b></br>",
+                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                              "</br>Aantal mensen: ", decimal2(N))),
+                size=3) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
   return(plot)
 }
+
 
 gen_highlight_points <- function(data, color) {
   min_max <- data %>%
