@@ -476,7 +476,7 @@ server <- function(input, output, session) {
         }
       }
       
-      #### ALTHERNATIVE PLOT ####
+      #### ALTERNATIVE PLOT ####
      } else if (input$change_barplot) {
 
        # get average of the groups
