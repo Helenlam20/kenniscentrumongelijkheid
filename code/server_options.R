@@ -125,8 +125,8 @@ get_prefix <- function(outcome) {
 get_postfix <- function(outcome) {
   postfix <- ""
   if (outcome != "Uren werk per week" &
-      outcome != "Woonoppervlak per lid huishouden van kinderen" &
-      outcome != "Woonoppervlak per lid huishouden van tieners" & 
+      outcome != "Woonoppervlak per lid van kinderen" &
+      outcome != "Woonoppervlak per lid van tieners" & 
       outcome != "Persoonlijk inkomen" & outcome != "Uurloon"&
       outcome != "Zorgkosten" & outcome != "Vermogen" &
       outcome != "Jeugd zorgkosten van tieners" &
@@ -189,8 +189,8 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 18,
                plot.caption = element_text(hjust = 0, size = 12,
                                            vjust = 1, margin = margin(0,0,10,0)),
                legend.text = element_text(colour = "grey20", size = 16),
-               # legend.position="right",
-               legend.position="none",
+               legend.position="right",
+               # legend.position="none",
                axis.title.y = element_text(size = 16, face = "italic",
                                            margin = margin(0,15,0,0)),
                axis.title.x = element_text(size = 16, face = "italic",
@@ -337,6 +337,19 @@ gen_bar_plot <- function(data, prefix_text, postfix_text) {
   return(plot)
 }
 
+gen_bubble_plot <- function(data, prefix_text, postfix_text) {
+  plot <- ggplot() +
+    geom_linerange(data = data, aes(x = opleiding_ouders, ymin = 0, ymax = mean, colour = group), 
+                   position = position_dodge(width = 1)) +
+    geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = N, 
+                                text = paste0("<b>", geografie, "</b></br>",
+                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                              "</br>Aantal mensen: ", decimal2(N))),
+               position = position_dodge(width = 1)) +
+    scale_size("", range = c(5, 25))
+  return(plot)
+}
+
 
 get_rounded_slider_steps <- function(data_min, data_max) {
   possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10)
@@ -384,8 +397,6 @@ get_rounded_slider_min <- function(data_min, steps) {
 #                         gradient_dat$geslacht == "Totaal" &
 #                         gradient_dat$migratieachtergrond == "Totaal" &
 #                         gradient_dat$huishouden == "Totaal")
-
-
 
 
 

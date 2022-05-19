@@ -446,6 +446,9 @@ server <- function(input, output, session) {
     } else if(input$parents_options == "Opleiding ouders") {
       
       plot <- ggplot()
+      
+    if (!(input$change_barplot)) {
+  
       if (data_group1_has_data() && data_group2_has_data())
         plot <- gen_bar_plot(dat, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color, data_group2_color))
       else if (data_group1_has_data())
@@ -473,6 +476,49 @@ server <- function(input, output, session) {
         }
       }
       
+      #### ALTHERNATIVE PLOT ####
+     } else if (input$change_barplot) {
+
+       # get average of the groups
+       total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+       total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+ 
+       
+        if (data_group1_has_data() && data_group2_has_data()) {
+          
+          plot <- gen_bubble_plot(dat, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color, data_group2_color))
+          
+        } else if (data_group1_has_data()) {
+          
+          plot <- gen_bubble_plot(data_group1, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color))
+          
+          
+        } else if (data_group2_has_data()) {
+          plot <- gen_bubble_plot(data_group2, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group2_color))
+          
+        }
+       
+       if (mean_option_selected) {
+         # get average of the groups
+         if (data_group1_has_data()) {
+           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+           plot <- plot + gen_mean_line(total_group1, data_group1_color) 
+         }
+         
+         if (data_group2_has_data()) {
+           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+           plot <- plot + gen_mean_line(total_group2, data_group2_color) 
+           
+         }
+       }
+       
+
+        # BUBBLE PLOT
+        plot <- plot +
+        labs(x ="Hoogst behaalde opleiding ouders", y ="") +
+          theme_minimal() +
+          thema
+     }
     }
 
     # Add user inputted ylim
@@ -526,11 +572,11 @@ observeEvent(input$outcome,{
 
 observeEvent(input$parents_options,{
   if (input$parents_options == "Opleiding ouders") {
-    runjs("document.getElementById('change_barplot').style.visibility='visible'")
+    runjs("document.getElementById('change_barplot').closest('div').style.display='block'")
     runjs("document.getElementsByName('line_options')[0].disabled=true")
     # runjs("document.getElementsByName('line_options')[1].disabled=true")
   } else {
-    runjs("document.getElementById('change_barplot').style.visibility='hidden'")
+    runjs("document.getElementById('change_barplot').closest('div').style.display='none'")
     runjs("document.getElementsByName('line_options')[0].disabled=false")
     # runjs("document.getElementsByName('line_options')[1].disabled=false")
   }
