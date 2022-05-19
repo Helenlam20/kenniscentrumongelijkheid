@@ -150,11 +150,19 @@ server <- function(input, output, session) {
                               " De verticale as toont het eigen", statistic_type_text, tolower(input$outcome),
                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
       
-    } else if(input$parents_options == "Opleiding ouders") {
+    } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
       axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
                                " van ", labels_dat$population,
-                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
-    }
+                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. De"))
+    
+      } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
+      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
+                               " van ", labels_dat$population,
+                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. 
+                               De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit. 
+                               Hierdoor kan de gebruiker in één oogopslag zien hoeveel mensen er in een lollipop zitten."))
+      }
+    
     group1_text <- gen_algemeen_group_text(
       group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
       group_data_size = N1,

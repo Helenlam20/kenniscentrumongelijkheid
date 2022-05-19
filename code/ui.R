@@ -78,7 +78,6 @@ body <- dashboardBody(
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
                                     inputId = "line_options",
-                                    # label = HTML("<b>Selecteer hier een optie:</b>"), 
                                     label = h5(HTML("<b>Selecteer hier een optie:</b>"),
                                                tags$style("#q_line {vertical-align: middle; width: 25px;
                                                           height: 25px; font-size: 11px;
@@ -114,7 +113,7 @@ body <- dashboardBody(
                                     status = "info", animation = "smooth"
                                   ),
                                   bsPopover(id = "q_parents", title = "Kenmerken van ouders optie",
-                                            content = HTML("<b>Kenmerken van de ouders</b> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
+                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -140,7 +139,7 @@ body <- dashboardBody(
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief voor Opleiding Ouders</b>"),
+                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief grafiek voor Opleiding Ouders</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T),
                          plotlyOutput("main_figure", height = "450")),
               ),
