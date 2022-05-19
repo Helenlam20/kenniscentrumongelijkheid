@@ -162,7 +162,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   
   if (huishouden_input != "Totaal")
     household_text <- paste("in een", tolower(huishouden_input))
-
+  
   group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, sex_text, 
                             populatie_input, migration_text, "die zijn opgegroeid", household_text, 
                             "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
@@ -346,7 +346,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                               "</br>Aantal mensen: ", decimal2(N))),
                position = position_dodge(width = 1)) +
-    scale_size("", range = c(5, 25))
+    scale_size("", range = c(5, 25), guide = 'none')
   return(plot)
 }
 
