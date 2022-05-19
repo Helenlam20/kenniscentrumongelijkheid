@@ -292,11 +292,11 @@ HTML_to_plain_text <- function(txt) {
 # Plotting functions
 gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
   plot <- ggplot() +
-    geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
+    suppressWarnings(geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                               "</br>Aantal mensen: ", decimal2(N))),
-                size=3) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
+                size=3)) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
   return(plot)
 }
 
@@ -340,11 +340,11 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
   plot <- ggplot() +
     geom_linerange(data = data, aes(x = opleiding_ouders, ymin = 0, ymax = mean, colour = group), 
                    position = position_dodge(width = 1)) +
-    geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = N, 
+    suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = N, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                                               "</br>Aantal mensen: ", decimal2(N))),
-               position = position_dodge(width = 1)) +
+               position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
   return(plot)
 }
