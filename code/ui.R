@@ -55,6 +55,7 @@ sidebar <-
 
 body <- dashboardBody(
   useShinyjs(),
+  tags$head(tags$link(rel = "icon", type = "image/png", href = "temp_home.png")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
   theme_poor_mans_flatly,
