@@ -783,7 +783,7 @@ observeEvent(input$user_reset, {vals$use_user_input=FALSE})
       # figure no caption 
       fig_name <- "fig.pdf"
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 6)
+          width = 10, height = 6)
       print(vals$plot + labs(title = input$outcome))
       dev.off()
       zip_files <- c(zip_files, fig_name)
