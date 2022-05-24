@@ -135,7 +135,6 @@ body <- dashboardBody(
                            actionButton("user_reset", "Reset", width = "100%"),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px"
-                           # tooltip = tooltipOptions(title = "Y-as range aanpassen")
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
