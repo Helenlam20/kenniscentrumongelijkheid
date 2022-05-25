@@ -13,6 +13,10 @@ decimal0 <- function(x) {
   num <- format(round(x), big.mark = ".", decimal.mark = ",", scientific = F)
 }
 
+decimal1 <- function(x) {
+  num <- format(round(x, 1), decimal.mark = ",", big.mark = ".", scientific = F)
+}
+
 decimal2 <- function(x) {
   num <- format(round(x, 2), decimal.mark = ",", big.mark = ".", scientific = F)
 }
@@ -295,7 +299,8 @@ gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
     suppressWarnings(geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Aantal mensen: ", decimal2(N))),
+                                              "</br>Inkomen ouders: € ", decimal0(parents_income * 1000),
+                                              "</br>Aantal mensen: ", decimal0(N))),
                 size=3)) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
   return(plot)
 }
@@ -331,7 +336,7 @@ gen_bar_plot <- function(data, prefix_text, postfix_text) {
   plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group,
                 text = paste0("<b>", geografie, "</b></br>",
                 "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                "</br>Aantal mensen: ", decimal2(N)))
+                "</br>Aantal mensen: ", decimal0(N)))
                 )
   return(plot)
 }
@@ -343,7 +348,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
     suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = N, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Aantal mensen: ", decimal2(N))),
+                                              "</br>Aantal mensen: ", decimal0(N))),
                position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
   return(plot)

@@ -132,6 +132,7 @@ body <- dashboardBody(
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
                            sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75)),
+                           sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75)),
                            actionButton("user_reset", "Reset", width = "100%"),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px"
