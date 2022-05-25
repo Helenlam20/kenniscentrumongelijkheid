@@ -233,12 +233,12 @@ server <- function(input, output, session) {
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                             " met ouders met de laagste inkomens in de blauwe groep, het",
                             statistic_type_text, tolower(input$outcome), 
-                            paste0(prefix_text, decimal2(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
+                            paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
                             add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                             " met ouders met de hoogste inkomens in de blauwe groep, het", 
                             statistic_type_text, tolower(input$outcome),
-                            paste0(prefix_text, decimal2(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                            paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         green_text <- ""
         if (data_group2_has_data()) {
@@ -246,12 +246,12 @@ server <- function(input, output, session) {
                               " laat zien dat, voor de", paste0(perc_html, "%"), 
                               labels_dat$population, " met ouders met de laagste inkomens in de groene groep, het",
                               statistic_type_text, tolower(input$outcome), 
-                              paste0(prefix_text, decimal2(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
+                              paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
                               add_bold_text_html(text="groene stip", color=data_group2_color), 
                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                               " met ouders met de hoogste inkomens in de groene groep, het",
                               statistic_type_text, tolower(input$outcome),
-                              paste0(prefix_text, decimal2(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                              paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         
       } else if (perc_html == "100") {
@@ -260,14 +260,14 @@ server <- function(input, output, session) {
           blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
                             "laat zien dat, voor de", paste0(perc_html, "%"), 
                             labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
-                            paste0(prefix_text, decimal2(data_group1$mean), postfix_text), "was.")
+                            paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
         }
         green_text <- ""
         if (data_group2_has_data()) {
           green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
                               "laat zien dat, voor de", paste0(perc_html, "%"), 
                               labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
-                              paste0(prefix_text, decimal2(data_group2$mean), postfix_text), "was.")
+                              paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
           
         }
         
@@ -597,7 +597,7 @@ update_yaxis_slider <- function(data_min, data_max) {
   vals$yslider_min <- get_rounded_slider_min(data_min = data_min, vals$ysteps)
 
   # Set UI slider
-  updateSliderInput(session, "y_axis", label = "Y-as:", value = c(data_min, data_max),
+  updateSliderInput(session, "y_axis", label = "Verticale as (Y-as):", value = c(data_min, data_max),
                     min = vals$yslider_min, max = vals$yslider_max, step = vals$ysteps)
 }
 
@@ -783,7 +783,7 @@ observeEvent(input$user_reset, {vals$use_user_input=FALSE})
       # figure no caption 
       fig_name <- "fig.pdf"
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 6)
+          width = 10, height = 6)
       print(vals$plot + labs(title = input$outcome))
       dev.off()
       zip_files <- c(zip_files, fig_name)
