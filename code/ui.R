@@ -146,7 +146,7 @@ body <- dashboardBody(
               column(width = 3,
                      box(height = NULL,
                          title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
-                         pickerInput("geografie1", label = "Gebied", selected = "Metropool Amsterdam",
+                         pickerInput("geografie1", label = "Gebied", selected = "Bloemendaal",
                                      choices = list("Nederland", "Metropool Amsterdam",
                                                     `Gemeenten in Metropool Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
                                                     `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),

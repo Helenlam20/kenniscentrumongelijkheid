@@ -178,7 +178,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
 gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
                           total_group_mean, prefix_text, postfix_text) {
   text <- HTML(paste0("Het totale ", statistic_type_text, " ", tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal2(total_group_mean), postfix_text), "."))
+                      group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
   return(text)
 }
 
@@ -338,6 +338,7 @@ gen_bar_plot <- function(data, prefix_text, postfix_text) {
                 "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
                 "</br>Aantal mensen: ", decimal0(N)))
                 )
+
   return(plot)
 }
 

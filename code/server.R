@@ -63,6 +63,7 @@ server <- function(input, output, session) {
       data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "Blauwe groep")
       data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "Groene groep")
         dat <- bind_rows(data_group1, data_group2)      
+        
     } else if (input$parents_options == "Opleiding ouders") {
       data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "Blauwe groep")
       data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = "Groene groep")
@@ -231,25 +232,29 @@ server <- function(input, output, session) {
         if (data_group1_has_data()) {
           blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
-                            " met ouders met de laagste inkomens in de blauwe groep, het",
+                            " met ouders met de laagste inkomens in de blauwe groep ", 
+                            paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), "),"), "het",
                             statistic_type_text, tolower(input$outcome), 
                             paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
                             add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
-                            " met ouders met de hoogste inkomens in de blauwe groep, het", 
+                            " met ouders met de hoogste inkomens in de blauwe groep ", 
+                            paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
                             statistic_type_text, tolower(input$outcome),
                             paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         green_text <- ""
         if (data_group2_has_data()) {
           green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat, voor de", paste0(perc_html, "%"), 
-                              labels_dat$population, " met ouders met de laagste inkomens in de groene groep, het",
+                              " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
+                              " met ouders met de laagste inkomens in de groene groep ", 
+                              paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), "),"), "het",
                               statistic_type_text, tolower(input$outcome), 
                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
                               add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
-                              " met ouders met de hoogste inkomens in de groene groep, het",
+                              " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
+                              " met ouders met de hoogste inkomens in de groene groep ", 
+                              paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
                               statistic_type_text, tolower(input$outcome),
                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
@@ -258,6 +263,8 @@ server <- function(input, output, session) {
         blue_text <- ""
         if (data_group1_has_data()){
           blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
+                            "met een jaarlijks inkomen ouders van", 
+                            paste0("€ ",  decimal0(data_group1$parents_income*1000), ","),
                             "laat zien dat, voor de", paste0(perc_html, "%"), 
                             labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
                             paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
@@ -265,8 +272,10 @@ server <- function(input, output, session) {
         green_text <- ""
         if (data_group2_has_data()) {
           green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
+                              "met een jaarlijks inkomen ouders van", 
+                              paste0("€ ",  decimal0(data_group2$parents_income*1000), ","),
                               "laat zien dat, voor de", paste0(perc_html, "%"), 
-                              labels_dat$population, "het", statistic_type_text, tolower(input$outcome),
+                              labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
                               paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
           
         }
@@ -487,21 +496,18 @@ server <- function(input, output, session) {
       #### ALTERNATIVE PLOT ####
      } else if (input$change_barplot) {
 
-       # get average of the groups
-       total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-       total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
- 
-       
         if (data_group1_has_data() && data_group2_has_data()) {
           
+          # dat <- dat %>% group_by(group) %>% mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(dat, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color, data_group2_color))
           
         } else if (data_group1_has_data()) {
-          
+          # data_group1 <- data_group1 %>% mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(data_group1, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color))
           
           
         } else if (data_group2_has_data()) {
+          # data_group2 <- data_group2 %>% mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(data_group2, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group2_color))
           
         }
