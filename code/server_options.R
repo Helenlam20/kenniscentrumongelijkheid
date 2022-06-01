@@ -194,7 +194,6 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 18,
                                            vjust = 1, margin = margin(0,0,10,0)),
                legend.text = element_text(colour = "grey20", size = 16),
                legend.position="right",
-               # legend.position="none",
                axis.title.y = element_text(size = 16, face = "italic",
                                            margin = margin(0,15,0,0)),
                axis.title.x = element_text(size = 16, face = "italic",
@@ -346,9 +345,10 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
   plot <- ggplot() +
     geom_linerange(data = data, aes(x = opleiding_ouders, ymin = 0, ymax = mean, colour = group), 
                    position = position_dodge(width = 1)) +
-    suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = N, 
+    suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = bubble_size, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                              "</br>Bubble size: ", decimal2(bubble_size), "%", 
                                               "</br>Aantal mensen: ", decimal0(N))),
                position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
@@ -390,19 +390,26 @@ get_rounded_slider_min <- function(data_min, steps) {
 }
 
 # TEST
-# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
+# bin <- "parents_edu"
+# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
 #                         gradient_dat$geografie == "Nederland" &
 #                         gradient_dat$geslacht == "Totaal" &
 #                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal")
+#                         gradient_dat$huishouden == "Totaal") %>% 
+#   filter(type == bin) %>%
+#   mutate(group = "Blauwe groep")
 # 
 # 
-# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Laag geboortegewicht" &
-#                         gradient_dat$geografie == "Amsterdam" &
+# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
+#                         gradient_dat$geografie == "Metropool Amsterdam" &
 #                         gradient_dat$geslacht == "Totaal" &
 #                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal")
-
+#                         gradient_dat$huishouden == "Totaal") %>% 
+#   filter(type == bin) %>%
+#   mutate(group = "Groene groep")
+# 
+# 
+# dat <- bind_rows(data_group1, data_group2)   
 
 
 

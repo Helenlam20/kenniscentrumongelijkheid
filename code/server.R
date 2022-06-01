@@ -62,7 +62,7 @@ server <- function(input, output, session) {
       bin <- get_bin(data_group1, data_group2)
       data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "Blauwe groep")
       data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "Groene groep")
-        dat <- bind_rows(data_group1, data_group2)      
+      dat <- bind_rows(data_group1, data_group2)      
         
     } else if (input$parents_options == "Opleiding ouders") {
       data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = "Blauwe groep")
@@ -80,7 +80,7 @@ server <- function(input, output, session) {
     dat <- dat %>%
       select(-c(group, type, uitkomst)) %>%
       relocate(uitkomst_NL) %>%
-      rename(uitkomst = uitkomst_NL)
+      dplyr::rename(uitkomst = uitkomst_NL)
     
   })
 
@@ -160,7 +160,7 @@ server <- function(input, output, session) {
       axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. 
-                               De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit. 
+                               De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit binnen een groep. 
                                Hierdoor kan de gebruiker in één oogopslag zien hoeveel mensen er in een lollipop zitten."))
       }
     
@@ -493,21 +493,20 @@ server <- function(input, output, session) {
         }
       }
       
-      #### ALTERNATIVE PLOT ####
+      #### ALTERNATIVE BUBBLE PLOT ####
      } else if (input$change_barplot) {
 
         if (data_group1_has_data() && data_group2_has_data()) {
-          
-          # dat <- dat %>% group_by(group) %>% mutate(bubble_size = (N / sum(N)) * 100)
+          dat <- dat %>%  dplyr::group_by(group) %>% dplyr::mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(dat, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color, data_group2_color))
           
         } else if (data_group1_has_data()) {
-          # data_group1 <- data_group1 %>% mutate(bubble_size = (N / sum(N)) * 100)
+          data_group1 <- data_group1 %>% dplyr::mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(data_group1, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group1_color))
           
           
         } else if (data_group2_has_data()) {
-          # data_group2 <- data_group2 %>% mutate(bubble_size = (N / sum(N)) * 100)
+          data_group2 <- data_group2 %>% dplyr::mutate(bubble_size = (N / sum(N)) * 100)
           plot <- gen_bubble_plot(data_group2, prefix_text, postfix_text) + scale_color_manual("", values=c(data_group2_color))
           
         }
@@ -588,11 +587,9 @@ observeEvent(input$parents_options,{
   if (input$parents_options == "Opleiding ouders") {
     runjs("document.getElementById('change_barplot').closest('div').style.display='block'")
     runjs("document.getElementsByName('line_options')[0].disabled=true")
-    # runjs("document.getElementsByName('line_options')[1].disabled=true")
   } else {
     runjs("document.getElementById('change_barplot').closest('div').style.display='none'")
     runjs("document.getElementsByName('line_options')[0].disabled=false")
-    # runjs("document.getElementsByName('line_options')[1].disabled=false")
   }
 })
 
