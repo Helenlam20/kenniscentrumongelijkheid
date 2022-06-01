@@ -56,7 +56,10 @@ server <- function(input, output, session) {
     # Flag to check whether to use the user input
     # When false to the UI slider is updated to reflect the new data
     input$OnePlot # This is just to update the y-axis when oneplot is enabled
-    vals$use_user_input <- FALSE
+    isolate({
+      vals$use_user_input <- FALSE
+      vals$run_plot <- FALSE
+    })
     
     if (input$parents_options == "Inkomen ouders") {
       bin <- get_bin(data_group1, data_group2)
@@ -536,7 +539,8 @@ server <- function(input, output, session) {
 
     # Add user inputted ylim
     # TODO: Currenty there is a bug when with the user input that the selected ylim is still visible for a couple of seconds with a new plot
-    if (vals$use_user_input == TRUE)
+    input$y_axis; vals$user_reset; vals$run_plot
+    if (isolate({vals$use_user_input == TRUE}))
     # if (FALSE) # Temporary debug statement to show the bug from above
       plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text), limits=input$y_axis) 
     else
@@ -607,23 +611,22 @@ update_yaxis_slider <- function(data_min, data_max) {
 
 observeEvent(vals$plot,{
   if(vals$use_user_input == FALSE) {
-    vals$use_user_input <- TRUE
-    # Get current ylim 
-    # ylim <- layer_scales(vals$plot)$y$range$range # This gives a result closer to without ylim however sometimes it results to values outside the plot
-    ylim = ggplot_build(vals$plot)$layout$panel_params[[1]]$y.range
-    # Update slider
-    update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
+    isolate({
+      # Get current ylim 
+      # ylim <- layer_scales(vals$plot)$y$range$range # This gives a result closer to without ylim however sometimes it results to values outside the plot
+      ylim = ggplot_build(vals$plot)$layout$panel_params[[1]]$y.range
+      # Update slider
+      update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
+      vals$use_user_input <- TRUE
+    })
   }
 
 }
 )
 
 observeEvent(input$y_axis,{
-  if(!is.null(input$y_axis) && 
-    !is.null(vals$yslider_min) && 
-    !is.null(vals$yslider_max) && 
-    !is.null(vals$ysteps) &&
-    vals$use_user_input == TRUE) {
+  req(input$y_axis, vals$yslider_min, vals$yslider_max, vals$ysteps)
+  if(vals$use_user_input == TRUE) {
 
     ylim_min <- input$y_axis[1]
     ylim_max <- input$y_axis[2]
@@ -635,13 +638,25 @@ observeEvent(input$y_axis,{
     if((ylim_min != 0 && 
         (abs(ylim_min - vals$yslider_min) <= vals$ysteps ||
         (abs(ylim_min - vals$yslider_min) >= ylim_diff/2))) || 
-       abs(ylim_max - vals$yslider_max) <= vals$ysteps ||
-       (abs(ylim_max - vals$yslider_max) >= ylim_diff/2))
-      update_yaxis_slider(ylim_min, ylim_max)
+        abs(ylim_max - vals$yslider_max) <= vals$ysteps ||
+        (abs(ylim_max - vals$yslider_max) >= ylim_diff/2)) {
+        vals$use_user_input = FALSE  
+        update_yaxis_slider(ylim_min, ylim_max)
+        vals$use_user_input = TRUE
+       }
+    
   }
 })
 
-observeEvent(input$user_reset, {vals$use_user_input=FALSE})
+observeEvent(input$user_reset, {
+  vals$use_user_input=FALSE
+  vals$user_reset=TRUE
+  vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
+
+  # Reset buttons
+  runjs("document.getElementById('ymin').value=null")
+  runjs("document.getElementById('ymax').value=null")
+  })
 
 
   
