@@ -9,3 +9,8 @@ document.getElementById('OnePlot').addEventListener('change', function(){box_btn
 
 // Hide the alterative plot button
 document.getElementById('change_barplot').closest('div').style.display='none';
+
+
+// Hardcoded way to add placeholder
+document.getElementById("ymin").placeholder="Y-min";
+document.getElementById("ymax").placeholder="Y-max";

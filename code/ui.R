@@ -132,6 +132,11 @@ body <- dashboardBody(
                      box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
+                           strong("Verticale as (Y-as):"),
+                           fluidRow(title="Verticale as (Y-as)",
+                             column(width=6, numericInput("ymin", NULL, NULL)),
+                             column(width=6, numericInput("ymax", NULL, NULL))
+                           ),
                            sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75)),
                            sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75)),
                            actionButton("user_reset", "Reset", width = "100%"),
