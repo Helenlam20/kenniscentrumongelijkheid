@@ -42,7 +42,7 @@ sidebar <-
     sidebarMenu(
       HTML(paste0(
         "<br>",
-        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='temp_home.png' width = '186'>",
+        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width = '186'>",
         "<br><br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
@@ -55,7 +55,7 @@ sidebar <-
 
 body <- dashboardBody(
   useShinyjs(),
-  tags$head(tags$link(rel = "icon", type = "image/png", href = "temp_home.png")),
+  tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
   theme_poor_mans_flatly,
