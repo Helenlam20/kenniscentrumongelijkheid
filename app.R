@@ -24,7 +24,6 @@ library(grid)
 library(markdown)
 library(shinyjs)
 library(plyr)
-library(ggpattern)
 
 
 #### RUN APP ####
