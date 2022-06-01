@@ -26,7 +26,6 @@ library(shinyjs)
 library(plyr)
 
 
-
 #### RUN APP ####
 source("./startup.R")
 source("./code/Theme_PoorMansFlatly.R")
