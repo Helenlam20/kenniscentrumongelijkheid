@@ -2,3 +2,8 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+body {
+    margin: auto;
+    max-width: 2000px;
+}
