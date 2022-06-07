@@ -88,7 +88,7 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
+                                    choices = c("Lijn", "Gemiddelde", "Mediaan"), bigger = TRUE,
                                     icon = icon("check-square-o"), status = "primary",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
@@ -114,7 +114,7 @@ body <- dashboardBody(
                                     status = "info", animation = "smooth"
                                   ),
                                   bsPopover(id = "q_parents", title = "Kenmerken van ouders optie",
-                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en groep 8."),
+                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is <u>alleen beschikbaar</u> voor de uitkomstmaten van pasgeborenen en groep 8."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
