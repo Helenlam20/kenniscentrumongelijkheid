@@ -16,8 +16,11 @@ document.getElementById("ymin").placeholder="Y-min";
 document.getElementById("ymax").placeholder="Y-max";
 
 
-// Limit the maximum aspect ratio of the body on ultra-wide monitors to 18:9
-window.addEventListener("resize", () => {
-    let max_width = Math.max(1920,2*window.screen.height);
+// Limit the maximum aspect ratio of the body on ultra-wide monitors to ~16:9
+function limit_body_width() {
+    let max_width = Math.max(1920, Math.round(1.8*window.screen.height));
     document.body.style.maxWidth = `${max_width}px`;
-});
+}
+
+limit_body_width();
+window.addEventListener("resize", limit_body_width);
