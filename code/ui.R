@@ -42,8 +42,8 @@ sidebar <-
     sidebarMenu(
       HTML(paste0(
         "<br>",
-        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width = '186'>",
-        "<br><br>"
+        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width='65%'>",
+        "<br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
