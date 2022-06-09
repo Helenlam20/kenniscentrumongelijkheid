@@ -46,8 +46,9 @@ sidebar <-
         "<br>"
       )),
       menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("question")),
-      menuItem("Contact", tabName = "contact", icon = icon("envelope", lib = "glyphicon"))
+      menuItem("Help", tabName = "help", icon = icon("question")),
+      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("book-open")),
+      menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
 
@@ -88,7 +89,8 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde", "Mediaan"), bigger = TRUE,
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan"), bigger = TRUE,
+                                    choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
                                     icon = icon("check-square-o"), status = "primary",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
@@ -196,6 +198,13 @@ body <- dashboardBody(
     ),
     
     # info tab content
+    tabItem(tabName = "help",
+            box(status = "primary",
+                includeMarkdown("markdown/help.Rmd")
+            )
+    ),
+
+    # info tab content
     tabItem(tabName = "werkwijze",
             box(status = "primary",
               includeMarkdown("markdown/werkwijze.Rmd")
@@ -215,10 +224,10 @@ body <- dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
-  title="Dashboard Ongelijkheid in de stad",
+  title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 400, 
-    title = tags$span("Dashboard Ongelijkheid in de stad", 
+    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
     )
   ),
