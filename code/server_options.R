@@ -348,7 +348,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
     suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = bubble_size, 
                                 text = paste0("<b>", geografie, "</b></br>",
                                               "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Bubble size: ", decimal2(bubble_size), "%", 
+                                              # "</br>Bubble size: ", decimal2(bubble_size), "%", 
                                               "</br>Aantal mensen: ", decimal0(N))),
                position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
