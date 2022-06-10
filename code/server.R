@@ -698,7 +698,8 @@ observeEvent(input$user_reset, {
   
   # title plot widget
   output$title_plot <- renderPrint({
-    HTML(input$outcome)
+    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome);
+    HTML(paste0(input$outcome, " (", labels_dat$population, ")"))
   })
   
   

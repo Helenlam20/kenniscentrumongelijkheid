@@ -76,7 +76,7 @@ body <- dashboardBody(
                                                              `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
                                                              `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
                                                              `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
-                                              options = list(`live-search` = T, style = "", size = 10),
+                                              options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
                                     inputId = "line_options",
@@ -134,11 +134,6 @@ body <- dashboardBody(
                      box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
-                           strong("Verticale as (Y-as):"),
-                           fluidRow(title="Verticale as (Y-as)",
-                             column(width=6, numericInput("ymin", NULL, NULL)),
-                             column(width=6, numericInput("ymax", NULL, NULL))
-                           ),
                            sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75)),
                            sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75)),
                            actionButton("user_reset", "Reset", width = "100%"),
