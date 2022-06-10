@@ -652,10 +652,6 @@ observeEvent(input$user_reset, {
   vals$use_user_input=FALSE
   vals$user_reset=TRUE
   vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
-
-  # Reset buttons
-  runjs("document.getElementById('ymin').value=null")
-  runjs("document.getElementById('ymax').value=null")
   })
 
 
