@@ -45,7 +45,7 @@ sidebar <-
         "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width='65%'>",
         "<br>"
       )),
-      menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
+      menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       menuItem("Help", tabName = "help", icon = icon("question")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("book-open")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
@@ -165,7 +165,7 @@ body <- dashboardBody(
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal"),
-                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
+                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",
