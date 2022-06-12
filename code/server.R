@@ -568,6 +568,13 @@ server <- function(input, output, session) {
           panel.grid.major=element_blank()
         )
     }
+
+    # Hide the legend when it is in mobile mode
+    input$hide_legend;
+    if(!is.null(input$hide_legend) && input$hide_legend == "true") {
+      plot <- plot + theme(legend.position="none")
+    }
+    
     vals$plot <- plot
   })
 

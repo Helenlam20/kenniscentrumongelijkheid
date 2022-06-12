@@ -10,12 +10,6 @@ document.getElementById('OnePlot').addEventListener('change', function(){box_btn
 // Hide the alterative plot button
 document.getElementById('change_barplot').closest('div').style.display='none';
 
-
-// Hardcoded way to add placeholder
-document.getElementById("ymin").placeholder="Y-min";
-document.getElementById("ymax").placeholder="Y-max";
-
-
 // Limit the maximum aspect ratio of the body on ultra-wide monitors to ~16:9
 function limit_body_width() {
     let max_width = Math.max(1920, Math.round(1.8*window.screen.height));
@@ -24,3 +18,23 @@ function limit_body_width() {
 
 limit_body_width();
 window.addEventListener("resize", limit_body_width);
+
+
+// Hacky way to add fire an shiny event when it is in a mobile state
+var is_desktop = true;
+function check_desktop() {
+    let is_desktop_new = document.getElementById("sidebarCollapsed").getAttribute("data-collapsed");
+    if (is_desktop != is_desktop_new) {
+        is_desktop = is_desktop_new;
+        try{
+            Shiny.setInputValue("hide_legend", is_desktop);
+        } catch(e) {
+            // Hacky way to fire the event again if in mobile and Shiny.setInputValue hasn't loaded yet
+            is_desktop = true;
+        }
+    }
+}
+
+const sidebar = document.getElementById("sidebarCollapsed");
+const observer = new MutationObserver(check_desktop);
+observer.observe(sidebar, {attributes: true})
