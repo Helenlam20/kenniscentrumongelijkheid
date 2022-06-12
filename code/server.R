@@ -17,7 +17,7 @@ server <- function(input, output, session) {
   
   
   vals <- reactiveValues()
-  
+
   # REACTIVE ----------------------------------------------------------
   
   dataInput1 <- reactive({
@@ -540,17 +540,18 @@ server <- function(input, output, session) {
     # Add user inputted ylim and xlim
     vals$run_plot;
     if (isolate({vals$use_user_input == FALSE})) {
+      # Y-axis
       ylim = ggplot_build(plot)$layout$panel_params[[1]]$y.range
       update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
       vals$ylim = c(max(ylim[1], 0), ylim[2])
       
+      # X-axis
       if (input$parents_options == "Inkomen ouders") {
         # Only update the x-axis slider at "inkomen ouders"
         vals$xlim <- layer_scales(plot)$x$range$range
-        update_xaxis_slider(data_min=vals$xlim[1], data_max=vals$xlim[2])
-        
-        vals$use_user_input <- TRUE
+        update_xaxis_slider(data_min=vals$xlim[1], data_max=vals$xlim[2])   
       }
+      vals$use_user_input <- TRUE
     } 
 
 
