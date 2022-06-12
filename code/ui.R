@@ -45,7 +45,7 @@ sidebar <-
         "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width='65%'>",
         "<br>"
       )),
-      menuItem("Gradiënt", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
+      menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       menuItem("Help", tabName = "help", icon = icon("question")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("book-open")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
@@ -76,7 +76,7 @@ body <- dashboardBody(
                                                              `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
                                                              `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
                                                              `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
-                                              options = list(`live-search` = T, style = "", size = 10),
+                                              options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
                                     inputId = "line_options",
@@ -134,13 +134,8 @@ body <- dashboardBody(
                      box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
-                           strong("Verticale as (Y-as):"),
-                           fluidRow(title="Verticale as (Y-as)",
-                             column(width=6, numericInput("ymin", NULL, NULL)),
-                             column(width=6, numericInput("ymax", NULL, NULL))
-                           ),
-                           sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75)),
-                           sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75)),
+                           sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75), dragRange=FALSE),
+                           sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75), dragRange=FALSE),
                            actionButton("user_reset", "Reset", width = "100%"),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px"
@@ -170,7 +165,7 @@ body <- dashboardBody(
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
                                         choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
                                         selected = "Totaal"),
-                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon maar één groep</b>"),
+                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",

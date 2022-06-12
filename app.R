@@ -13,6 +13,7 @@ rm(list=ls())
 
 #### PACKAGES ####
 library(shiny)
+library(plyr)
 library(tidyverse)
 library(shinydashboard)
 library(dashboardthemes)
@@ -23,7 +24,6 @@ library(shinyBS)
 library(grid)
 library(markdown)
 library(shinyjs)
-library(plyr)
 
 
 #### RUN APP ####

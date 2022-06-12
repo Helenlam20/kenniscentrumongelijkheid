@@ -17,7 +17,7 @@ server <- function(input, output, session) {
   
   
   vals <- reactiveValues()
-  
+
   # REACTIVE ----------------------------------------------------------
   
   dataInput1 <- reactive({
@@ -423,7 +423,7 @@ server <- function(input, output, session) {
       else if (data_group2_has_data())
         plot <- gen_geom_point(data_group2, data_group2_color, prefix_text, postfix_text, shape=15)
 
-      plot <- plot + scale_x_continuous(labels = function(x) paste0("€ ", x)) +
+      plot <- plot + #scale_x_continuous(labels = function(x) paste0("€ ", x)) +
               theme_minimal() +
               labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
               thema
@@ -537,15 +537,28 @@ server <- function(input, output, session) {
      }
     }
 
-    # Add user inputted ylim
-    # TODO: Currenty there is a bug when with the user input that the selected ylim is still visible for a couple of seconds with a new plot
-    input$y_axis; vals$user_reset; vals$run_plot
-    if (isolate({vals$use_user_input == TRUE}))
-    # if (FALSE) # Temporary debug statement to show the bug from above
-      plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text), limits=input$y_axis) 
-    else
-      plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) 
+    # Add user inputted ylim and xlim
+    vals$run_plot;
+    if (isolate({vals$use_user_input == FALSE})) {
+      # Y-axis
+      ylim = ggplot_build(plot)$layout$panel_params[[1]]$y.range
+      update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
+      vals$ylim = c(max(ylim[1], 0), ylim[2])
+      
+      # X-axis
+      if (input$parents_options == "Inkomen ouders") {
+        # Only update the x-axis slider at "inkomen ouders"
+        vals$xlim <- layer_scales(plot)$x$range$range
+        update_xaxis_slider(data_min=vals$xlim[1], data_max=vals$xlim[2])   
+      }
+      vals$use_user_input <- TRUE
+    } 
 
+
+    plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text), limits=vals$ylim) 
+    
+    if (input$parents_options == "Inkomen ouders")
+      plot <- plot + scale_x_continuous(labels = function(x) paste0("€ ", x), limits=vals$xlim)
 
     if (!data_group1_has_data() && !data_group2_has_data()) {
       # Return empty plot when there is no data available
@@ -556,9 +569,16 @@ server <- function(input, output, session) {
           panel.grid.major=element_blank()
         )
     }
+
+    # Hide the legend when it is in mobile mode
+    input$hide_legend;
+    if(!is.null(input$hide_legend) && input$hide_legend == "true") {
+      plot <- plot + theme(legend.position="none")
+    }
+    
     vals$plot <- plot
   })
-  
+
 
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
@@ -589,11 +609,16 @@ observeEvent(input$outcome,{
 
 observeEvent(input$parents_options,{
   if (input$parents_options == "Opleiding ouders") {
+    # Make the "Toon alternatief grafiek" only visible when "Opleiding ouders" is selected
     runjs("document.getElementById('change_barplot').closest('div').style.display='block'")
+    # Disable "Lijn" option when "Opleiding ouders" is selected
     runjs("document.getElementsByName('line_options')[0].disabled=true")
+    # Remove x-axis slider when "Opleiding ouders" is selected
+    runjs("document.getElementById('x_axis').closest('div').style.display='none'")
   } else {
     runjs("document.getElementById('change_barplot').closest('div').style.display='none'")
     runjs("document.getElementsByName('line_options')[0].disabled=false")
+    runjs("document.getElementById('x_axis').closest('div').style.display='block'")
   }
 })
 
@@ -609,70 +634,96 @@ update_yaxis_slider <- function(data_min, data_max) {
 }
 
 
-observeEvent(vals$plot,{
-  if(vals$use_user_input == FALSE) {
-    isolate({
-      # Get current ylim 
-      # ylim <- layer_scales(vals$plot)$y$range$range # This gives a result closer to without ylim however sometimes it results to values outside the plot
-      ylim = ggplot_build(vals$plot)$layout$panel_params[[1]]$y.range
-      # Update slider
-      update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
-      vals$use_user_input <- TRUE
-    })
-  }
+update_xaxis_slider <- function(data_min, data_max) {
+  # Update the x-axis slider
+  vals$xsteps <- get_rounded_slider_steps(data_min = data_min, data_max = data_max)
+  vals$xslider_max <- get_rounded_slider_max(data_max = data_max, vals$xsteps)
+  vals$xslider_min <- get_rounded_slider_min(data_min = data_min, vals$xsteps, min_zero = FALSE)
 
+  # Set UI slider
+  updateSliderInput(session, "x_axis", label = "Verticale as (X-as):", value = c(data_min, data_max),
+                    min = vals$xslider_min, max = vals$xslider_max, step = vals$xsteps)
 }
-)
 
+
+
+# Y-axis slider range updater
 observeEvent(input$y_axis,{
   req(input$y_axis, vals$yslider_min, vals$yslider_max, vals$ysteps)
   if(vals$use_user_input == TRUE) {
 
     ylim_min <- input$y_axis[1]
     ylim_max <- input$y_axis[2]
-    ylim_diff <- abs(ylim_max - ylim_min)
+    yslider_diff <- abs(vals$yslider_max - vals$yslider_min)
 
     # Only update the slider when the max/min of the slider is reached or
     # the distance between the selected value and the edge is more than 
     # half of the slider
     if((ylim_min != 0 && 
         (abs(ylim_min - vals$yslider_min) <= vals$ysteps ||
-        (abs(ylim_min - vals$yslider_min) >= ylim_diff/2))) || 
+        (abs(ylim_min - vals$yslider_min) >= yslider_diff/2))) || 
         abs(ylim_max - vals$yslider_max) <= vals$ysteps ||
-        (abs(ylim_max - vals$yslider_max) >= ylim_diff/2)) {
-        vals$use_user_input = FALSE  
+        (abs(ylim_max - vals$yslider_max) >= yslider_diff/2)) {
         update_yaxis_slider(ylim_min, ylim_max)
-        vals$use_user_input = TRUE
        }
     
   }
 })
 
+# X-axis slider range updater
+observeEvent(input$x_axis,{
+  req(input$x_axis, vals$xslider_min, vals$xslider_max, vals$xsteps)
+  if(vals$use_user_input == TRUE) {
+
+    xlim_min <- input$x_axis[1]
+    xlim_max <- input$x_axis[2]
+    xslider_diff <- abs(vals$xslider_max - vals$xslider_min)
+
+    # Only update the slider when the max/min of the slider is reached or
+    # the distance between the selected value and the edge is more than 
+    # half of the slider
+    if(((abs(xlim_min - vals$xslider_min) <= vals$xsteps ||
+        (abs(xlim_min - vals$xslider_min) >= xslider_diff/2))) || 
+        abs(xlim_max - vals$xslider_max) <= vals$xsteps ||
+        (abs(xlim_max - vals$xslider_max) >= xslider_diff/2)) {
+        update_xaxis_slider(xlim_min, xlim_max)
+       }
+    
+  }
+})
+
+
+# Input axis filter
+# This function filters updates to the plot when the values for ylim hasn't changed
+# Because when updateSliderInput is called it fires an input$y_axis event
+observeEvent(input$y_axis, {
+  req(vals$ylim)
+  if(vals$use_user_input == TRUE) {
+    if(abs(vals$ylim[1] - input$y_axis[1]) >= vals$ysteps/2 ||abs(vals$ylim[2] - input$y_axis[2]) >= vals$ysteps/2) {
+      vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
+      vals$ylim <- input$y_axis
+    }
+  }
+})
+
+observeEvent(input$x_axis, {
+  req(vals$xlim)
+  if(vals$use_user_input == TRUE) {
+    if(abs(vals$xlim[1] - input$x_axis[1]) >= vals$xsteps/2 ||abs(vals$xlim[2] - input$x_axis[2]) >= vals$xsteps/2) {
+      vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
+      vals$xlim <- input$x_axis
+    }
+  }
+})
+
+
+
 observeEvent(input$user_reset, {
   vals$use_user_input=FALSE
-  vals$user_reset=TRUE
   vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
-
-  # Reset buttons
-  runjs("document.getElementById('ymin').value=null")
-  runjs("document.getElementById('ymax').value=null")
   })
 
 
-  
-  output$radio_button <- renderText({
-    
-    if(input$outcome %in% subset(outcome_dat$outcome_name,
-                                 (outcome_dat$population != "pasgeborenen" &
-                                  outcome_dat$population != "leerlingen van groep 8"))) {
-      
-      HTML("Niet beschikbaar voor deze uitkomstmaat!")
-    } else {
-      HTML("Beschikbaar voor deze uitkomst!")
-    }
-  })
-  
-  
   
   # HTML TEXT ----------------------------------------------------------
   
@@ -698,7 +749,8 @@ observeEvent(input$user_reset, {
   
   # title plot widget
   output$title_plot <- renderPrint({
-    HTML(input$outcome)
+    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome);
+    HTML(paste0(input$outcome, " (", labels_dat$population, ")"))
   })
   
   
