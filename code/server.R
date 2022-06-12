@@ -538,13 +538,14 @@ server <- function(input, output, session) {
     }
 
     # Add user inputted ylim
-    # TODO: Currenty there is a bug when with the user input that the selected ylim is still visible for a couple of seconds with a new plot
-    input$y_axis; vals$user_reset; vals$run_plot
-    if (isolate({vals$use_user_input == TRUE}))
-    # if (FALSE) # Temporary debug statement to show the bug from above
-      plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text), limits=input$y_axis) 
-    else
-      plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text)) 
+    vals$run_plot;
+    if (isolate({vals$use_user_input == FALSE})) {
+      ylim = ggplot_build(plot)$layout$panel_params[[1]]$y.range
+      update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
+      vals$use_user_input <- TRUE
+      vals$ylim = c(max(ylim[1], 0), ylim[2])
+    } 
+    plot <- plot + scale_y_continuous(labels = function(x) paste0(prefix_text, decimal2(x), postfix_text), limits=vals$ylim) 
 
 
     if (!data_group1_has_data() && !data_group2_has_data()) {
@@ -558,7 +559,7 @@ server <- function(input, output, session) {
     }
     vals$plot <- plot
   })
-  
+
 
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
@@ -609,48 +610,45 @@ update_yaxis_slider <- function(data_min, data_max) {
 }
 
 
-observeEvent(vals$plot,{
-  if(vals$use_user_input == FALSE) {
-    isolate({
-      # Get current ylim 
-      # ylim <- layer_scales(vals$plot)$y$range$range # This gives a result closer to without ylim however sometimes it results to values outside the plot
-      ylim = ggplot_build(vals$plot)$layout$panel_params[[1]]$y.range
-      # Update slider
-      update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
-      vals$use_user_input <- TRUE
-    })
-  }
 
-}
-)
-
+# Y-axis slider range updater
 observeEvent(input$y_axis,{
   req(input$y_axis, vals$yslider_min, vals$yslider_max, vals$ysteps)
   if(vals$use_user_input == TRUE) {
 
     ylim_min <- input$y_axis[1]
     ylim_max <- input$y_axis[2]
-    ylim_diff <- abs(ylim_max - ylim_min)
+    yslider_diff <- abs(vals$yslider_max - vals$yslider_min)
 
     # Only update the slider when the max/min of the slider is reached or
     # the distance between the selected value and the edge is more than 
     # half of the slider
     if((ylim_min != 0 && 
         (abs(ylim_min - vals$yslider_min) <= vals$ysteps ||
-        (abs(ylim_min - vals$yslider_min) >= ylim_diff/2))) || 
+        (abs(ylim_min - vals$yslider_min) >= yslider_diff/2))) || 
         abs(ylim_max - vals$yslider_max) <= vals$ysteps ||
-        (abs(ylim_max - vals$yslider_max) >= ylim_diff/2)) {
-        vals$use_user_input = FALSE  
+        (abs(ylim_max - vals$yslider_max) >= yslider_diff/2)) {
         update_yaxis_slider(ylim_min, ylim_max)
-        vals$use_user_input = TRUE
        }
     
   }
 })
 
+# Input axis filter
+# This function filters updates to the plot when values for ylim hasn't changed
+# Because when updateSliderInput is called it fires an input$y_axis event
+observeEvent(input$y_axis, {
+  req(vals$ylim)
+  if(vals$use_user_input == TRUE) {
+    if(abs(vals$ylim[1] - input$y_axis[1]) >= vals$ysteps/2 ||abs(vals$ylim[2] - input$y_axis[2]) >= vals$ysteps/2) {
+      vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
+      vals$ylim <- input$y_axis
+    }
+  }
+})
+
 observeEvent(input$user_reset, {
   vals$use_user_input=FALSE
-  vals$user_reset=TRUE
   vals$run_plot = xor(vals$run_plot, TRUE) # TODO: Ugly toggle to run plot
   })
 
