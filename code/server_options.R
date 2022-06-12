@@ -357,7 +357,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
 
 
 get_rounded_slider_steps <- function(data_min, data_max) {
-  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10)
+  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10, 20, 50, 100)
   steps_between = 50
 
   # Calculate the size of the step
@@ -368,7 +368,7 @@ get_rounded_slider_steps <- function(data_min, data_max) {
 }
 
 get_rounded_slider_max <- function(data_max, steps) {
-  num_padding_steps = 20
+  num_padding_steps = 25
   
   # Calculate the maximum value of the slider to be 20 steps above 
   # the currently selected max value
@@ -378,14 +378,16 @@ get_rounded_slider_max <- function(data_max, steps) {
   return(slider_max_rounded)
 }
 
-get_rounded_slider_min <- function(data_min, steps) {
-  num_padding_steps = 20
+get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
+  num_padding_steps = 25
 
   # Calculate the minimum value of the slider to be 20 steps below 
   # the currently selected max value
   slider_min_raw <- data_min - steps*num_padding_steps
   # Round to it to be a multiple of "steps"
-  slider_min_rounded <- max(round_any(slider_min_raw, steps, f = floor), 0)
+  slider_min_rounded <- round_any(slider_min_raw, steps, f = floor)
+  if (min_zero)
+    slider_min_rounded <- max(slider_min_rounded, 0)
   return(slider_min_rounded)
 }
 
