@@ -21,20 +21,20 @@ window.addEventListener("resize", limit_body_width);
 
 
 // Hacky way to add fire an shiny event when it is in a mobile state
-var is_desktop = true;
-function check_desktop() {
-    let is_desktop_new = document.getElementById("sidebarCollapsed").getAttribute("data-collapsed");
-    if (is_desktop != is_desktop_new) {
-        is_desktop = is_desktop_new;
+var is_mobile = true;
+function check_mobile() {
+    let is_mobile_new = document.getElementById("sidebarCollapsed").getAttribute("data-collapsed");
+    if (is_mobile != is_mobile_new) {
+        is_mobile = is_mobile_new;
         try{
-            Shiny.setInputValue("hide_legend", is_desktop);
+            Shiny.setInputValue("hide_legend", is_mobile);
         } catch(e) {
             // Hacky way to fire the event again if in mobile and Shiny.setInputValue hasn't loaded yet
-            is_desktop = true;
+            is_mobile = true;
         }
     }
 }
 
 const sidebar = document.getElementById("sidebarCollapsed");
-const observer = new MutationObserver(check_desktop);
+const observer = new MutationObserver(check_mobile);
 observer.observe(sidebar, {attributes: true})
