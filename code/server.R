@@ -635,7 +635,7 @@ observeEvent(input$y_axis,{
 })
 
 # Input axis filter
-# This function filters updates to the plot when values for ylim hasn't changed
+# This function filters updates to the plot when the values for ylim hasn't changed
 # Because when updateSliderInput is called it fires an input$y_axis event
 observeEvent(input$y_axis, {
   req(vals$ylim)
@@ -653,20 +653,6 @@ observeEvent(input$user_reset, {
   })
 
 
-  
-  output$radio_button <- renderText({
-    
-    if(input$outcome %in% subset(outcome_dat$outcome_name,
-                                 (outcome_dat$population != "pasgeborenen" &
-                                  outcome_dat$population != "leerlingen van groep 8"))) {
-      
-      HTML("Niet beschikbaar voor deze uitkomstmaat!")
-    } else {
-      HTML("Beschikbaar voor deze uitkomst!")
-    }
-  })
-  
-  
   
   # HTML TEXT ----------------------------------------------------------
   
