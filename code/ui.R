@@ -188,8 +188,7 @@ body <- dashboardBody(
                                         selected = "Totaal")
                      ),
               )
-            ),
-            tags$script(src="script.js")
+            )
     ),
     
     # info tab content
@@ -197,23 +196,25 @@ body <- dashboardBody(
             column(width = 6, box(width = 300, status = "primary",
                 includeMarkdown("markdown/help.Rmd")
             )),
-            column(width = 5, box(title = "Veelgestelde vragen", width = 300, collapsible = F, 
+            column(width = 5, box(width = 300, collapsible = F, 
+                    h1("Veelgestelde vragen"),
                    box(title = "Vraag 1: waarom is dit de eerste veelgestelde vraag?", 
                        status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!"),
+                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
                    box(title = "Vraag 2: waarom is dit de tweede veelgestelde vraag?", 
                        status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!"),
+                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
                    box(title = "Vraag 3: waarom is dit de derde veelgestelde vraag?", 
                        status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!"),
+                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
                    box(title = "Vraag 4: waarom is dit de vierde veelgestelde vraag?", 
                        status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!"),
+                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
                    box(title = "Vraag 5: waarom is dit de vijfde veelgestelde vraag?", 
                        status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!"))
-                   )
+                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"))
+                   ),
+      tags$script(src="script.js")
     ),
 
     # info tab content

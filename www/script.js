@@ -31,3 +31,12 @@ function check_mobile() {
 const sidebar = document.getElementById("sidebarCollapsed");
 const sidebar_observer = new MutationObserver(check_mobile);
 sidebar_observer.observe(sidebar, {attributes: true})
+
+
+// Add header click to FAQ boxes
+let faq_boxes = document.getElementsByClassName("faq");
+for (let faq_box of faq_boxes) {
+    let header = faq_box.getElementsByClassName("box-header")[0];
+    let collapse_btn = faq_box.getElementsByClassName("btn")[0];
+    header.addEventListener("click", ()=>collapse_btn.click());
+}
