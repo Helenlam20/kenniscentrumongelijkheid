@@ -42,8 +42,8 @@ theme_poor_mans_flatly <- shinyDashboardThemeDIY(
   ,primaryFontColor = "rgb(245,245,245)"
   ,infoFontColor = "rgb(245,245,245)"
   ,successFontColor = "rgb(245,245,245)"
-  ,warningFontColor = "rgb(33,37,41)"
-  ,dangerFontColor = "rgb(33,37,41)"
+  ,warningFontColor = "rgb(245,245,245)"
+  ,dangerFontColor = "rgb(245,245,245)"
   ,bodyBackColor = "rgb(255,255,255)"
   
   ### header

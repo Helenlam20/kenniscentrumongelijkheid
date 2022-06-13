@@ -13,8 +13,8 @@ rm(list=ls())
 
 #### PACKAGES ####
 library(shiny)
-library(plyr)
 library(tidyverse)
+library(plyr)
 library(shinydashboard)
 library(dashboardthemes)
 library(shinyWidgets)
