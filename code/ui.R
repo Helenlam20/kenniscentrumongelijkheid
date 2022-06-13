@@ -72,10 +72,10 @@ body <- dashboardBody(
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
                                               # selected = "Startkwalificatie behaald",
                                               selected = "Eindtoetsadvies havo en hoger",
-                                              choices = list(`Geld` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Geld")),
-                                                             `Gezondheid en welzijn` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en Welzijn")),
-                                                             `Onderwijs` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs")),
-                                                             `Wonen` = sort(subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen"))),
+                                              choices = list(`Geld` = subset(outcome_dat$outcome_name, outcome_dat$type == "Geld"),
+                                                             `Gezondheid en welzijn` = subset(outcome_dat$outcome_name, outcome_dat$type == "Gezondheid en welzijn"),
+                                                             `Onderwijs` = subset(outcome_dat$outcome_name, outcome_dat$type == "Onderwijs"),
+                                                             `Wonen` = subset(outcome_dat$outcome_name, outcome_dat$type == "Wonen")),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -95,7 +95,7 @@ body <- dashboardBody(
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
-                                            content = HTML("De optie <i>Lijn</i> is de fitted line door de bollen en is <u>alleen beschikbaar</u> voor de optie <i>Inkomen Ouders</i>.<br><br>De optie <i>Gemiddelde</i> is het gemiddelde van de groep."),
+                                            content = HTML("De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -115,8 +115,8 @@ body <- dashboardBody(
                                     bigger = TRUE, selected = "Inkomen ouders",
                                     status = "info", animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_parents", title = "Kenmerken van ouders optie",
-                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding Ouders</i> is <u>alleen beschikbaar</u> voor de uitkomstmaten van pasgeborenen en groep 8."),
+                                  bsPopover(id = "q_parents", title = "Kenmerk van ouders optie",
+                                            content = HTML("<i>Kenmerken van de ouders</i> staan op de horizontale as van de figuur.<br><br>De optie <i>Opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en leeringen in groep 8."),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -194,21 +194,38 @@ body <- dashboardBody(
     
     # info tab content
     tabItem(tabName = "help",
-            box(status = "primary",
+            column(width = 6, box(width = 300, status = "primary",
                 includeMarkdown("markdown/help.Rmd")
-            )
+            )),
+            column(width = 5, box(title = "Veelgestelde vragen", width = 300, collapsible = F, 
+                   box(title = "Vraag 1: waarom is dit de eerste veelgestelde vraag?", 
+                       status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
+                       "Antwoord op de vraag!"),
+                   box(title = "Vraag 2: waarom is dit de tweede veelgestelde vraag?", 
+                       status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
+                       "Antwoord op de vraag!"),
+                   box(title = "Vraag 3: waarom is dit de derde veelgestelde vraag?", 
+                       status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
+                       "Antwoord op de vraag!"),
+                   box(title = "Vraag 4: waarom is dit de vierde veelgestelde vraag?", 
+                       status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
+                       "Antwoord op de vraag!"),
+                   box(title = "Vraag 5: waarom is dit de vijfde veelgestelde vraag?", 
+                       status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
+                       "Antwoord op de vraag!"))
+                   )
     ),
 
     # info tab content
     tabItem(tabName = "werkwijze",
-            box(status = "primary",
+            box(status = "primary", 
               includeMarkdown("markdown/werkwijze.Rmd")
             )
     ),
     
     # contact tab content
     tabItem(tabName = "contact",
-            box(status = "primary",
+            box(status = "primary", 
               includeMarkdown("markdown/contact.Rmd")
             )
     )

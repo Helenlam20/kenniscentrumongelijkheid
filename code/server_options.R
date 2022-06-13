@@ -30,6 +30,15 @@ decimal2 <- function(x) {
 data_group1_color <- "#3498db"
 data_group2_color <- "#18bc9c" 
 
+# linetype
+linetype1_reg <- "longdash"
+linetype1_mean <- "dotted"
+
+linetype2_reg <- "twodash"
+linetype2_mean <- "dotdash"
+
+
+
 
 # Add color functions
 add_text_color_html <- function(text, color) {
@@ -315,18 +324,18 @@ gen_highlight_points <- function(data, color) {
   return(plot)
 }
 
-gen_regression_line <- function(data, color, polynom) {
+gen_regression_line <- function(data, color, polynom, linetype) {
   plot <- geom_smooth(data = data, aes(x = parents_income, y = mean),  method = "lm",
             se = FALSE, formula = paste0("y ~ poly(x, ", polynom, ")"), 
-            color = color, linetype = "longdash") 
+            color = color, linetype = linetype) 
   return(plot)
 }
 
 
-gen_mean_line <- function(total_group, color) {
+gen_mean_line <- function(total_group, color, linetype) {
   plot <- geom_abline(
             aes(intercept = total_group$mean, slope = 0),
-            linetype = "twodash", size=0.5, color = color
+            linetype = linetype, size=0.5, color = color
           ) 
   return(plot)
 }

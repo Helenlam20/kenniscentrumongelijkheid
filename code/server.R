@@ -145,7 +145,7 @@ server <- function(input, output, session) {
       perc_html <- get_perc_per_bin_html(data_group1)
       if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
       # if dat has more than 1 bin then add range to text
-      if (!("100" %in% dat$type)) {
+      if (perc_html != 100) {
         range <- paste0(", gerangschikt van laag naar hoog ouderlijk inkomen.")
       } else {range <- "."}
       
@@ -436,13 +436,13 @@ server <- function(input, output, session) {
 
         # Plot regression line if it is selected
         if (line_option_selected)
-          plot <- plot + gen_regression_line(data_group1, data_group1_color, polynom)
+          plot <- plot + gen_regression_line(data_group1, data_group1_color, polynom, linetype1_reg)
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
           # get average of the groups
           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-          plot <- plot + gen_mean_line(total_group1, data_group1_color)
+          plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
         }
       }
 
@@ -454,11 +454,11 @@ server <- function(input, output, session) {
 
         # Plot the additional options
         if (line_option_selected)
-          plot <- plot + gen_regression_line(data_group2, data_group2_color, polynom)
+          plot <- plot + gen_regression_line(data_group2, data_group2_color, polynom, linetype2_reg)
 
         if (mean_option_selected) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-          plot <- plot + gen_mean_line(total_group2, data_group2_color)
+          plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
         }
       }     
        
@@ -486,12 +486,12 @@ server <- function(input, output, session) {
         # get average of the groups
         if (data_group1_has_data()) {
           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-          plot <- plot + gen_mean_line(total_group1, data_group1_color) 
+          plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
         }
         
         if (data_group2_has_data()) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-          plot <- plot + gen_mean_line(total_group2, data_group2_color) 
+          plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
           
         }
       }
@@ -518,12 +518,12 @@ server <- function(input, output, session) {
          # get average of the groups
          if (data_group1_has_data()) {
            total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-           plot <- plot + gen_mean_line(total_group1, data_group1_color) 
+           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
          }
          
          if (data_group2_has_data()) {
            total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-           plot <- plot + gen_mean_line(total_group2, data_group2_color) 
+           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
            
          }
        }
@@ -585,7 +585,7 @@ server <- function(input, output, session) {
   
 observeEvent(input$outcome,{
   labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
-  if ("pasgeborenen" %in% labels_dat$population || "leerlingen van groep 8" %in% labels_dat$population) {
+  if ("pasgeborenen" %in% labels_dat$population || "leerlingen groep 8" %in% labels_dat$population) {
     selected_option = input$parents_options
     parent_choices <- c("Inkomen ouders", "Opleiding ouders")
   } else {
@@ -641,7 +641,7 @@ update_xaxis_slider <- function(data_min, data_max) {
   vals$xslider_min <- get_rounded_slider_min(data_min = data_min, vals$xsteps, min_zero = FALSE)
 
   # Set UI slider
-  updateSliderInput(session, "x_axis", label = "Verticale as (X-as):", value = c(data_min, data_max),
+  updateSliderInput(session, "x_axis", label = "Horizontale as (X-as):", value = c(data_min, data_max),
                     min = vals$xslider_min, max = vals$xslider_max, step = vals$xsteps)
 }
 
@@ -834,7 +834,7 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- "fig_with_caption.pdf"
+      fig_name <- paste0("fig_with_caption", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
@@ -851,7 +851,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- "fig.pdf"
+      fig_name <- paste0("fig", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = input$outcome))
