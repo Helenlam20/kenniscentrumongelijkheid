@@ -21,20 +21,22 @@ window.addEventListener("resize", limit_body_width);
 
 
 // Hacky way to add fire an shiny event when it is in a mobile state
-var is_mobile = true;
 function check_mobile() {
-    let is_mobile_new = document.getElementById("sidebarCollapsed").getAttribute("data-collapsed");
-    if (is_mobile != is_mobile_new) {
-        is_mobile = is_mobile_new;
-        try{
-            Shiny.setInputValue("hide_legend", is_mobile);
-        } catch(e) {
-            // Hacky way to fire the event again if in mobile and Shiny.setInputValue hasn't loaded yet
-            is_mobile = true;
-        }
-    }
+    let is_mobile = document.getElementById("sidebarCollapsed").getAttribute("data-collapsed");
+    try{
+        Shiny.setInputValue("hide_legend", is_mobile);
+    } catch(e) {}
 }
 
 const sidebar = document.getElementById("sidebarCollapsed");
-const observer = new MutationObserver(check_mobile);
-observer.observe(sidebar, {attributes: true})
+const sidebar_observer = new MutationObserver(check_mobile);
+sidebar_observer.observe(sidebar, {attributes: true})
+
+
+// Add header click to FAQ boxes
+let faq_boxes = document.getElementsByClassName("faq");
+for (let faq_box of faq_boxes) {
+    let header = faq_box.getElementsByClassName("box-header")[0];
+    let collapse_btn = faq_box.getElementsByClassName("btn")[0];
+    header.addEventListener("click", ()=>collapse_btn.click());
+}
