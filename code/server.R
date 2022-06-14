@@ -21,7 +21,7 @@ server <- function(input, output, session) {
   # REACTIVE ----------------------------------------------------------
   
   dataInput1 <- reactive({
-    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                             gradient_dat$geografie == input$geografie1 & 
                             gradient_dat$geslacht == input$geslacht1 &
                             gradient_dat$migratieachtergrond == input$migratie1 & 
@@ -29,7 +29,7 @@ server <- function(input, output, session) {
   })
   
   dataInput2 <- reactive({
-    data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                             gradient_dat$geografie == input$geografie2 & 
                             gradient_dat$geslacht == input$geslacht2 &
                             gradient_dat$migratieachtergrond == input$migratie2 & 
@@ -41,13 +41,13 @@ server <- function(input, output, session) {
   # FILTER DATA ----------------------------------------------------
   filterData <- reactive({
     
-    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                             gradient_dat$geografie == input$geografie1 & 
                             gradient_dat$geslacht == input$geslacht1 &
                             gradient_dat$migratieachtergrond == input$migratie1 & 
                             gradient_dat$huishouden == input$huishouden1)
     
-    data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == input$outcome &
+    data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                             gradient_dat$geografie == input$geografie2 & 
                             gradient_dat$geslacht == input$geslacht2 &
                             gradient_dat$migratieachtergrond == input$migratie2 & 
@@ -126,7 +126,7 @@ server <- function(input, output, session) {
   algemeenText <- reactive({
     
     # select outcome from outcome_dat
-    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
     statistic_type_text <- get_stat_per_outcome_html(labels_dat)
 
     # load data
@@ -151,16 +151,16 @@ server <- function(input, output, session) {
       
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
                               "% van de ", labels_dat$population, range, 
-                              " De verticale as toont het eigen", statistic_type_text, tolower(input$outcome),
+                              " De verticale as toont het eigen", statistic_type_text, tolower(labels_dat$outcome_name),
                               ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
-      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
+      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(labels_dat$outcome_name), 
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     
       } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
-      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(input$outcome), 
+      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(labels_dat$outcome_name), 
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. 
                                De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit binnen een groep. 
@@ -191,7 +191,7 @@ server <- function(input, output, session) {
     }    
     
     # output
-    HTML(paste0("<p><b>", input$outcome, "</b> is ", labels_dat$definition, "</p>",
+    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> is ", labels_dat$definition, "</p>",
                 "<p>", axis_text, "</p>",
                 "<p>", group1_text, " ", group2_text, "</p>"))
     
@@ -203,7 +203,7 @@ server <- function(input, output, session) {
   watzieikText <- reactive({
     
     # select outcome from outcome_dat
-    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
     stat <- get_stat_per_outcome_html(labels_dat)
     statistic_type_text <- get_stat_per_outcome_html(labels_dat)
     
@@ -237,13 +237,13 @@ server <- function(input, output, session) {
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                             " met ouders met de laagste inkomens in de blauwe groep ", 
                             paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), "),"), "het",
-                            statistic_type_text, tolower(input$outcome), 
+                            statistic_type_text, tolower(labels_dat$outcome_name), 
                             paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
                             add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                             " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                             " met ouders met de hoogste inkomens in de blauwe groep ", 
                             paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
-                            statistic_type_text, tolower(input$outcome),
+                            statistic_type_text, tolower(labels_dat$outcome_name),
                             paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         green_text <- ""
@@ -252,13 +252,13 @@ server <- function(input, output, session) {
                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                               " met ouders met de laagste inkomens in de groene groep ", 
                               paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), "),"), "het",
-                              statistic_type_text, tolower(input$outcome), 
+                              statistic_type_text, tolower(labels_dat$outcome_name), 
                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
                               add_bold_text_html(text="groene stip", color=data_group2_color), 
                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                               " met ouders met de hoogste inkomens in de groene groep ", 
                               paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
-                              statistic_type_text, tolower(input$outcome),
+                              statistic_type_text, tolower(labels_dat$outcome_name),
                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
         }
         
@@ -269,7 +269,7 @@ server <- function(input, output, session) {
                             "met een jaarlijks inkomen ouders van", 
                             paste0("€ ",  decimal0(data_group1$parents_income*1000), ","),
                             "laat zien dat, voor de", paste0(perc_html, "%"), 
-                            labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
+                            labels_dat$population, " het", statistic_type_text, tolower(labels_dat$outcome_name),
                             paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
         }
         green_text <- ""
@@ -278,7 +278,7 @@ server <- function(input, output, session) {
                               "met een jaarlijks inkomen ouders van", 
                               paste0("€ ",  decimal0(data_group2$parents_income*1000), ","),
                               "laat zien dat, voor de", paste0(perc_html, "%"), 
-                              labels_dat$population, " het", statistic_type_text, tolower(input$outcome),
+                              labels_dat$population, " het", statistic_type_text, tolower(labels_dat$outcome_name),
                               paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
           
         }
@@ -292,7 +292,7 @@ server <- function(input, output, session) {
           if (data_group1_has_data()) {
             mean_text <- paste(mean_text, gen_mean_text(
               statistic_type_text, 
-              input$outcome, 
+              labels_dat$outcome_name, 
               add_bold_text_html(text="blauwe groep", color=data_group1_color),
               total_group1$mean,
               prefix_text,
@@ -303,7 +303,7 @@ server <- function(input, output, session) {
           if (data_group2_has_data()) {
             mean_text <- paste(mean_text, gen_mean_text(
               statistic_type_text, 
-              input$outcome, 
+              labels_dat$outcome_name, 
               add_bold_text_html(text="groene groep", color=data_group2_color),
               total_group2$mean,
               prefix_text,
@@ -322,7 +322,7 @@ server <- function(input, output, session) {
       
       if (data_group1_has_data() | data_group2_has_data()) {
         
-        bar_text <- HTML(paste0("<p><b>Opleiding Ouders</b> wordt gedefinieerd als de hoogst 
+        bar_text <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
                               behaalde opleiding van één van de ouders. Voor opleiding 
                               ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
   
@@ -346,7 +346,7 @@ server <- function(input, output, session) {
           if (data_group1_has_data()) {
             mean_text <- paste(mean_text, gen_mean_text(
               statistic_type_text, 
-              input$outcome, 
+              labels_dat$outcome_name, 
               add_bold_text_html(text="blauwe groep", color=data_group1_color),
               total_group1$mean,
               prefix_text,
@@ -357,7 +357,7 @@ server <- function(input, output, session) {
           if (data_group2_has_data()) {
             mean_text <- paste(mean_text, gen_mean_text(
               statistic_type_text, 
-              input$outcome, 
+              labels_dat$outcome_name, 
               add_bold_text_html(text="groene groep", color=data_group2_color),
               total_group2$mean,
               prefix_text,
@@ -380,7 +380,7 @@ server <- function(input, output, session) {
   makePlot <- reactive({
     
     # select outcome from outcome_dat
-    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
     
     # get prefix and postfix for outcomes
     prefix_text <- get_prefix(input$outcome)
@@ -584,7 +584,7 @@ server <- function(input, output, session) {
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
   
 observeEvent(input$outcome,{
-  labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome)
+  labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
   if ("pasgeborenen" %in% labels_dat$population || "leerlingen groep 8" %in% labels_dat$population) {
     selected_option = input$parents_options
     parent_choices <- c("Inkomen ouders", "Opleiding ouders")
@@ -749,8 +749,8 @@ observeEvent(input$user_reset, {
   
   # title plot widget
   output$title_plot <- renderPrint({
-    labels_dat <- subset(outcome_dat, outcome_dat$outcome_name == input$outcome);
-    HTML(paste0(input$outcome, " (", labels_dat$population, ")"))
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome);
+    HTML(paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"))
   })
   
   
@@ -826,8 +826,9 @@ observeEvent(input$user_reset, {
                                         input$huishouden2), width = 70), collapse = "\n")
       }
       
-      
+  
       # set temporary dir
+      labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
       tmpdir <- tempdir()
       setwd(tmpdir)
       zip_files <- c()
@@ -838,7 +839,7 @@ observeEvent(input$user_reset, {
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
-            labs(title = input$outcome, caption = 
+            labs(title = labels_dat$outcome_name, caption = 
                    paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
                           "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                           caption_sep, "WAT ZIE IK?\n\n",
@@ -854,7 +855,7 @@ observeEvent(input$user_reset, {
       fig_name <- paste0("fig", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
-      print(vals$plot + labs(title = input$outcome))
+      print(vals$plot + labs(title = labels_dat$outcome_name))
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
