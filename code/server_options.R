@@ -128,7 +128,7 @@ get_prefix <- function(outcome) {
   prefix <- ""
   if (outcome == "c30_income" | outcome == "c30_hourly_wage" |
       outcome == "c30_total_health_costs" | outcome == "c30_wealth" |
-      outcome == "c11_youth_health_costss" |
+      outcome == "c11_youth_health_costs" |
       outcome == "c16_youth_health_costs" ) {
     prefix <- "€ "
   } 
@@ -139,10 +139,10 @@ get_postfix <- function(outcome) {
   postfix <- ""
   if (outcome != "c30_hrs_work_pw" &
       outcome != "c11_living_space_pp" &
-      outcome != "c11_living_space_pp" & 
+      outcome != "c16_living_space_pp" & 
       outcome != "c30_income" & outcome != "c30_hourly_wage"&
       outcome != "c30_total_health_costs" & outcome != "c30_wealth" &
-      outcome != "c11_youth_health_costss" &
+      outcome != "c11_youth_health_costs" &
       outcome != "c16_youth_health_costs") {
     postfix <- "%"
   }

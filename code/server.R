@@ -839,8 +839,8 @@ observeEvent(input$user_reset, {
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
-            labs(title = labels_dat$outcome_name, caption = 
-                   paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
+            labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
+                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
                           "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                           caption_sep, "WAT ZIE IK?\n\n",
                           paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"), 
@@ -855,7 +855,7 @@ observeEvent(input$user_reset, {
       fig_name <- paste0("fig", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
-      print(vals$plot + labs(title = labels_dat$outcome_name))
+      print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))
       dev.off()
       zip_files <- c(zip_files, fig_name)
       
