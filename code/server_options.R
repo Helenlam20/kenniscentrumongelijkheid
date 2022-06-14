@@ -126,10 +126,10 @@ get_stat_per_outcome_html <- function(sample_dat){
 # get signs for the outcomes
 get_prefix <- function(outcome) {
   prefix <- ""
-  if (outcome == "Persoonlijk inkomen" | outcome == "Uurloon" |
-      outcome == "Zorgkosten" | outcome == "Vermogen" |
-      outcome == "Jeugd zorgkosten van tieners" |
-      outcome == "Jeugd zorgkosten van kinderen" ) {
+  if (outcome == "c30_income" | outcome == "c30_hourly_wage" |
+      outcome == "c30_total_health_costs" | outcome == "c30_wealth" |
+      outcome == "c11_youth_health_costss" |
+      outcome == "c16_youth_health_costs" ) {
     prefix <- "€ "
   } 
   return(prefix)
@@ -137,13 +137,13 @@ get_prefix <- function(outcome) {
 
 get_postfix <- function(outcome) {
   postfix <- ""
-  if (outcome != "Uren werk per week" &
-      outcome != "Woonoppervlak per lid van kinderen" &
-      outcome != "Woonoppervlak per lid van tieners" & 
-      outcome != "Persoonlijk inkomen" & outcome != "Uurloon"&
-      outcome != "Zorgkosten" & outcome != "Vermogen" &
-      outcome != "Jeugd zorgkosten van tieners" &
-      outcome != "Jeugd zorgkosten van kinderen") {
+  if (outcome != "c30_hrs_work_pw" &
+      outcome != "c11_living_space_pp" &
+      outcome != "c11_living_space_pp" & 
+      outcome != "c30_income" & outcome != "c30_hourly_wage"&
+      outcome != "c30_total_health_costs" & outcome != "c30_wealth" &
+      outcome != "c11_youth_health_costss" &
+      outcome != "c16_youth_health_costs") {
     postfix <- "%"
   }
   return(postfix)
@@ -402,7 +402,7 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
 
 # TEST
 # bin <- "parents_edu"
-# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
+# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == "Zuigelingensterfte" &
 #                         gradient_dat$geografie == "Nederland" &
 #                         gradient_dat$geslacht == "Totaal" &
 #                         gradient_dat$migratieachtergrond == "Totaal" &
@@ -411,7 +411,7 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
 #   mutate(group = "Blauwe groep")
 # 
 # 
-# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst_NL == "Zuigelingensterfte" &
+# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == "Zuigelingensterfte" &
 #                         gradient_dat$geografie == "Metropool Amsterdam" &
 #                         gradient_dat$geslacht == "Totaal" &
 #                         gradient_dat$migratieachtergrond == "Totaal" &
