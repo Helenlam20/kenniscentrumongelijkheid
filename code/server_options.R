@@ -280,7 +280,8 @@ caption_license <- paste0(
 Erasmus School of Economics, met ondersteuning van Kenniscentrum Ongelijkheid. De 
 figuur en onderliggende data zijn beschikbaar volgens een Creative Commons 
 BY-NC-SA 4.0 licentie, altijd onder vermelding van auteurs en de website 
-website.nl. Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"   
+ongelijkheidincijfers.amsterdam. Bij vragen kunt u contact opnemen met 
+ravesteijn@ese.eur.nl"   
 
 )
 
