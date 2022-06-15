@@ -3,6 +3,10 @@
     font-weight: bold;
 }
 
+.dropdown-menu .dropdown-item {
+    white-space: normal;
+  }
+
 body {
     margin: auto;
     background-color: #f5f5f5;
