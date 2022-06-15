@@ -39,7 +39,6 @@ linetype2_mean <- "dotdash"
 
 
 
-
 # Add color functions
 add_text_color_html <- function(text, color) {
   # Constructs a string of the form: <span style='color:[[text_color]]'>[[text]]</span>'
@@ -59,23 +58,28 @@ add_bold_text_html <- function(text, color) {
 
 
 #### HTML TEXT ####
-dummy <- c("c00_infant_mortality", "c00_sga", "c00_preterm_birth", 
-           "c11_vmbo_gl_final", "c11_havo_final", "c11_vwo_final", 
-           "c11_vmbo_gl_test", "c11_havo_test", "c11_vwo_test",
-           "c11_over_advice", "c11_under_advice", "c11_math", "c11_language", 
-           "c11_reading", "c11_youth_protection", 
-           "c16_vmbo_gl", "c16_havo", "c16_vwo", "c16_youth_protection",  
-           "c21_high_school_attained", "c21_hbo_followed", "c21_uni_followed", 
-           "c30_hbo_attained", "c30_wo_attained", "c30_flex_contract",
-           "c30_employed", "c30_social_assistance", "c30_disability", 
-           "c30_basic_mhc", "c30_specialist_mhc", "c30_hospital", "c30_pharma", 
-           "c30_debt", "c30_home_owner")
+dummy <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "dummy") 
+costs <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "costs") 
+continuous <- c(subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "continuous"), costs)
 
 
-costs <- c("c11_youth_health_costs", "c16_youth_health_costs", "c30_income",
-           "c30_wealth", "c30_hourly_wage", "c30_total_health_costs")
+# get signs for the outcomes
+get_prefix <- function(outcome) {
+  prefix <- ""
+  if (outcome %in% costs) {
+    prefix <- "€ "
+  } 
+  return(prefix)
+}
 
-continuous <- c("c16_living_space_pp", "c11_living_space_pp", "c30_hrs_work_pw", costs) 
+get_postfix <- function(outcome) {
+  postfix <- ""
+  if (outcome %in% dummy) {
+    postfix <- "%"
+  }
+  return(postfix)
+}
+
 
 
 # html text
@@ -121,34 +125,6 @@ get_stat_per_outcome_html <- function(sample_dat){
   }
   return(stat)
 } 
-
-
-# get signs for the outcomes
-get_prefix <- function(outcome) {
-  prefix <- ""
-  if (outcome == "c30_income" | outcome == "c30_hourly_wage" |
-      outcome == "c30_total_health_costs" | outcome == "c30_wealth" |
-      outcome == "c11_youth_health_costs" |
-      outcome == "c16_youth_health_costs" ) {
-    prefix <- "€ "
-  } 
-  return(prefix)
-}
-
-get_postfix <- function(outcome) {
-  postfix <- ""
-  if (outcome != "c30_hrs_work_pw" &
-      outcome != "c11_living_space_pp" &
-      outcome != "c16_living_space_pp" & 
-      outcome != "c30_income" & outcome != "c30_hourly_wage"&
-      outcome != "c30_total_health_costs" & outcome != "c30_wealth" &
-      outcome != "c11_youth_health_costs" &
-      outcome != "c16_youth_health_costs") {
-    postfix <- "%"
-  }
-  return(postfix)
-}
-
 
 
 # Generate text for the "Algemeen" tab
@@ -400,29 +376,3 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
     slider_min_rounded <- max(slider_min_rounded, 0)
   return(slider_min_rounded)
 }
-
-# TEST
-# bin <- "parents_edu"
-# data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == "Zuigelingensterfte" &
-#                         gradient_dat$geografie == "Nederland" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal") %>% 
-#   filter(type == bin) %>%
-#   mutate(group = "Blauwe groep")
-# 
-# 
-# data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == "Zuigelingensterfte" &
-#                         gradient_dat$geografie == "Metropool Amsterdam" &
-#                         gradient_dat$geslacht == "Totaal" &
-#                         gradient_dat$migratieachtergrond == "Totaal" &
-#                         gradient_dat$huishouden == "Totaal") %>% 
-#   filter(type == bin) %>%
-#   mutate(group = "Groene groep")
-# 
-# 
-# dat <- bind_rows(data_group1, data_group2)   
-
-
-
-
