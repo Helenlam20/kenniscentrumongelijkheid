@@ -166,7 +166,6 @@ body <- dashboardBody(
                 includeMarkdown("markdown/help.Rmd")
             )
     ),
-  
     
     # tab content
     tabItem(tabName = "werkwijze",

@@ -5,7 +5,12 @@
 
 .dropdown-menu .dropdown-item {
     white-space: normal;
-  }
+}
+
+.dropdown-menu .dropdown-header {
+    white-space: normal;
+}
+  
 
 body {
     margin: auto;
