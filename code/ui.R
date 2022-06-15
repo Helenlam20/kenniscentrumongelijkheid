@@ -6,31 +6,9 @@
 # (c) Erasmus School of Economics 2022
 
 
-radioTooltip <- function(id, choice, title, placement = "bottom", trigger = "hover", options = NULL){
-  
-  options = shinyBS:::buildTooltipOrPopoverOptionsList(title, placement, trigger, options)
-  options = paste0("{'", paste(names(options), options, sep = "': '", collapse = "', '"), "'}")
-  bsTag <- shiny::tags$script(shiny::HTML(paste0("
-    $(document).ready(function() {
-      setTimeout(function() {
-        $('input', $('#", id, "')).each(function(){
-          if(this.getAttribute('value') == '", choice, "') {
-            opts = $.extend(", options, ", {html: true});
-            $(this.parentElement).tooltip('destroy');
-            $(this.parentElement).tooltip(opts);
-          }
-        })
-      }, 500)
-    });
-  ")))
-  htmltools::attachDependencies(bsTag, shinyBS:::shinyBSDep)
-}
 
-causal_text <- 
-"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen opgroeien 
-en hun uitkomsten over de levensloop. Maar die omstandigheden hangen samen met 
-eindeloos veel factoren die ook van invloed zijn en waarvoor niet te controleren 
-valt. Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."
+#### UI TEXT ####
+source("./code/ui_options.R")
 
 
 #### START UI ####
@@ -71,49 +49,10 @@ body <- dashboardBody(
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
                                               selected = "c11_havo_test",
-                                              choices = list(`Geld` = c("Persoonlijk inkomen" = "c30_income",
-                                                                        "Werkend" = "c30_employed", 
-                                                                        "Uren werk per week" = "c30_hrs_work_pw", 
-                                                                        "Flexibel arbeidscontract" = "c30_flex_contract", 
-                                                                        "Uurloon"  = "c30_hourly_wage", 
-                                                                        "Uitkering arbeidsongeschiktheid/ziekte" = "c30_disability", 
-                                                                        "Bijstand" = "c30_social_assistance", 
-                                                                        "Vermogen"  = "c30_wealth", 
-                                                                        "Schulden" = "c30_debt"), 
-                                                             `Gezondheid en welzijn` = c("Zorgkosten" = "c30_total_health_costs", 
-                                                                                         "Gebruikt ziekenhuiszorg" = "c30_hospital", 
-                                                                                         "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
-                                                                                         "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
-                                                                                         "Gebruikt medicijnen" = "c30_pharma", 
-                                                                                         "Zorgkosten" = "c11_youth_health_costs", 
-                                                                                         "Zorgkosten" = "c16_youth_health_costs", 
-                                                                                         "Jeugdbescherming" = "c11_youth_protection",
-                                                                                         "Jeugdbescherming" = "c16_youth_protection",
-                                                                                         "Laag geboortegewicht" = "c00_sga",
-                                                                                         "Vroeggeboorte"  = "c00_preterm_birth", 
-                                                                                         "Zuigelingensterfte" = "c00_infant_mortality"),
-                                                             `Onderwijs` = c("Eindtoetsadvies vmbo-GL en hoger" = "c11_vmbo_gl_test",        
-                                                                             "Eindtoetsadvies havo en hoger" = "c11_havo_test",           
-                                                                             "Eindtoetsadvies vwo" = "c11_vwo_test",                    
-                                                                             "Eindtoets rekenen streefniveau" = "c11_math",           
-                                                                             "Eindtoets lezen streefniveau" = "c11_reading",           
-                                                                             "Eindtoets taalverzorging streefniveau" = "c11_language",  
-                                                                             "Schooladvies vmbo-GL en hoger" = "c11_vmbo_gl_final",            
-                                                                             "Schooladvies havo en hoger" = "c11_havo_final",           
-                                                                             "Schooladvies vwo" = "c11_vwo_final" ,                      
-                                                                             "Schooladvies hoger dan eindtoetsadvies" = "c11_over_advice", 
-                                                                             "Schooladvies lager dan eindtoetsadvies" = "c11_under_advice", 
-                                                                             "Volgt vmbo-GL of hoger" = "c16_vmbo_gl",                  
-                                                                             "Volgt havo of hoger" = "c16_havo",                     
-                                                                             "Volgt vwo" = "c16_vwo",                               
-                                                                             "Startkwalificatie behaald" = "c21_high_school_attained",             
-                                                                             "Volgend/ gevolgd hbo of hoger" = "c21_hbo_followed",         
-                                                                             "Volgend/ gevolgd universiteit" = "c21_uni_followed",         
-                                                                             "Diploma hbo of hoger" = "c30_hbo_attained",                  
-                                                                             "Diploma universiteit" = "c30_wo_attained"),
-                                                             `Wonen` = c("Huiseigenaar" = "c30_home_owner", 
-                                                                         "Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
-                                                                         "Woonoppervlak per lid huishouden" = "c16_living_space_pp")),
+                                              choices = list(`Geld` = MoneyChoices, 
+                                                             `Gezondheid en welzijn` = HealthChoices,
+                                                             `Onderwijs` = EducationChoices,
+                                                             `Wonen` = HouseChoices),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -127,12 +66,13 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"), bigger = TRUE,
-                                    icon = icon("check-square-o"), status = "primary",
+                                    choices = c("Lijn", "Gemiddelde"), 
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"), 
+                                    bigger = TRUE, icon = icon("check-square-o"), status = "primary",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
-                                            content = HTML("De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."),
+                                            content = HTML(line_hovertext),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -153,7 +93,7 @@ body <- dashboardBody(
                                     status = "info", animation = "smooth"
                                   ),
                                   bsPopover(id = "q_parents", title = "Kenmerk van ouders optie",
-                                            content = HTML("<i>Kenmerk van de ouders</i> staat op de horizontale as van de figuur.<br><br>De optie <i>Opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en leeringen in groep 8."),
+                                            content = HTML(parents_hovertext),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -187,81 +127,74 @@ body <- dashboardBody(
                      box(height = NULL,
                          title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
                          pickerInput("geografie1", label = "Gebied", selected = "Bloemendaal",
-                                     choices = list("Nederland", "Metropool Amsterdam",
-                                                    `Gemeenten in Metropool Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                     choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht1", label = "Geslacht",
-                                        choices = c("Totaal", "Mannen", "Vrouwen"),
-                                        selected = "Totaal"),
+                                        choices = GenderChoices,
+                                        selected = GenderChoices[1]),
                          selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
-                                                    "Suriname", "Nederlandse Antillen"),
-                                        selected = "Totaal"),
+                                        choices = MigrationChoices,
+                                        selected = MigrationChoices[1]),
                          selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
-                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
-                                        selected = "Totaal"),
+                                        choices = HouseholdChoices,
+                                        selected = HouseholdChoices[1]),
                          prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",
                          title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
                          pickerInput("geografie2", label = "Gebied", selected = "Purmerend",
-                                     choices = list("Nederland", "Metropool Amsterdam",
-                                                    `Gemeenten` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                                                    `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                                                    `Gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk"))),
+                                     choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht2", label = "Geslacht",
-                                        choices = c("Totaal", "Mannen", "Vrouwen"),
+                                        choices = GenderChoices[1],
                                         selected = "Totaal"),
                          selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
-                                        choices = c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
-                                                    "Suriname", "Nederlandse Antillen"),
-                                        selected = "Totaal"),
+                                        choices = MigrationChoices,
+                                        selected = MigrationChoices[1]),
                          selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
-                                        choices = c("Totaal", "Eenoudergezin", "Tweeoudergezin"),
-                                        selected = "Totaal")
+                                        choices = HouseholdChoices,
+                                        selected = HouseholdChoices[1])
                      ),
               )
             )
     ),
     
-    # info tab content
+    # tab content
     tabItem(tabName = "help",
-            column(width = 6, box(width = 300, status = "primary",
+            box(status = "primary", 
                 includeMarkdown("markdown/help.Rmd")
+            )
+    ),
+  
+    
+    # tab content
+    tabItem(tabName = "werkwijze",
+            column(width = 6, box(width = 300, status = "primary",
+                includeMarkdown("markdown/werkwijze.Rmd")
             )),
-            column(width = 5, box(width = 300, collapsible = F, 
+            column(width = 6, box(width = 350, collapsible = F, 
                     h1("Veelgestelde vragen"),
-                   box(title = "Vraag 1: waarom is dit de eerste veelgestelde vraag?", 
-                       status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
-                   box(title = "Vraag 2: waarom is dit de tweede veelgestelde vraag?", 
-                       status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
-                   box(title = "Vraag 3: waarom is dit de derde veelgestelde vraag?", 
-                       status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
-                   box(title = "Vraag 4: waarom is dit de vierde veelgestelde vraag?", 
-                       status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"),
-                   box(title = "Vraag 5: waarom is dit de vijfde veelgestelde vraag?", 
-                       status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 300, 
-                       "Antwoord op de vraag!") %>% tagAppendAttributes(class = "faq"))
+                   box(title = faq_q1, 
+                       status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                       faq_a1) %>% tagAppendAttributes(class = "faq"),
+                   box(title = faq_q2, 
+                       status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                       faq_a2) %>% tagAppendAttributes(class = "faq"),
+                   box(title = faq_q3, 
+                       status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                       faq_a3) %>% tagAppendAttributes(class = "faq"),
+                   box(title = faq_q4, 
+                       status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                       faq_a4) %>% tagAppendAttributes(class = "faq"),
+                   box(title = faq_q5, 
+                       status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                       faq_a5) %>% tagAppendAttributes(class = "faq"))
                    ),
       tags$script(src="script.js")
     ),
-
-    # info tab content
-    tabItem(tabName = "werkwijze",
-            box(status = "primary", 
-              includeMarkdown("markdown/werkwijze.Rmd")
-            )
-    ),
     
-    # contact tab content
+    # tab content
     tabItem(tabName = "contact",
             box(status = "primary", 
               includeMarkdown("markdown/contact.Rmd")
