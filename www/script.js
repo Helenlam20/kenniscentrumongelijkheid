@@ -16,6 +16,16 @@ document.getElementById('OnePlot').addEventListener('change', function(){
 // Hide the alterative plot button
 document.getElementById('change_barplot').closest('div').style.display='none';
 
+
+// Disable Alternative plot button when shiny is busy with the plot
+document.getElementById('change_barplot').addEventListener('change', function(){
+    document.getElementById('change_barplot').disabled=true;
+    $(document).one('shiny:idle', function() {
+        document.getElementById('change_barplot').disabled=false;
+    })
+});
+
+
 // Limit the maximum aspect ratio of the body on ultra-wide monitors to ~16:9
 function limit_body_width() {
     let max_width = Math.max(1920, Math.round(1.8*window.screen.height));

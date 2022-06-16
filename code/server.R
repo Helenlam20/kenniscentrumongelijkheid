@@ -769,7 +769,7 @@ observeEvent(input$user_reset, {
     ggplotly(x = vals$plot, tooltip = c("text"))  %>% 
       config(displayModeBar = F, scrollZoom = F) %>%
       style(hoverlabel = label) %>%
-      layout(font = font)  
+      layout(font = font, xaxis=list(fixedrange=T), yaxis=list(fixedrange=T))  
       
   }) # end plot
   
