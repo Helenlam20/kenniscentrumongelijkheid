@@ -25,6 +25,15 @@ document.getElementById('change_barplot').addEventListener('change', function(){
     })
 });
 
+// Disable reset button when shiny is busy with the plot
+document.getElementById('user_reset').addEventListener('click', function(){
+    console.log("Hi");
+    document.getElementById('user_reset').disabled=true;
+    $(document).one('shiny:idle', function() {
+        document.getElementById('user_reset').disabled=false;
+    })
+});
+
 
 // Limit the maximum aspect ratio of the body on ultra-wide monitors to ~16:9
 function limit_body_width() {
