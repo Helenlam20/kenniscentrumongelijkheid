@@ -539,7 +539,7 @@ server <- function(input, output, session) {
 
     # Add user inputted ylim and xlim
     vals$run_plot;
-    if (isolate({vals$use_user_input == FALSE})) {
+    if (isolate({vals$use_user_input == FALSE}) && (data_group1_has_data() || data_group2_has_data())) {
       # Y-axis
       ylim = ggplot_build(plot)$layout$panel_params[[1]]$y.range
       update_yaxis_slider(data_min=ylim[1], data_max=ylim[2])
