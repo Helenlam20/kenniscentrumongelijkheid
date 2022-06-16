@@ -10,7 +10,10 @@
 .dropdown-menu .dropdown-header {
     white-space: normal;
 }
-  
+
+.faq .box-header .box-title {
+    margin-right: 15px;
+}
 
 body {
     margin: auto;
