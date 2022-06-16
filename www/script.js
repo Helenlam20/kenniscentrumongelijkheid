@@ -5,7 +5,13 @@ var box_btn = document.getElementById('box_groene_group').closest('.box').getEle
 // Hide the button
 box_btn.style.visibility='hidden';
 // Add an listener to the OnePlot toggle to also click the hidden collapse button
-document.getElementById('OnePlot').addEventListener('change', function(){box_btn.click()});
+document.getElementById('OnePlot').addEventListener('change', function(){
+    document.getElementById('OnePlot').disabled=true;
+    box_btn.click();
+    $(document).one('shiny:idle', function() {
+        document.getElementById('OnePlot').disabled=false;
+    })
+});
 
 // Hide the alterative plot button
 document.getElementById('change_barplot').closest('div').style.display='none';
