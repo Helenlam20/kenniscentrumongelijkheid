@@ -25,7 +25,8 @@ sidebar <-
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       menuItem("Help", tabName = "help", icon = icon("question")),
-      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("book-open")),
+      menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
+      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
@@ -166,29 +167,32 @@ body <- dashboardBody(
                 includeMarkdown("markdown/help.Rmd")
             )
     ),
+
+    tabItem(tabName = "faq",
+            box(h1("Veelgestelde vragen"),
+                box(title = faq_q1, 
+                    status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    faq_a1) %>% tagAppendAttributes(class = "faq"),
+                box(title = faq_q2, 
+                    status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    faq_a2) %>% tagAppendAttributes(class = "faq"),
+                box(title = faq_q3, 
+                    status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    faq_a3) %>% tagAppendAttributes(class = "faq"),
+                box(title = faq_q4, 
+                    status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350,  
+                    faq_a4) %>% tagAppendAttributes(class = "faq"),
+                box(title = faq_q5, 
+                    status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    faq_a5) %>% tagAppendAttributes(class = "faq"))
+    ),
     
     # tab content
     tabItem(tabName = "werkwijze",
             column(width = 6, box(width = 300, status = "primary",
                 includeMarkdown("markdown/werkwijze.Rmd")
             )),
-            column(width = 6, box(width = 350, collapsible = F, 
-                    h1("Veelgestelde vragen"),
-                   box(title = faq_q1, 
-                       status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
-                       faq_a1) %>% tagAppendAttributes(class = "faq"),
-                   box(title = faq_q2, 
-                       status = "success", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
-                       faq_a2) %>% tagAppendAttributes(class = "faq"),
-                   box(title = faq_q3, 
-                       status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
-                       faq_a3) %>% tagAppendAttributes(class = "faq"),
-                   box(title = faq_q4, 
-                       status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
-                       faq_a4) %>% tagAppendAttributes(class = "faq"),
-                   box(title = faq_q5, 
-                       status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
-                       faq_a5) %>% tagAppendAttributes(class = "faq"))
+            column(width = 6, 
                    ),
       tags$script(src="script.js")
     ),
