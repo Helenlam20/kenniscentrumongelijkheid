@@ -4,8 +4,10 @@
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
 
+median_dat <- read_rds(file.path("./data/median_tab.rds"))
 
-for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
+
+for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   
   assign(i, read_rds(file.path("./data/", paste0(i, "_tab.rds"))))
   
@@ -13,11 +15,11 @@ for (i in c("bins_20", "bins_10", "bins_5", "total", "parents_edu")) {
 rm(i)
 
 # combines gradient data
-gradient_dat <- bind_rows(bins_20, bins_10) 
-gradient_dat <- bind_rows(gradient_dat, bins_5)
-gradient_dat <- bind_rows(gradient_dat, total)
+gradient_dat <- bind_rows(bins20, bins10) 
+gradient_dat <- bind_rows(gradient_dat, bins5)
+gradient_dat <- bind_rows(gradient_dat, mean)
 gradient_dat <- bind_rows(gradient_dat, parents_edu) 
-rm(bins_20, bins_10, bins_5, total, parents_edu)
+rm(bins20, bins10, bins5, mean, parents_edu)
 
 
 # txt file for README in download button for data and fig
