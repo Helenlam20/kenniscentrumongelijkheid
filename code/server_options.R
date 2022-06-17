@@ -343,7 +343,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
 
 
 get_rounded_slider_steps <- function(data_min, data_max) {
-  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10, 20, 50, 100)
+  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10, 20, 50, 100, 250, 500, 1000)
   steps_between = 50
 
   # Calculate the size of the step
