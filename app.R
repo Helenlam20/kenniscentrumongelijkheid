@@ -24,6 +24,7 @@ library(shinyBS)
 library(grid)
 library(markdown)
 library(shinyjs)
+library(shinyalert)
 
 
 #### RUN APP ####

@@ -210,6 +210,7 @@ body <- dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
+  # useShinyalert(),
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 400, 
