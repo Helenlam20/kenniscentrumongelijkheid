@@ -15,6 +15,7 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
+  # welcome pop-up
   # shinyalert(
   #   title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
   #   text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
@@ -23,13 +24,13 @@ server <- function(input, output, session) {
   #               <br><b>Stap 2:</b> kies een kenmerk van ouders.
   #               <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
   #               <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
-  #   size = "m", 
+  #   size = "m",
   #   closeOnEsc = TRUE,
   #   closeOnClickOutside = TRUE,
   #   html = TRUE,
   #   showConfirmButton = TRUE,
   #   showCancelButton = FALSE,
-  #   confirmButtonText = "OK",
+  #   confirmButtonText = "Doorgaan",
   #   confirmButtonCol = "#18BC9C",
   #   timer = 0,
   #   imageUrl = "logo_button_shadow.svg",
@@ -38,6 +39,11 @@ server <- function(input, output, session) {
   #   animation = TRUE
   # )
   
+  # take a screenshot
+  observeEvent(input$screenshot, {
+    screenshot(scale = 1,
+               filename = paste0("screenshot ", Sys.time()))
+  }, ignoreInit = FALSE)
   
   
   vals <- reactiveValues()
@@ -805,7 +811,7 @@ observeEvent(input$user_reset, {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("data-", Sys.time(), ".zip")
+      paste0("data ", Sys.time(), ".zip")
     },
     content = function(file) {
       
@@ -815,7 +821,7 @@ observeEvent(input$user_reset, {
       zip_files <- c()
       
       # get files
-      csv_name <- paste0("data-", Sys.time(), ".csv")
+      csv_name <- paste0("data ", Sys.time(), ".csv")
       write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
@@ -836,7 +842,7 @@ observeEvent(input$user_reset, {
   output$downloadPlot <- downloadHandler(
   
     filename = function() {
-      paste0("fig-", Sys.time(), ".zip")
+      paste0("fig ", Sys.time(), ".zip")
     },
     content = function(file) {
       
@@ -859,7 +865,7 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig_with_caption", Sys.time(), ".pdf")
+      fig_name <- paste0("fig_with_caption ", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
@@ -876,7 +882,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- paste0("fig", Sys.time(), ".pdf")
+      fig_name <- paste0("fig ", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))
