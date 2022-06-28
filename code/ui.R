@@ -34,6 +34,15 @@ sidebar <-
 
 
 body <- dashboardBody(
+  disconnectMessage(
+    text = "Je sessie is verlopen, laad de applicatie opnieuw.",
+    refresh = "Klik hier om te vernieuwen ",
+    background = "#3498db",
+    colour = "white",
+    overlayColour = "grey",
+    overlayOpacity = 0.7,
+    refreshColour = "white"
+  ),
   useShinyjs(),
   tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
@@ -118,7 +127,9 @@ body <- dashboardBody(
                          ),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief grafiek voor Opleiding ouders</b>"),
+                         actionButton("screenshot", "Maak een screenshot", icon = icon("camera"), 
+                                      icon.library = "font awesome"),
+                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief staafdiagram</b>"),
                                       status = "primary", inline = TRUE, fill = T, bigger = T),
                          shinycssloaders::withSpinner(plotlyOutput("main_figure", height = "450"), 
                                                       type = 1, color = "#18BC9C", size = 1.5)),
@@ -209,7 +220,6 @@ body <- dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
-  # useShinyalert(),
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 400, 

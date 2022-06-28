@@ -25,6 +25,8 @@ library(grid)
 library(markdown)
 library(shinyjs)
 library(shinyalert)
+library(shinyscreenshot)
+library(shinydisconnect)
 
 
 #### RUN APP ####
