@@ -1,2 +1,2 @@
 library(rsconnect)
-rsconnect::deployApp()Y
+rsconnect::deployApp()
