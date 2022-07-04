@@ -5,7 +5,6 @@ output: html_document
 
 # Contact
 
-Het dashboard <i>Ongelijkheid in Amsterdam</i> is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics in samenwerking met Kenniscentrum Ongelijkheid over de sociaaleconomische ongelijkheid binnen de Metropoolregio Amsterdam. 
 
 ### Licentie
 Het dashboard <i>Ongelijkheid in Amsterdam</i>  is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics, met ondersteuning van Kenniscentrum 
@@ -13,9 +12,9 @@ Ongelijkheid. De figuur en onderliggende data zijn beschikbaar volgens een
 Creative Commons BY-NC-SA 4.0 licentie, altijd onder vermelding van de 
 auteurs en de website [ongelijkheidincijfers.amsterdam](https://www.ongelijkheidincijfers.amsterdam).
 
+
 ### Vragen of opmerkingen?
 Voor vragen of opmerkingen kunt u contact opnemen met: 
 
 Bastian Ravesteijn: <a href="mailto:ravesteijn@ese.eur.nl">ravesteijn@ese.eur.nl</a>
-<!-- Helen Lam: <a href="mailto:lam@ese.eur.nl">lam@ese.eur.nl</a> -->
 

@@ -122,12 +122,25 @@ server <- function(input, output, session) {
   
   txtFile <- reactive({
     
-    text <- c(temp_txt, readme_sep, 
-              "ALGEMEEN","", 
-              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+    # select outcome from outcome_dat
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
+    
+    # text <- c(temp_txt, readme_sep, 
+    #           "ALGEMEEN","", 
+    #           paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+    #           readme_sep, "WAT ZIE IK?", "", 
+    #           paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
+    #           readme_sep, "CAUSALITEIT", "", causal_text)
+    
+    text <- c(temp_txt,
+              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
               readme_sep, "WAT ZIE IK?", "", 
               paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
+              readme_sep, "ALGEMEEN","", 
+              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+              readme_sep, "LICENTIE", "", caption_license, 
               readme_sep, "CAUSALITEIT", "", causal_text)
+    
     
   })
   
@@ -870,11 +883,11 @@ observeEvent(input$user_reset, {
           width = 9, height = 14)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
-                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
-                          "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
-                          caption_sep, "WAT ZIE IK?\n\n",
-                          paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"), 
-                          caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
+                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n", 
+                                  "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
+                                  caption_sep, "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
+                                  caption_sep, "LICENTIE\n\n", caption_license,
+                                  caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
                  ) 
             )
       

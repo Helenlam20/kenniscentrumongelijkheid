@@ -24,8 +24,8 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      menuItem("Help", tabName = "help", icon = icon("question")),
-      menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
+      # menuItem("Help", tabName = "help", icon = icon("question")),
+      # menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
