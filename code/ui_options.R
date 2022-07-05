@@ -7,10 +7,11 @@
 
 # third tabblad text causality
 causal_text <- 
-  "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen opgroeien 
-en hun uitkomsten over de levensloop. Maar die omstandigheden hangen samen met 
-eindeloos veel factoren die ook van invloed zijn en waarvoor niet te controleren 
-valt. Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."
+  "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen 
+  opgroeien en hun uitkomsten over de levensloop. Maar die omstandigheden 
+  hangen samen met eindeloos veel factoren die ook van invloed zijn en 
+  waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
+gezien als oorzakelijke verbanden."
 
 
 
@@ -26,19 +27,18 @@ MoneyChoices <- c("Persoonlijk inkomen" = "c30_income",
                  "Schulden" = "c30_debt")
 
 
-
-HealthChoices <- c("Zorgkosten" = "c30_total_health_costs", 
-                       "Gebruikt ziekenhuiszorg" = "c30_hospital", 
-                       "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
-                       "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
-                       "Gebruikt medicijnen" = "c30_pharma", 
-                       "Zorgkosten" = "c11_youth_health_costs", 
-                       "Zorgkosten" = "c16_youth_health_costs", 
-                       "Jeugdbescherming" = "c11_youth_protection",
-                       "Jeugdbescherming" = "c16_youth_protection",
-                       "Laag geboortegewicht" = "c00_sga",
-                       "Vroeggeboorte"  = "c00_preterm_birth", 
-                       "Zuigelingensterfte" = "c00_infant_mortality")
+HealthChoices <- c("Laag geboortegewicht" = "c00_sga",
+                   "Vroeggeboorte"  = "c00_preterm_birth", 
+                   "Zuigelingensterfte" = "c00_infant_mortality",
+                   "Jeugdbescherming" = "c11_youth_protection",
+                   "Zorgkosten" = "c11_youth_health_costs", 
+                   "Zorgkosten" = "c16_youth_health_costs", 
+                   "Jeugdbescherming" = "c16_youth_protection",
+                   "Zorgkosten" = "c30_total_health_costs", 
+                   "Gebruikt ziekenhuiszorg" = "c30_hospital", 
+                   "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
+                   "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
+                   "Gebruikt medicijnen" = "c30_pharma")
 
 EducationChoices <- c("Eindtoetsadvies vmbo-GL en hoger" = "c11_vmbo_gl_test",        
                       "Eindtoetsadvies havo en hoger" = "c11_havo_test",           
@@ -55,14 +55,14 @@ EducationChoices <- c("Eindtoetsadvies vmbo-GL en hoger" = "c11_vmbo_gl_test",
                       "Volgt havo of hoger" = "c16_havo",                     
                       "Volgt vwo" = "c16_vwo",                               
                       "Startkwalificatie behaald" = "c21_high_school_attained",             
-                      "Volgend/ gevolgd hbo of hoger" = "c21_hbo_followed",         
-                      "Volgend/ gevolgd universiteit" = "c21_uni_followed",         
+                      "Volgend/gevolgd hbo of hoger" = "c21_hbo_followed",         
+                      "Volgend/gevolgd universiteit" = "c21_uni_followed",         
                       "Diploma hbo of hoger" = "c30_hbo_attained",                  
                       "Diploma universiteit" = "c30_wo_attained")
 
-HouseChoices <- c("Huiseigenaar" = "c30_home_owner", 
-                 "Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
-                 "Woonoppervlak per lid huishouden" = "c16_living_space_pp")
+HouseChoices <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
+                 "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
+                 "Huiseigenaar" = "c30_home_owner")
 
 #### DEMOGRAFIC GROUPS ####
 

@@ -26,7 +26,7 @@ sidebar <-
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       # menuItem("Help", tabName = "help", icon = icon("question")),
       # menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
-      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      # menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
@@ -44,6 +44,7 @@ body <- dashboardBody(
     refreshColour = "white"
   ),
   useShinyjs(),
+  useSweetAlert(), 
   tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
@@ -59,10 +60,10 @@ body <- dashboardBody(
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
                                               selected = "c11_havo_test",
-                                              choices = list(`Geld` = MoneyChoices, 
-                                                             `Gezondheid en welzijn` = HealthChoices,
+                                              choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
-                                                             `Wonen` = HouseChoices),
+                                                             `Wonen` = HouseChoices,
+                                                             `Geld` = MoneyChoices),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -226,6 +227,13 @@ ui <- dashboardPage(
     title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
     )
+    # tags$li(class = "dropdown", actionBttn(
+    #   inputId = "beginscherm",
+    #   label = "Beginscherm", 
+    #   style = "unite",
+    #   color = "success",
+    #   icon = icon("question")
+    # ))
   ),
   sidebar = sidebar,
   body = body  
