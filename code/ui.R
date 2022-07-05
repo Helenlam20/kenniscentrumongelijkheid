@@ -59,7 +59,7 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "c00_infant_mortality",
+                                              selected = "c11_havo_test",
                                               choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
                                                              `Wonen` = HouseChoices,
