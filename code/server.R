@@ -120,7 +120,12 @@ server <- function(input, output, session) {
     })
     
     if (input$parents_options == "Inkomen ouders") {
-      bin <- get_bin(data_group1, data_group2)
+      if(!is.null(input$OnePlot) && input$OnePlot) {
+        bin <- get_perc_per_bin(data_group1)
+      } else {
+        bin <- get_bin(data_group1, data_group2) 
+      }
+       
       data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "Blauwe groep")
       data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "Groene groep")
       dat <- bind_rows(data_group1, data_group2)      
