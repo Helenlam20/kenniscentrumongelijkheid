@@ -36,11 +36,11 @@ sidebar <-
 body <- dashboardBody(
   disconnectMessage(
     text = "Je sessie is verlopen, laad de applicatie opnieuw.",
-    refresh = "Klik hier om te vernieuwen ",
+    refresh = "Klik hier om te vernieuwen",
     background = "#3498db",
     colour = "white",
     overlayColour = "grey",
-    overlayOpacity = 0.7,
+    overlayOpacity = 0.75,
     refreshColour = "white"
   ),
   useShinyjs(),
@@ -59,7 +59,7 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "c11_havo_test",
+                                              selected = "c30_income",
                                               choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
                                                              `Wonen` = HouseChoices,
@@ -77,8 +77,8 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"), 
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"), 
+                                    choices = c("Lijn", "Gemiddelde", "Mediaan"),
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "primary",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
@@ -112,8 +112,12 @@ body <- dashboardBody(
                        ),
                        column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemeen", htmlOutput("selected_outcome")),
-                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
+                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome")),
+                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
+                                         br(), 
+                                         prettySwitch(inputId = "SwitchColor", label = htmlOutput("SwitchColorLabel"),
+                                                      status = "primary", inline = TRUE, fill = T, bigger = T)
+                                         ),
                                 tabPanel("Causaliteit", causal_text)),
                        ),
                      ),
@@ -224,7 +228,7 @@ ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 400, 
-    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
+    title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
     )
     # tags$li(class = "dropdown", actionBttn(

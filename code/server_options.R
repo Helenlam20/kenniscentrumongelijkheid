@@ -8,7 +8,7 @@
 
 #### DECIMALS ####
 
-# function decimals and thousand seperator
+# function decimals and thousand separator
 decimal0 <- function(x) {
   num <- format(round(x), big.mark = ".", decimal.mark = ",", scientific = F)
 }
@@ -126,6 +126,11 @@ get_stat_per_outcome_html <- function(sample_dat){
   return(stat)
 } 
 
+# no data found
+gen_nodata_found <- function(group_type_text) {
+    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+    return(group_text)
+  }
 
 # Generate text for the "Algemeen" tab
 gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, 
@@ -159,11 +164,19 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   return(group_text)
 }
 
-
+# create mean text for tabblad
 gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
                           total_group_mean, prefix_text, postfix_text) {
-  text <- HTML(paste0("Het totale ", statistic_type_text, " ", tolower(outcome_input), " van de ",  
+  text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
                       group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
+  return(text)
+}
+
+# create median text for tabblad
+gen_median_text <- function(outcome_input, group_type_text, 
+                          group_median, prefix_text, postfix_text) {
+  text <- HTML(paste0("De mediaan ", tolower(outcome_input), " van de ",  
+                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
   return(text)
 }
 
@@ -378,3 +391,19 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
     slider_min_rounded <- max(slider_min_rounded, 0)
   return(slider_min_rounded)
 }
+
+
+# tabbox for opleiding ouders
+bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+                              behaalde opleiding van één van de ouders. Voor opleiding 
+                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+  
+                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
+                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo</p>"))
+
+bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
+
+
+

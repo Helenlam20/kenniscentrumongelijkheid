@@ -7,21 +7,21 @@
 
 # third tabblad text causality
 causal_text <- 
-  "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen 
-  opgroeien en hun uitkomsten over de levensloop. Maar die omstandigheden 
-  hangen samen met eindeloos veel factoren die ook van invloed zijn en 
-  waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
-gezien als oorzakelijke verbanden."
+"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen
+opgroeien en hun uitkomsten over de levensloop. Maar die omstandigheden 
+hangen samen met eindeloos veel factoren die ook van invloed zijn en
+waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
+gezien als bewijs voor oorzakelijke verbanden."
 
 
 
 # dropdown menu choices
 MoneyChoices <- c("Persoonlijk inkomen" = "c30_income",
-                 "Werkend" = "c30_employed", 
-                 "Uren werk per week" = "c30_hrs_work_pw", 
-                 "Flexibel arbeidscontract" = "c30_flex_contract", 
+                 "Werkt" = "c30_employed", 
+                 "Gewerkte uren per week (werkenden)" = "c30_hrs_work_pw", 
+                 "Vast arbeidscontract" = "c30_permanent_contract", 
                  "Uurloon"  = "c30_hourly_wage", 
-                 "Uitkering arbeidsongeschiktheid/ziekte" = "c30_disability", 
+                 "Ziekte- of arbeidsongeschiktheidsuitkering" = "c30_disability", 
                  "Bijstand" = "c30_social_assistance", 
                  "Vermogen"  = "c30_wealth", 
                  "Schulden" = "c30_debt")
@@ -40,29 +40,29 @@ HealthChoices <- c("Laag geboortegewicht" = "c00_sga",
                    "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
                    "Gebruikt medicijnen" = "c30_pharma")
 
-EducationChoices <- c("Eindtoetsadvies vmbo-GL en hoger" = "c11_vmbo_gl_test",        
-                      "Eindtoetsadvies havo en hoger" = "c11_havo_test",           
+EducationChoices <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_gl_test",        
+                      "Eindtoetsadvies havo of hoger" = "c11_havo_test",           
                       "Eindtoetsadvies vwo" = "c11_vwo_test",                    
                       "Eindtoets rekenen streefniveau" = "c11_math",           
                       "Eindtoets lezen streefniveau" = "c11_reading",           
                       "Eindtoets taalverzorging streefniveau" = "c11_language",  
-                      "Schooladvies vmbo-GL en hoger" = "c11_vmbo_gl_final",            
-                      "Schooladvies havo en hoger" = "c11_havo_final",           
+                      "Schooladvies vmbo-GL of hoger" = "c11_vmbo_gl_final",            
+                      "Schooladvies havo of hoger" = "c11_havo_final",           
                       "Schooladvies vwo" = "c11_vwo_final" ,                      
                       "Schooladvies hoger dan eindtoetsadvies" = "c11_over_advice", 
                       "Schooladvies lager dan eindtoetsadvies" = "c11_under_advice", 
-                      "Volgt vmbo-GL of hoger" = "c16_vmbo_gl",                  
-                      "Volgt havo of hoger" = "c16_havo",                     
-                      "Volgt vwo" = "c16_vwo",                               
+                      "Vmbo-GL of hoger" = "c16_vmbo_gl",                  
+                      "Havo of hoger" = "c16_havo",                     
+                      "Vwo" = "c16_vwo",                               
                       "Startkwalificatie behaald" = "c21_high_school_attained",             
                       "Volgend/gevolgd hbo of hoger" = "c21_hbo_followed",         
                       "Volgend/gevolgd universiteit" = "c21_uni_followed",         
-                      "Diploma hbo of hoger" = "c30_hbo_attained",                  
-                      "Diploma universiteit" = "c30_wo_attained")
+                      "Hbo of hoger" = "c30_hbo_attained",                  
+                      "Universiteit" = "c30_wo_attained")
 
 HouseChoices <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
                  "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
-                 "Huiseigenaar" = "c30_home_owner")
+                 "Eigen woning" = "c30_home_owner")
 
 #### DEMOGRAFIC GROUPS ####
 
@@ -80,9 +80,9 @@ HouseholdChoices <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
 
 #### HOVER TEXT ####
-line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
 
-# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De optie <i>Mediaan, 25e kwantiel en 75e kwantiel</i> zijn alleen beschikbaar voor continue uitkomstmaten. De opties <i>Median</i> toont de mediaan van de groep. De opties <i>25e kwantiel</i> toont het 25ste kwanteiel van de groep. De opties <i>75e kwantiel</i> toont het 75ste kwanteiel van de groep."
+line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De opties <i>Mediaan, 25e kwantiel</i> en <i>75e kwantiel</i> zijn alleen beschikbaar voor continue uitkomstmaten."
 
 
 
