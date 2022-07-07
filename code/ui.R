@@ -36,11 +36,11 @@ sidebar <-
 body <- dashboardBody(
   disconnectMessage(
     text = "Je sessie is verlopen, laad de applicatie opnieuw.",
-    refresh = "Klik hier om te vernieuwen ",
+    refresh = "Klik hier om te vernieuwen",
     background = "#3498db",
     colour = "white",
     overlayColour = "grey",
-    overlayOpacity = 0.7,
+    overlayOpacity = 0.75,
     refreshColour = "white"
   ),
   useShinyjs(),
@@ -59,6 +59,7 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
+                                              # selected = "c30_income",
                                               selected = "c11_havo_test",
                                               choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
@@ -77,9 +78,9 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"), 
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"), 
-                                    bigger = TRUE, icon = icon("check-square-o"), status = "primary",
+                                    choices = c("Lijn", "Gemiddelde"),
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
+                                    bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
@@ -112,8 +113,16 @@ body <- dashboardBody(
                        ),
                        column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemeen", htmlOutput("selected_outcome")),
-                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
+                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome")),
+                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
+                                         br(), 
+                                         prettyRadioButtons(
+                                           inputId = "SwitchColor", label = "Toon uitleg van:", 
+                                           choices = c("Blauwe groep", "Groene groep"),
+                                           icon = icon("check"), inline = TRUE,
+                                           bigger = TRUE, selected = "Blauwe groep",
+                                           status = "info", animation = "smooth")
+                                         ), 
                                 tabPanel("Causaliteit", causal_text)),
                        ),
                      ),
@@ -131,7 +140,7 @@ body <- dashboardBody(
                          actionButton("screenshot", "Maak een screenshot", icon = icon("camera"), 
                                       icon.library = "font awesome"),
                          prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief staafdiagram</b>"),
-                                      status = "primary", inline = TRUE, fill = T, bigger = T),
+                                      status = "info", inline = TRUE, fill = T, bigger = T),
                          shinycssloaders::withSpinner(plotlyOutput("main_figure", height = "450"), 
                                                       type = 1, color = "#18BC9C", size = 1.5)),
               ),
@@ -151,7 +160,7 @@ body <- dashboardBody(
                                         choices = HouseholdChoices,
                                         selected = HouseholdChoices[1]),
                          prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
-                                      status = "primary", inline = TRUE, fill = T, bigger = T)
+                                      status = "info", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",
                          title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
@@ -224,7 +233,7 @@ ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 400, 
-    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
+    title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
     )
     # tags$li(class = "dropdown", actionBttn(
