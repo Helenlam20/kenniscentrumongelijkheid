@@ -27,6 +27,7 @@ library(shinyjs)
 library(shinyalert)
 library(shinyscreenshot)
 library(shinydisconnect)
+library(ggrepel)
 
 
 #### RUN APP ####

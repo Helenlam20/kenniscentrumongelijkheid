@@ -190,6 +190,32 @@ server <- function(input, output, session) {
   })
   
   
+  
+  # GET MEDIAN, 25E & 75E QUANTILE --------------------------------------
+
+  get_median_dat1 <- reactive({
+    
+    if (input$outcome %in% continuous) {
+      median_dat1 <- subset(median_dat, median_dat$uitkomst == input$outcome &
+                              median_dat$geografie == input$geografie1 & 
+                              median_dat$geslacht == input$geslacht1 &
+                              median_dat$migratieachtergrond == input$migratie1 & 
+                              median_dat$huishouden == input$huishouden1)
+    }
+  })
+  
+  get_median_dat2 <- reactive({
+    
+    if (input$outcome %in% continuous) {
+      median_dat2 <- subset(median_dat, median_dat$uitkomst == input$outcome &
+                              median_dat$geografie == input$geografie2 & 
+                              median_dat$geslacht == input$geslacht2 &
+                              median_dat$migratieachtergrond == input$migratie2 & 
+                              median_dat$huishouden == input$huishouden2)
+    }
+  })
+  
+  
   # ALGEMEEN TEXT REACTIVE ---------------------------------------------
   
   algemeenText <- reactive({
@@ -281,6 +307,14 @@ server <- function(input, output, session) {
     prefix_text <- get_prefix(input$outcome)
     postfix_text <- get_postfix(input$outcome)
     
+    # get average of total group
+    total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    
+    # get median, 25e en 75e quantile
+    median_dat1 <- get_median_dat1()
+    median_dat2 <- get_median_dat2()
+    
     # load data
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "Blauwe groep")
@@ -288,21 +322,9 @@ server <- function(input, output, session) {
     num_rows <- max(nrow(data_group1), nrow(data_group2))
     
     # text for switch
-    if (input$SwitchColor == "Blauwe groep") { # # SHOW BLUE TEXT IF SWITCH IS OFF
+    if (input$SwitchColor == "Blauwe groep") { # SHOW BLUE TEXT IF SWITCH IS OFF
       
       if (data_group1_has_data()) {
-      
-        # get average of total group
-        total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-        
-        # get median, 25e en 75e quantile
-        if (input$outcome %in% continuous) {
-          median_dat1 <- subset(median_dat, median_dat$uitkomst == input$outcome &
-                                  median_dat$geografie == input$geografie1 & 
-                                  median_dat$geslacht == input$geslacht1 &
-                                  median_dat$migratieachtergrond == input$migratie1 & 
-                                  median_dat$huishouden == input$huishouden1)
-        }
         
         if (input$parents_options == "Inkomen ouders") {
           
@@ -336,8 +358,11 @@ server <- function(input, output, session) {
           }
           mean_text <- ""
           median_text <- ""
+          q25_text <- ""
+          q75_text <- ""
           # if user has clicked on the line button
           if (!is.null(input$line_options)) {
+            
             # add mean text to tabbox
             if ("Gemiddelde" %in% input$line_options) {
               mean_text <- paste(mean_text, gen_mean_text(
@@ -359,10 +384,30 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
+            # add 25e quantile to tabbox
+            # if ("25e kwantiel" %in% input$line_options & input$outcome %in% continuous) {
+            #   q25_text <- paste(q25_text, gen_q25_text(
+            #     labels_dat$outcome_name, 
+            #     add_bold_text_html(text="blauwe groep", color=data_group1_color),
+            #     median_dat1$quantile_25,
+            #     prefix_text,
+            #     postfix_text
+            #   ))
+            # }
+            # add 75e quantile to tabbox
+            # if ("75e kwantiel" %in% input$line_options & input$outcome %in% continuous) {
+            #   q75_text <- paste(q75_text, gen_q75_text(
+            #     labels_dat$outcome_name, 
+            #     add_bold_text_html(text="blauwe groep", color=data_group1_color),
+            #     median_dat1$quantile_75,
+            #     prefix_text,
+            #     postfix_text
+            #   ))
+            # }
           }
           
           HTML(paste0("<p>", blue_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, median_text, q25_text, q75_text, "</p>"))
           
         } else if (input$parents_options == "Opleiding ouders") {
           
@@ -373,6 +418,7 @@ server <- function(input, output, session) {
           }
           
           mean_text <- ""
+          median_text <- ""
           # if user has clicked on the mean button
           if (!is.null(input$line_options)) {
             if ("Gemiddelde" %in% input$line_options) {
@@ -386,10 +432,20 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                median_dat1$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
           }
           
           HTML(paste0("<p>", bar_text, "</p>",
-                      "<p>", mean_text, "</p>"))
+                      "<p>", mean_text, median_text, "</p>"))
           
         }
         
@@ -398,22 +454,10 @@ server <- function(input, output, session) {
         
       }
 
-    } else if (input$SwitchColor == "Groene groep") {  # SHOW GREEN TEXT IF SWITCH IS ON
+    } else if (input$SwitchColor == "Groene groep") { # SHOW GREEN TEXT IF SWITCH IS ON
      
       if (data_group2_has_data()) {
-        
-        # get average of total group
-        total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-        
-        # get median, 25e en 75e quantile
-        if (input$outcome %in% continuous) {
-          median_dat2 <- subset(median_dat, median_dat$uitkomst == input$outcome &
-                                  median_dat$geografie == input$geografie2 & 
-                                  median_dat$geslacht == input$geslacht2 &
-                                  median_dat$migratieachtergrond == input$migratie2 & 
-                                  median_dat$huishouden == input$huishouden2)
-        }
-        
+
         if (input$parents_options == "Inkomen ouders") {
           
           # get html percentage
@@ -447,8 +491,11 @@ server <- function(input, output, session) {
           }
           mean_text <- ""
           median_text <- ""
+          q25_text <- ""
+          q75_text <- ""
           # if user has clicked on the line button
           if (!is.null(input$line_options)) {
+            
             # add mean text to tabbox
             if ("Gemiddelde" %in% input$line_options) {
               mean_text <- paste(mean_text, gen_mean_text(
@@ -470,10 +517,30 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
+            # add 25e quantile to tabbox
+            # if ("25e kwantiel" %in% input$line_options & input$outcome %in% continuous) {
+            #   q25_text <- paste(q25_text, gen_q25_text(
+            #     labels_dat$outcome_name, 
+            #     add_bold_text_html(text="groene groep", color=data_group2_color),
+            #     median_dat2$quantile_25,
+            #     prefix_text,
+            #     postfix_text
+            #   ))
+            # }
+            # add 75e quantile to tabbox
+            # if ("75e kwantiel" %in% input$line_options & input$outcome %in% continuous) {
+            #   q75_text <- paste(q75_text, gen_q75_text(
+            #     labels_dat$outcome_name, 
+            #     add_bold_text_html(text="groene groep", color=data_group2_color),
+            #     median_dat2$quantile_75,
+            #     prefix_text,
+            #     postfix_text
+            #   ))
+            # }
           }
           
           HTML(paste0("<p>", green_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, median_text, q25_text, q75_text, "</p>"))
           
         } else if (input$parents_options == "Opleiding ouders") {
           
@@ -484,6 +551,7 @@ server <- function(input, output, session) {
           }
           
           mean_text <- ""
+          median_text <- ""
           # if user has clicked on the mean button
           if (!is.null(input$line_options)) {
             if ("Gemiddelde" %in% input$line_options) {
@@ -497,13 +565,23 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="groene groep", color=data_group2_color),
+                median_dat2$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
           }
           
           HTML(paste0("<p>", bar_text, "</p>",
-                      "<p>", mean_text, "</p>"))
+                      "<p>", mean_text, median_text, "</p>"))
           
         }
-        
+
       } else {
         HTML(gen_nodata_found(add_bold_text_html(text="groene groep", color=data_group2_color)))
         
@@ -533,11 +611,17 @@ server <- function(input, output, session) {
     # Parse additional input options
     line_option_selected <- FALSE
     mean_option_selected <- FALSE
+    median_option_selected <- FALSE
+    q25_option_selected <- FALSE
+    q75_option_selected <- FALSE
     if (!is.null(input$line_options)) {
   
       line_option_selected <- "Lijn"  %in% input$line_options
       mean_option_selected <- "Gemiddelde" %in% input$line_options
-
+      median_option_selected <- "Mediaan" %in% input$line_options & input$outcome %in% continuous
+      q25_option_selected <- "25e kwantiel" %in% input$line_options & input$outcome %in% continuous
+      q75_option_selected <- "75e kwantiel" %in% input$line_options & input$outcome %in% continuous
+      
       # regression line
       # TODO: Add check for data_group2 when data_group1 is empty
       if (nrow(data_group1) == 5) {
@@ -561,13 +645,15 @@ server <- function(input, output, session) {
       else if (data_group2_has_data())
         plot <- gen_geom_point(data_group2, data_group2_color, prefix_text, postfix_text, shape=15)
 
-      plot <- plot + #scale_x_continuous(labels = function(x) paste0("€ ", x)) +
+      plot <- plot + # scale_x_continuous(labels = function(x) paste0("€ ", x)) +
               theme_minimal() +
               labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
               thema
 
       # Plot for data_group1 
-      if (data_group1_has_data()) {        
+      if (data_group1_has_data()) {
+        median_dat1 <- get_median_dat1()
+        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group1, data_group1_color)
@@ -578,14 +664,27 @@ server <- function(input, output, session) {
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
-          # get average of the groups
           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
+        }
+        # Plot median line if it is selected
+        if (median_option_selected) {
+          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_median) 
+        }
+        # Plot 25e quantile line if it is selected
+        if (q25_option_selected) {
+          plot <- plot + gen_q25_line(median_dat1, data_group1_color, linetype1_q25) 
+        }
+        # Plot 75e quantile line if it is selected
+        if (q75_option_selected) {
+          plot <- plot + gen_q75_line(median_dat1, data_group1_color, linetype1_q75) 
         }
       }
 
       # Plot for data_group2
-      if (data_group2_has_data()) {        
+      if (data_group2_has_data()) { 
+        median_dat2 <- get_median_dat2()
+        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group2, data_group2_color)
@@ -597,6 +696,19 @@ server <- function(input, output, session) {
         if (mean_option_selected) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
+        }
+        
+        if (median_option_selected) {
+          # get the median of the groups
+          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_median) 
+        }
+        # Plot 25e quantile line if it is selected
+        if (q25_option_selected) {
+          plot <- plot + gen_q25_line(median_dat2, data_group2_color, linetype1_q25) 
+        }
+        # Plot 75e quantile line if it is selected
+        if (q75_option_selected) {
+          plot <- plot + gen_q75_line(median_dat2, data_group2_color, linetype1_q75) 
         }
       }     
        
@@ -634,6 +746,20 @@ server <- function(input, output, session) {
         }
       }
       
+      if (median_option_selected) {
+        # get median of the groups
+        if (data_group1_has_data()) {
+          median_dat1 <- get_median_dat1()
+          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
+        }
+        if (data_group2_has_data()) {
+          median_dat2 <- get_median_dat2()
+          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
+          
+        }
+      }
+      
+      
       #### ALTERNATIVE BUBBLE PLOT ####
      } else if (input$change_barplot) {
 
@@ -666,7 +792,20 @@ server <- function(input, output, session) {
          }
        }
        
+       if (median_option_selected) {
+         # get median of the groups
+         if (data_group1_has_data()) {
+           median_dat1 <- get_median_dat1()
+           plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
+         }
+         if (data_group2_has_data()) {
+           median_dat2 <- get_median_dat2()
+           plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
+           
+         }
+       }
 
+       
         # BUBBLE PLOT
         plot <- plot +
         labs(x ="Hoogst behaalde opleiding ouders", y ="") +
@@ -760,6 +899,43 @@ observeEvent(input$parents_options,{
   }
 })
 
+observeEvent(input$outcome,{
+  
+  if (!(input$outcome %in% continuous)) {
+  # remove "Mediaan" option if outcome is not a continuous
+    runjs("document.getElementsByName('line_options')[2].disabled=true")
+  } else {
+    runjs("document.getElementsByName('line_options')[2].disabled=false")
+  }
+})
+
+# remove button if user clicked on button to show one plot
+observeEvent(input$OnePlot,{
+
+  
+  if (!input$OnePlot) {
+    group_choices <- c("Blauwe groep", "Groene groep")
+  } else {
+    group_choices <- "Blauwe groep"
+  }
+  
+  updatePrettyRadioButtons(
+    session = getDefaultReactiveDomain(),
+    inputId = "SwitchColor",
+    label = "Toon uitleg van:", 
+    choices = group_choices,
+    selected = "Blauwe groep",
+    inline = TRUE,
+    prettyOptions = list(
+      icon = icon("check"),
+      bigger = TRUE,
+      status = "info", 
+      animation = "smooth"
+    ),
+  )
+})
+  
+
 update_yaxis_slider <- function(data_min, data_max) {
   # Update the y-axis slider
   vals$ysteps <- get_rounded_slider_steps(data_min = data_min, data_max = data_max)
@@ -826,7 +1002,6 @@ observeEvent(input$x_axis,{
         (abs(xlim_max - vals$xslider_max) >= xslider_diff/2)) {
         update_xaxis_slider(xlim_min, xlim_max)
        }
-    
   }
 })
 

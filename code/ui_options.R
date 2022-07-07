@@ -80,7 +80,8 @@ HouseholdChoices <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
 
 #### HOVER TEXT ####
-line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De optie <i>Mediaan</i> is alleen beschikbaar voor continue uitkomstmaten."
 
 # line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De opties <i>Mediaan, 25e kwantiel</i> en <i>75e kwantiel</i> zijn alleen beschikbaar voor continue uitkomstmaten."
 

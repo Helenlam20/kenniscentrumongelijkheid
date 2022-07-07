@@ -32,12 +32,16 @@ data_group2_color <- "#18bc9c"
 
 # linetype
 linetype1_reg <- "longdash"
-linetype1_mean <- "dotted"
+linetype1_mean <- "longdash"
+linetype1_median <- "longdash"
+linetype1_q25 <- "longdash"
+linetype1_q75 <- "longdash"
 
-linetype2_reg <- "twodash"
-linetype2_mean <- "dotdash"
-
-
+linetype2_reg <- "dotted"
+linetype2_mean <- "dotted"
+linetype2_median <- "dotted"
+linetype1_q25 <- "dotted"
+linetype1_q75 <- "dotted"
 
 # Add color functions
 add_text_color_html <- function(text, color) {
@@ -164,7 +168,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   return(group_text)
 }
 
-# create mean text for tabblad
+# create mean text for tabbox
 gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
                           total_group_mean, prefix_text, postfix_text) {
   text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
@@ -172,10 +176,26 @@ gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text,
   return(text)
 }
 
-# create median text for tabblad
+# create median text for tabbox
 gen_median_text <- function(outcome_input, group_type_text, 
                           group_median, prefix_text, postfix_text) {
   text <- HTML(paste0("De mediaan ", tolower(outcome_input), " van de ",  
+                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
+  return(text)
+}
+
+# create quantile 25 text for tabbox
+gen_q25_text <- function(outcome_input, group_type_text, 
+                            group_median, prefix_text, postfix_text) {
+  text <- HTML(paste0("De 25e kwantiel van ", tolower(outcome_input), " van de ",  
+                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
+  return(text)
+}
+
+# create quantile 75 text for tabbox
+gen_q75_text <- function(outcome_input, group_type_text, 
+                            group_median, prefix_text, postfix_text) {
+  text <- HTML(paste0("De 75e kwantiel van ", tolower(outcome_input), " van de ",  
                       group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
   return(text)
 }
@@ -261,9 +281,6 @@ readme_sep <- c("",
   "================================================================================"
 )
 
-
-
-
 caption_sep <- 
 "\n\n=========================================================================\n"
 caption_license <- paste0(
@@ -276,7 +293,6 @@ ravesteijn@ese.eur.nl"
 
 )
 
-      
 
 
 # convert html text to plain txt
@@ -324,11 +340,35 @@ gen_regression_line <- function(data, color, polynom, linetype) {
 }
 
 
-gen_mean_line <- function(total_group, color, linetype) {
+gen_mean_line <- function(dat, color, linetype) {
   plot <- geom_abline(
-            aes(intercept = total_group$mean, slope = 0),
+            aes(intercept = dat$mean, slope = 0),
             linetype = linetype, size=0.5, color = color
           ) 
+  return(plot)
+}
+
+gen_median_line <- function(dat, color, linetype) {
+  plot <- geom_abline(
+    aes(intercept = dat$median, slope = 0),
+    linetype = linetype, size=0.5, color = color
+  ) 
+  return(plot)
+}
+
+gen_q25_line <- function(dat, color, linetype) {
+  plot <- geom_abline(
+    aes(intercept = dat$quantile_25, slope = 0),
+    linetype = linetype, size=0.5, color = color
+  ) 
+  return(plot)
+}
+
+gen_q75_line <- function(dat, color, linetype) {
+  plot <- geom_abline(
+    aes(intercept = dat$quantile_75, slope = 0),
+    linetype = linetype, size=0.5, color = color
+  ) 
   return(plot)
 }
 
