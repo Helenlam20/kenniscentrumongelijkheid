@@ -78,7 +78,7 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"),
+                                    choices = c("Lijn", "Gemiddelde", "Mediaan"),
                                     # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
@@ -232,7 +232,7 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
-    titleWidth = 400, 
+    titleWidth = 475, 
     title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
     )
