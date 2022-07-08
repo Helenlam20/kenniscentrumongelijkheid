@@ -59,12 +59,12 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              # selected = "c30_income",
-                                              selected = "c11_havo_test",
+                                              selected = "c11_living_space_pp",
+                                              # selected = "c11_havo_test",
                                               choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
                                                              `Wonen` = HouseChoices,
-                                                             `Geld` = MoneyChoices),
+                                                             `Werk en inkomen` = MoneyChoices),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -188,7 +188,7 @@ body <- dashboardBody(
             )
     ),
 
-    tabItem(tabName = "faq",
+    tabItem(tabName = "faq", status = "primary",
             box(h1("Veelgestelde vragen"),
                 box(title = faq_q1, 
                     status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
@@ -200,10 +200,10 @@ body <- dashboardBody(
                     status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
                     faq_a3) %>% tagAppendAttributes(class = "faq"),
                 box(title = faq_q4, 
-                    status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350,  
+                    status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350,  
                     faq_a4) %>% tagAppendAttributes(class = "faq"),
                 box(title = faq_q5, 
-                    status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
                     faq_a5) %>% tagAppendAttributes(class = "faq"))
     ),
     
@@ -232,7 +232,7 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
-    titleWidth = 475, 
+    titleWidth = 470, 
     title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
     )
