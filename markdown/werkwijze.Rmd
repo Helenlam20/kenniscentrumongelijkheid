@@ -5,7 +5,7 @@ output: html_document
 
 # Werkwijze
 
-Het dashboard <i>Ongelijkheid in Amsterdam</i> is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics in samenwerking met Kenniscentrum Ongelijkheid over de sociaaleconomische ongelijkheid binnen de Metropoolregio Amsterdam. 
+Het dashboard <i>Ongelijkheid in Cijfers Amsterdam</i> is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics in samenwerking met Kenniscentrum Ongelijkheid over de sociaaleconomische ongelijkheid binnen de Metropoolregio Amsterdam. 
 
 <b>Doel:</b> het doel is het bijdrage aan het beschrijven, begrijpen en aanpakken van ongelijkheid binnen Amsterdam met beschrijvende statistiek.
 
@@ -13,5 +13,5 @@ Het dashboard <i>Ongelijkheid in Amsterdam</i> is een project van Helen Lam, Bas
 
 <b>Wat:</b> aan de hand van beschrijvende statistiek maken we inzichtelijk waar, wanneer en hoe ongelijkheid ontstaat en zich manifesteert in de Metropoolregio Amsterdam.
 
-Lees hier het rapport over de werkwijze van het dashboard: <a href="werkwijze.pdf" download="werkwijze ongelijkheid in Amsterdam.pdf">Download werkwijze rapport</a>
+Lees hier het rapport over de werkwijze van het dashboard: <a href="werkwijze.pdf" download="werkwijze ongelijkheid in Cijfers Amsterdam.pdf">Download werkwijze rapport</a>
 

@@ -24,9 +24,9 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      menuItem("Help", tabName = "help", icon = icon("question")),
-      menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
-      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      # menuItem("Help", tabName = "help", icon = icon("question")),
+      # menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
+      # menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
@@ -34,7 +34,17 @@ sidebar <-
 
 
 body <- dashboardBody(
+  disconnectMessage(
+    text = "Je sessie is verlopen, laad de applicatie opnieuw.",
+    refresh = "Klik hier om te vernieuwen",
+    background = "#3498db",
+    colour = "white",
+    overlayColour = "grey",
+    overlayOpacity = 0.75,
+    refreshColour = "white"
+  ),
   useShinyjs(),
+  useSweetAlert(), 
   tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
@@ -49,11 +59,12 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "c11_havo_test",
-                                              choices = list(`Geld` = MoneyChoices, 
-                                                             `Gezondheid en welzijn` = HealthChoices,
+                                              selected = "c11_living_space_pp",
+                                              # selected = "c11_havo_test",
+                                              choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
-                                                             `Wonen` = HouseChoices),
+                                                             `Wonen` = HouseChoices,
+                                                             `Werk en inkomen` = MoneyChoices),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -67,9 +78,9 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"), 
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"), 
-                                    bigger = TRUE, icon = icon("check-square-o"), status = "primary",
+                                    choices = c("Lijn", "Gemiddelde", "Mediaan"),
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
+                                    bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "Lijn opties",
@@ -100,13 +111,19 @@ body <- dashboardBody(
                                   ),
                               ),
                        ),
-                       column(width = 7,
-                              tabBox(
+                       column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemeen", htmlOutput("selected_outcome")),
-                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg")),
-                                tabPanel("Causaliteit", causal_text),
-                                selected = "Algemeen"),
+                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome")),
+                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
+                                         br(), 
+                                         prettyRadioButtons(
+                                           inputId = "SwitchColor", label = "Toon uitleg van:", 
+                                           choices = c("Blauwe groep", "Groene groep"),
+                                           icon = icon("check"), inline = TRUE,
+                                           bigger = TRUE, selected = "Blauwe groep",
+                                           status = "info", animation = "smooth")
+                                         ), 
+                                tabPanel("Causaliteit", causal_text)),
                        ),
                      ),
                      box(collapsible = FALSE, status = "primary",
@@ -120,14 +137,17 @@ body <- dashboardBody(
                          )%>% tagAppendAttributes(class = "dropup"),
                          downloadButton(outputId = "downloadData", label = "Download data"),
                          downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief grafiek voor Opleiding ouders</b>"),
-                                      status = "primary", inline = TRUE, fill = T, bigger = T),
-                         plotlyOutput("main_figure", height = "450")),
+                         actionButton("screenshot", "Maak een screenshot", icon = icon("camera"), 
+                                      icon.library = "font awesome"),
+                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief staafdiagram</b>"),
+                                      status = "info", inline = TRUE, fill = T, bigger = T),
+                         shinycssloaders::withSpinner(plotlyOutput("main_figure", height = "450"), 
+                                                      type = 1, color = "#18BC9C", size = 1.5)),
               ),
               column(width = 3,
                      box(height = NULL,
                          title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
-                         pickerInput("geografie1", label = "Gebied", selected = "Bloemendaal",
+                         pickerInput("geografie1", label = "Gebied", selected = "Nederland",
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht1", label = "Geslacht",
@@ -140,7 +160,7 @@ body <- dashboardBody(
                                         choices = HouseholdChoices,
                                         selected = HouseholdChoices[1]),
                          prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
-                                      status = "primary", inline = TRUE, fill = T, bigger = T)
+                                      status = "info", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",
                          title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
@@ -148,8 +168,8 @@ body <- dashboardBody(
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
                          selectizeInput(inputId = "geslacht2", label = "Geslacht",
-                                        choices = GenderChoices[1],
-                                        selected = "Totaal"),
+                                        choices = GenderChoices,
+                                        selected = GenderChoices[1]),
                          selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
                                         choices = MigrationChoices,
                                         selected = MigrationChoices[1]),
@@ -168,7 +188,7 @@ body <- dashboardBody(
             )
     ),
 
-    tabItem(tabName = "faq",
+    tabItem(tabName = "faq", status = "primary",
             box(h1("Veelgestelde vragen"),
                 box(title = faq_q1, 
                     status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
@@ -180,10 +200,10 @@ body <- dashboardBody(
                     status = "info", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
                     faq_a3) %>% tagAppendAttributes(class = "faq"),
                 box(title = faq_q4, 
-                    status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350,  
+                    status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350,  
                     faq_a4) %>% tagAppendAttributes(class = "faq"),
                 box(title = faq_q5, 
-                    status = "danger", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
+                    status = "warning", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
                     faq_a5) %>% tagAppendAttributes(class = "faq"))
     ),
     
@@ -212,10 +232,17 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
-    titleWidth = 400, 
-    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
+    titleWidth = 470, 
+    title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
     )
+    # tags$li(class = "dropdown", actionBttn(
+    #   inputId = "beginscherm",
+    #   label = "Beginscherm", 
+    #   style = "unite",
+    #   color = "success",
+    #   icon = icon("question")
+    # ))
   ),
   sidebar = sidebar,
   body = body  

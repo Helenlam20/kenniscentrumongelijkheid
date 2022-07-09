@@ -15,6 +15,64 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
+  # # welcome pop-up
+  # shinyalert(
+  #   title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
+  #   text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+  #   waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
+  #               <br><br><b>Stap 1:</b> kies een uitkomstmaat.
+  #               <br><b>Stap 2:</b> kies een kenmerk van ouders.
+  #               <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
+  #               <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #   size = "s",
+  #   closeOnEsc = TRUE,
+  #   closeOnClickOutside = TRUE,
+  #   html = TRUE,
+  #   showConfirmButton = TRUE,
+  #   showCancelButton = FALSE,
+  #   confirmButtonText = "Doorgaan",
+  #   confirmButtonCol = "#18BC9C",
+  #   timer = 0,
+  #   imageUrl = "logo_button_shadow.svg",
+  #   imageWidth = 150,
+  #   imageHeight = 150,
+  #   animation = TRUE
+  # )
+  # 
+  # 
+  # observeEvent(input$beginscherm, {
+  #   sendSweetAlert(
+  #     session = session,
+  #     title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
+  #     text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+  #   waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
+  #               <br><br><b>Stap 1:</b> kies een uitkomstmaat.
+  #               <br><b>Stap 2:</b> kies een kenmerk van ouders.
+  #               <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
+  #               <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #     size = "s",
+  #     closeOnEsc = TRUE,
+  #     closeOnClickOutside = TRUE,
+  #     html = TRUE,
+  #     showConfirmButton = TRUE,
+  #     showCancelButton = FALSE,
+  #     confirmButtonText = "Doorgaan",
+  #     confirmButtonCol = "#18BC9C",
+  #     timer = 0,
+  #     imageUrl = "logo_button_shadow.svg",
+  #     imageWidth = 150,
+  #     imageHeight = 150,
+  #     animation = TRUE
+  #   )
+  # })
+  
+  
+  # take a screenshot
+  observeEvent(input$screenshot, {
+    screenshot(scale = 1,
+               filename = paste0("screenshot ", Sys.time()))
+  }, ignoreInit = FALSE)
+  
   
   vals <- reactiveValues()
 
@@ -62,7 +120,12 @@ server <- function(input, output, session) {
     })
     
     if (input$parents_options == "Inkomen ouders") {
-      bin <- get_bin(data_group1, data_group2)
+      if(!is.null(input$OnePlot) && input$OnePlot) {
+        bin <- get_perc_per_bin(data_group1)
+      } else {
+        bin <- get_bin(data_group1, data_group2) 
+      }
+       
       data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = "Blauwe groep")
       data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = "Groene groep")
       dat <- bind_rows(data_group1, data_group2)      
@@ -92,12 +155,18 @@ server <- function(input, output, session) {
   
   txtFile <- reactive({
     
-    text <- c(temp_txt, readme_sep, 
-              "ALGEMEEN","", 
-              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"), 
+    # select outcome from outcome_dat
+    labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
+
+    text <- c(temp_txt,
+              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
+              readme_sep, "ALGEMENE UITLEG","", 
+              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"),
               readme_sep, "WAT ZIE IK?", "", 
               paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
-              readme_sep, "CAUSALITEIT", "", causal_text)
+              readme_sep, "CAUSALITEIT", "", causal_text, 
+              readme_sep, "LICENTIE", "", caption_license)
+    
     
   })
   
@@ -117,6 +186,32 @@ server <- function(input, output, session) {
       dat <- filterData()
       data_group2 <- subset(dat, dat$group == "Groene groep")
       data_group2_has_data = ifelse(nrow(data_group2) > 0, TRUE, FALSE)
+    }
+  })
+  
+  
+  
+  # GET MEDIAN, 25E & 75E QUANTILE --------------------------------------
+
+  get_median_dat1 <- reactive({
+    
+    if (input$outcome %in% continuous) {
+      median_dat1 <- subset(median_dat, median_dat$uitkomst == input$outcome &
+                              median_dat$geografie == input$geografie1 & 
+                              median_dat$geslacht == input$geslacht1 &
+                              median_dat$migratieachtergrond == input$migratie1 & 
+                              median_dat$huishouden == input$huishouden1)
+    }
+  })
+  
+  get_median_dat2 <- reactive({
+    
+    if (input$outcome %in% continuous) {
+      median_dat2 <- subset(median_dat, median_dat$uitkomst == input$outcome &
+                              median_dat$geografie == input$geografie2 & 
+                              median_dat$geslacht == input$geslacht2 &
+                              median_dat$migratieachtergrond == input$migratie2 & 
+                              median_dat$huishouden == input$huishouden2)
     }
   })
   
@@ -146,22 +241,23 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
       # if dat has more than 1 bin then add range to text
       if (perc_html != 100) {
-        range <- paste0(", gerangschikt van laag naar hoog ouderlijk inkomen.")
-      } else {range <- "."}
+        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen ")
+      } else {range <- ""}
       
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
-                              "% van de ", labels_dat$population, range, 
-                              " De verticale as toont het eigen", statistic_type_text, tolower(labels_dat$outcome_name),
-                              ". De horizontale as toont het gemiddelde inkomen van hun ouders."))
+                              "% van de ", labels_dat$population, " op de horizontale as", range, 
+                              " binnen de betreffende groep. De verticale as toont het ", 
+                              statistic_type_text, " met een ", tolower(labels_dat$outcome_name)))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
-      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, tolower(labels_dat$outcome_name), 
+      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
+                               tolower(labels_dat$outcome_name), 
                                " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
     
       } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
-      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, tolower(labels_dat$outcome_name), 
-                               " van ", labels_dat$population,
+      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, 
+                               " met een ", tolower(labels_dat$outcome_name), " van ", labels_dat$population,
                                ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. 
                                De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit binnen een groep. 
                                Hierdoor kan de gebruiker in één oogopslag zien hoeveel mensen er in een lollipop zitten."))
@@ -191,9 +287,9 @@ server <- function(input, output, session) {
     }    
     
     # output
-    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> is ", labels_dat$definition, "</p>",
-                "<p>", axis_text, "</p>",
-                "<p>", group1_text, " ", group2_text, "</p>"))
+    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
+                "<p>", group1_text, " ", group2_text, "</p>", 
+                "<p>", axis_text, "</p>"))
     
   })
   
@@ -207,14 +303,17 @@ server <- function(input, output, session) {
     stat <- get_stat_per_outcome_html(labels_dat)
     statistic_type_text <- get_stat_per_outcome_html(labels_dat)
     
-    # get average of total group
-    total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-    total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-    
     # get prefix and postfix for outcomes
     prefix_text <- get_prefix(input$outcome)
     postfix_text <- get_postfix(input$outcome)
     
+    # get average of total group
+    total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    
+    # get median, 25e en 75e quantile
+    median_dat1 <- get_median_dat1()
+    median_dat2 <- get_median_dat2()
     
     # load data
     dat <- filterData()
@@ -222,155 +321,246 @@ server <- function(input, output, session) {
     data_group2 <- subset(dat, dat$group == "Groene groep")
     num_rows <- max(nrow(data_group1), nrow(data_group2))
     
-    
-    if (input$parents_options == "Inkomen ouders") {
-
+    # text for switch
+    if (input$SwitchColor == "Blauwe groep") { # SHOW BLUE TEXT IF SWITCH IS OFF
       
-      # get html percentage
-      perc_html <- get_perc_per_bin_html(data_group1)
-      if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
-      
-      if (perc_html != "100") {
-        blue_text <- ""
-        if (data_group1_has_data()) {
-          blue_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
-                            " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
-                            " met ouders met de laagste inkomens in de blauwe groep ", 
-                            paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), "),"), "het",
-                            statistic_type_text, tolower(labels_dat$outcome_name), 
-                            paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
-                            add_bold_text_html(text="blauwe stip", color=data_group1_color), 
-                            " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
-                            " met ouders met de hoogste inkomens in de blauwe groep ", 
-                            paste0("(€ ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
-                            statistic_type_text, tolower(labels_dat$outcome_name),
-                            paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
-        }
-        green_text <- ""
-        if (data_group2_has_data()) {
-          green_text <- paste("De meest linker ", add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
-                              " met ouders met de laagste inkomens in de groene groep ", 
-                              paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), "),"), "het",
-                              statistic_type_text, tolower(labels_dat$outcome_name), 
-                              paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter ", 
-                              add_bold_text_html(text="groene stip", color=data_group2_color), 
-                              " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
-                              " met ouders met de hoogste inkomens in de groene groep ", 
-                              paste0("(€ ",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), "),"), "het", 
-                              statistic_type_text, tolower(labels_dat$outcome_name),
-                              paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
-        }
+      if (data_group1_has_data()) {
         
-      } else if (perc_html == "100") {
-        blue_text <- ""
-        if (data_group1_has_data()){
-          blue_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
-                            "met een jaarlijks inkomen ouders van", 
-                            paste0("€ ",  decimal0(data_group1$parents_income*1000), ","),
-                            "laat zien dat, voor de", paste0(perc_html, "%"), 
-                            labels_dat$population, " het", statistic_type_text, tolower(labels_dat$outcome_name),
-                            paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
-        }
-        green_text <- ""
-        if (data_group2_has_data()) {
-          green_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
-                              "met een jaarlijks inkomen ouders van", 
-                              paste0("€ ",  decimal0(data_group2$parents_income*1000), ","),
-                              "laat zien dat, voor de", paste0(perc_html, "%"), 
-                              labels_dat$population, " het", statistic_type_text, tolower(labels_dat$outcome_name),
-                              paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
+        if (input$parents_options == "Inkomen ouders") {
+          
+          # get html percentage
+          perc_html <- get_perc_per_bin_html(data_group1)
+          if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
+          
+          if (perc_html != "100") {
+            main_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
+                               " met ouders met de laagste inkomens in de blauwe groep ", 
+                               paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), 
+                                      " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name), 
+                               paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
+                               add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
+                               " met ouders met de hoogste inkomens in de blauwe groep ", 
+                               paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), 
+                                      " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name),
+                               paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
+            
+          } else if (perc_html == "100") {
+            main_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
+                               "met een jaarlijks inkomen ouders van", 
+                               paste0("€ ",  decimal0(data_group1$parents_income*1000), ","),
+                               "laat zien dat, voor de", paste0(perc_html, "%"), 
+                               labels_dat$population, " het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
+                               paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
+          }
+          mean_text <- ""
+          median_text <- ""
+          # if user has clicked on the line button
+          if (!is.null(input$line_options)) {
+            
+            # add mean text to tabbox
+            if ("Gemiddelde" %in% input$line_options) {
+              mean_text <- paste(mean_text, gen_mean_text(
+                statistic_type_text, 
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                total_group1$mean,
+                prefix_text,
+                postfix_text
+              ))
+            }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                median_dat1$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
+          }
+          
+          HTML(paste0("<p>", main_text, "</p>",
+                      "<p>", mean_text, median_text, "</p>"))
+          
+        } else if (input$parents_options == "Opleiding ouders") {
+          
+          if (data_group1_has_data()) {
+            bar_text <- paste("De linker", add_bold_text_html(text="blauwe staaf", color=data_group1_color), 
+                              "laat zien dat, voor", labels_dat$population, "met ouders die geen
+                              hbo of wo opleiding hebben, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group1$mean[3]), postfix_text), 
+                              "was. De middelste ", add_bold_text_html(text="blauwe staaf", color=data_group1_color), 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder die
+                              een hbo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group1$mean[2]), postfix_text), 
+                              "was. De rechter ", add_bold_text_html(text="blauwe staaf", color=data_group1_color), 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder die
+                              een wo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was.")
+            
+          } else {
+            bar_text <- bar_text_nodata
+          }
+          
+          mean_text <- ""
+          median_text <- ""
+          # if user has clicked on the mean button
+          if (!is.null(input$line_options)) {
+            if ("Gemiddelde" %in% input$line_options) {
+              mean_text <- ""
+              mean_text <- paste(mean_text, gen_mean_text(
+                statistic_type_text, 
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                total_group1$mean,
+                prefix_text,
+                postfix_text
+              ))
+            }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="blauwe groep", color=data_group1_color),
+                median_dat1$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
+          }
+          
+          HTML(paste0("<p>", bar_text, "</p>",
+                      "<p>", mean_text, median_text, "</p>"))
           
         }
-        
-      }
-      mean_text <- ""
-      # if user has clicked on the mean button
-      if (!is.null(input$line_options)) {
-        if ("Gemiddelde" %in% input$line_options) {
-          mean_text <- ""
-          if (data_group1_has_data()) {
-            mean_text <- paste(mean_text, gen_mean_text(
-              statistic_type_text, 
-              labels_dat$outcome_name, 
-              add_bold_text_html(text="blauwe groep", color=data_group1_color),
-              total_group1$mean,
-              prefix_text,
-              postfix_text
-            ))
-          }
-
-          if (data_group2_has_data()) {
-            mean_text <- paste(mean_text, gen_mean_text(
-              statistic_type_text, 
-              labels_dat$outcome_name, 
-              add_bold_text_html(text="groene groep", color=data_group2_color),
-              total_group2$mean,
-              prefix_text,
-              postfix_text
-            ))
-          }
-        }
-      }
-      
-      HTML(paste0("<p>", blue_text, "</p>",
-                  "<p>", green_text, "</p>", 
-                  "<p>", mean_text, "</p>"))
-      
-      
-    } else if(input$parents_options == "Opleiding ouders") {
-      
-      if (data_group1_has_data() | data_group2_has_data()) {
-        
-        bar_text <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
-                              behaalde opleiding van één van de ouders. Voor opleiding 
-                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
-  
-                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
-                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
-                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
-                              vanaf 1983 voor wo en vanaf 1986 voor hbo. Gegevens over 
-                              middelbaar beroepsonderwijs (mbo) zijn pas beschikbaar vanaf 2004, 
-                              waardoor we geen categorie voor mbo konden definiëren.</p>"))
         
       } else {
+        HTML(gen_nodata_found(add_bold_text_html(text="blauwe groep", color=data_group1_color)))
         
-        bar_text <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
       }
-      
-      mean_text <- ""
-      # if user has clicked on the mean button
-      if (!is.null(input$line_options)) {
-        if ("Gemiddelde" %in% input$line_options) {
+
+    } else if (input$SwitchColor == "Groene groep") { # SHOW GREEN TEXT IF SWITCH IS ON
+     
+      if (data_group2_has_data()) {
+
+        if (input$parents_options == "Inkomen ouders") {
+          
+          # get html percentage
+          perc_html <- get_perc_per_bin_html(data_group2)
+          if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
+          
+          if (perc_html != "100") {
+            main_text <- paste("De meest linker", add_bold_text_html(text="groene stip", color=data_group2_color), 
+                               " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
+                               " met ouders met de laagste inkomens in de groene groep ", 
+                               paste0("(gemiddeld € ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), 
+                                      " per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name), 
+                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter", 
+                               add_bold_text_html(text="groene stip", color=data_group2_color), 
+                               "laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
+                               "met ouders met de hoogste inkomens in de groene groep", 
+                               paste0("(gemiddeld €",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), 
+                                      "per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
+                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
+            
+          } else if (perc_html == "100") {
+            main_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
+                               "met een jaarlijks inkomen ouders van", 
+                               paste0("€ ",  decimal0(data_group2$parents_income*1000), ","),
+                               "laat zien dat, voor de", paste0(perc_html, "%"), 
+                               labels_dat$population, " het", statistic_type_text, "met een", 
+                               tolower(labels_dat$outcome_name),
+                               paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
+          }
           mean_text <- ""
-          if (data_group1_has_data()) {
-            mean_text <- paste(mean_text, gen_mean_text(
-              statistic_type_text, 
-              labels_dat$outcome_name, 
-              add_bold_text_html(text="blauwe groep", color=data_group1_color),
-              total_group1$mean,
-              prefix_text,
-              postfix_text
-            ))
+          median_text <- ""
+          # if user has clicked on the line button
+          if (!is.null(input$line_options)) {
+            
+            # add mean text to tabbox
+            if ("Gemiddelde" %in% input$line_options) {
+              mean_text <- paste(mean_text, gen_mean_text(
+                statistic_type_text, 
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="groene groep", color=data_group2_color),
+                total_group2$mean,
+                prefix_text,
+                postfix_text
+              ))
+            }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="groene groep", color=data_group2_color),
+                median_dat2$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
           }
           
+          HTML(paste0("<p>", main_text, "</p>",
+                      "<p>", mean_text, median_text, "</p>"))
+          
+        } else if (input$parents_options == "Opleiding ouders") {
+          
           if (data_group2_has_data()) {
-            mean_text <- paste(mean_text, gen_mean_text(
-              statistic_type_text, 
-              labels_dat$outcome_name, 
-              add_bold_text_html(text="groene groep", color=data_group2_color),
-              total_group2$mean,
-              prefix_text,
-              postfix_text
-            ))
+            bar_text <- paste("De linker", add_bold_text_html(text="groene staaf", color=data_group2_color), 
+                              "laat zien dat, voor", labels_dat$population, "die ouders hebben die geen
+                              hbo of wo opleiding hebben, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group2$mean[3]), postfix_text), 
+                              "was. De middelste ", add_bold_text_html(text="groene staaf", color=data_group2_color), 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder 
+                              een hbo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group2$mean[2]), postfix_text), 
+                              "was. De rechter ", add_bold_text_html(text="groene staaf", color=data_group2_color), 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder 
+                              een wo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
+                              paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was.")
+          } else {
+            bar_text <- bar_text_nodata
           }
+          
+          mean_text <- ""
+          median_text <- ""
+          # if user has clicked on the mean button
+          if (!is.null(input$line_options)) {
+            if ("Gemiddelde" %in% input$line_options) {
+              mean_text <- ""
+              mean_text <- paste(mean_text, gen_mean_text(
+                statistic_type_text, 
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="groene groep", color=data_group2_color),
+                total_group2$mean,
+                prefix_text,
+                postfix_text
+              ))
+            }
+            # add median text to tabbox
+            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
+              median_text <- paste(median_text, gen_median_text(
+                labels_dat$outcome_name, 
+                add_bold_text_html(text="groene groep", color=data_group2_color),
+                median_dat2$median,
+                prefix_text,
+                postfix_text
+              ))
+            }
+          }
+          
+          HTML(paste0("<p>", bar_text, "</p>",
+                      "<p>", mean_text, median_text, "</p>"))
+          
         }
+
+      } else {
+        HTML(gen_nodata_found(add_bold_text_html(text="groene groep", color=data_group2_color)))
+        
       }
-      
-      HTML(paste0("<p>", bar_text, "</p>",
-                  "<p>", mean_text, "</p>"))
-      
-      
     }
   })
   
@@ -395,11 +585,17 @@ server <- function(input, output, session) {
     # Parse additional input options
     line_option_selected <- FALSE
     mean_option_selected <- FALSE
+    median_option_selected <- FALSE
+    q25_option_selected <- FALSE
+    q75_option_selected <- FALSE
     if (!is.null(input$line_options)) {
   
       line_option_selected <- "Lijn"  %in% input$line_options
       mean_option_selected <- "Gemiddelde" %in% input$line_options
-
+      median_option_selected <- "Mediaan" %in% input$line_options & input$outcome %in% continuous
+      q25_option_selected <- "25e kwantiel" %in% input$line_options & input$outcome %in% continuous
+      q75_option_selected <- "75e kwantiel" %in% input$line_options & input$outcome %in% continuous
+      
       # regression line
       # TODO: Add check for data_group2 when data_group1 is empty
       if (nrow(data_group1) == 5) {
@@ -423,13 +619,15 @@ server <- function(input, output, session) {
       else if (data_group2_has_data())
         plot <- gen_geom_point(data_group2, data_group2_color, prefix_text, postfix_text, shape=15)
 
-      plot <- plot + #scale_x_continuous(labels = function(x) paste0("€ ", x)) +
+      plot <- plot + # scale_x_continuous(labels = function(x) paste0("€ ", x)) +
               theme_minimal() +
               labs(x ="Jaarlijks inkomen ouders (keer € 1.000)", y ="") +
               thema
 
       # Plot for data_group1 
-      if (data_group1_has_data()) {        
+      if (data_group1_has_data()) {
+        median_dat1 <- get_median_dat1()
+        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group1, data_group1_color)
@@ -440,14 +638,27 @@ server <- function(input, output, session) {
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
-          # get average of the groups
           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
+        }
+        # Plot median line if it is selected
+        if (median_option_selected) {
+          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_median) 
+        }
+        # Plot 25e quantile line if it is selected
+        if (q25_option_selected) {
+          plot <- plot + gen_q25_line(median_dat1, data_group1_color, linetype1_q25) 
+        }
+        # Plot 75e quantile line if it is selected
+        if (q75_option_selected) {
+          plot <- plot + gen_q75_line(median_dat1, data_group1_color, linetype1_q75) 
         }
       }
 
       # Plot for data_group2
-      if (data_group2_has_data()) {        
+      if (data_group2_has_data()) { 
+        median_dat2 <- get_median_dat2()
+        
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
           plot <- plot + gen_highlight_points(data_group2, data_group2_color)
@@ -459,6 +670,19 @@ server <- function(input, output, session) {
         if (mean_option_selected) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
+        }
+        
+        if (median_option_selected) {
+          # get the median of the groups
+          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_median) 
+        }
+        # Plot 25e quantile line if it is selected
+        if (q25_option_selected) {
+          plot <- plot + gen_q25_line(median_dat2, data_group2_color, linetype1_q25) 
+        }
+        # Plot 75e quantile line if it is selected
+        if (q75_option_selected) {
+          plot <- plot + gen_q75_line(median_dat2, data_group2_color, linetype1_q75) 
         }
       }     
        
@@ -496,6 +720,20 @@ server <- function(input, output, session) {
         }
       }
       
+      if (median_option_selected) {
+        # get median of the groups
+        if (data_group1_has_data()) {
+          median_dat1 <- get_median_dat1()
+          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
+        }
+        if (data_group2_has_data()) {
+          median_dat2 <- get_median_dat2()
+          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
+          
+        }
+      }
+      
+      
       #### ALTERNATIVE BUBBLE PLOT ####
      } else if (input$change_barplot) {
 
@@ -528,7 +766,20 @@ server <- function(input, output, session) {
          }
        }
        
+       if (median_option_selected) {
+         # get median of the groups
+         if (data_group1_has_data()) {
+           median_dat1 <- get_median_dat1()
+           plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
+         }
+         if (data_group2_has_data()) {
+           median_dat2 <- get_median_dat2()
+           plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
+           
+         }
+       }
 
+       
         # BUBBLE PLOT
         plot <- plot +
         labs(x ="Hoogst behaalde opleiding ouders", y ="") +
@@ -585,7 +836,7 @@ server <- function(input, output, session) {
   
 observeEvent(input$outcome,{
   labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
-  if ("pasgeborenen" %in% labels_dat$population || "leerlingen groep 8" %in% labels_dat$population) {
+  if ("pasgeborenen" %in% labels_dat$population || "leerlingen in groep 8" %in% labels_dat$population) {
     selected_option = input$parents_options
     parent_choices <- c("Inkomen ouders", "Opleiding ouders")
   } else {
@@ -621,6 +872,43 @@ observeEvent(input$parents_options,{
     runjs("document.getElementById('x_axis').closest('div').style.display='block'")
   }
 })
+
+observeEvent(input$outcome,{
+  
+  if (!(input$outcome %in% continuous)) {
+  # remove "Mediaan" option if outcome is not a continuous
+    runjs("document.getElementsByName('line_options')[2].disabled=true")
+  } else {
+    runjs("document.getElementsByName('line_options')[2].disabled=false")
+  }
+})
+
+# remove button if user clicked on button to show one plot
+observeEvent(input$OnePlot,{
+
+  
+  if (!input$OnePlot) {
+    group_choices <- c("Blauwe groep", "Groene groep")
+  } else {
+    group_choices <- "Blauwe groep"
+  }
+  
+  updatePrettyRadioButtons(
+    session = getDefaultReactiveDomain(),
+    inputId = "SwitchColor",
+    label = "Toon uitleg van:", 
+    choices = group_choices,
+    selected = "Blauwe groep",
+    inline = TRUE,
+    prettyOptions = list(
+      icon = icon("check"),
+      bigger = TRUE,
+      status = "info", 
+      animation = "smooth"
+    ),
+  )
+})
+  
 
 update_yaxis_slider <- function(data_min, data_max) {
   # Update the y-axis slider
@@ -688,7 +976,6 @@ observeEvent(input$x_axis,{
         (abs(xlim_max - vals$xslider_max) >= xslider_diff/2)) {
         update_xaxis_slider(xlim_min, xlim_max)
        }
-    
   }
 })
 
@@ -733,8 +1020,8 @@ observeEvent(input$user_reset, {
     algemeenText()
     
   })
-  
-  
+
+
   #### WAT ZIE JE? ####
   output$sample_uitleg <- renderPrint({
  
@@ -756,14 +1043,7 @@ observeEvent(input$user_reset, {
   
   # Create plot
   output$main_figure <- renderPlotly({
-    
-    # withProgress(message = "Even geduld! Bezig met figuren maken", value = 0, {
-    #   for (i in 1:5) {
-    #     incProgress(1/5)
-    #     Sys.sleep(0.1)
-    #   }
-    # })
-    
+
     # call reactive
     makePlot()
     ggplotly(x = vals$plot, tooltip = c("text"))  %>% 
@@ -781,7 +1061,7 @@ observeEvent(input$user_reset, {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("data-", Sys.time(), ".zip")
+      paste0("data ", Sys.time(), ".zip")
     },
     content = function(file) {
       
@@ -791,7 +1071,7 @@ observeEvent(input$user_reset, {
       zip_files <- c()
       
       # get files
-      csv_name <- paste0("data-", Sys.time(), ".csv")
+      csv_name <- paste0("data ", Sys.time(), ".csv")
       write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
@@ -812,7 +1092,7 @@ observeEvent(input$user_reset, {
   output$downloadPlot <- downloadHandler(
   
     filename = function() {
-      paste0("fig-", Sys.time(), ".zip")
+      paste0("fig ", Sys.time(), ".zip")
     },
     content = function(file) {
       
@@ -835,16 +1115,16 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig_with_caption", Sys.time(), ".pdf")
+      fig_name <- paste0("fig_with_caption ", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
-                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN DE STAD\n\n", caption_license, caption_sep, 
-                          "ALGEMEEN\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
-                          caption_sep, "WAT ZIE IK?\n\n",
-                          paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"), 
-                          caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"))
+                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN CIJFERS AMSTERDAM\n\n\n", 
+                                  "ALGEMENE UITLEG\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
+                                  caption_sep, "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
+                                  caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"), 
+                                  caption_sep, "LICENTIE\n\n", caption_license)
                  ) 
             )
       
@@ -852,7 +1132,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- paste0("fig", Sys.time(), ".pdf")
+      fig_name <- paste0("fig ", Sys.time(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))

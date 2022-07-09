@@ -7,62 +7,62 @@
 
 # third tabblad text causality
 causal_text <- 
-  "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen opgroeien 
-en hun uitkomsten over de levensloop. Maar die omstandigheden hangen samen met 
-eindeloos veel factoren die ook van invloed zijn en waarvoor niet te controleren 
-valt. Daarom moeten deze patronen niet worden gezien als oorzakelijke verbanden."
+"Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen
+opgroeien en hun uitkomsten over de levensloop. Maar die omstandigheden 
+hangen samen met eindeloos veel factoren die ook van invloed zijn en
+waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
+gezien als bewijs voor oorzakelijke verbanden."
 
 
 
 # dropdown menu choices
 MoneyChoices <- c("Persoonlijk inkomen" = "c30_income",
-                 "Werkend" = "c30_employed", 
-                 "Uren werk per week" = "c30_hrs_work_pw", 
-                 "Flexibel arbeidscontract" = "c30_flex_contract", 
+                 "Werkt" = "c30_employed", 
+                 "Gewerkte uren per week (werkenden)" = "c30_hrs_work_pw", 
+                 "Vast arbeidscontract" = "c30_permanent_contract", 
                  "Uurloon"  = "c30_hourly_wage", 
-                 "Uitkering arbeidsongeschiktheid/ziekte" = "c30_disability", 
+                 "Ziekte- of arbeidsongeschiktheidsuitkering" = "c30_disability", 
                  "Bijstand" = "c30_social_assistance", 
                  "Vermogen"  = "c30_wealth", 
                  "Schulden" = "c30_debt")
 
 
+HealthChoices <- c("Laag geboortegewicht" = "c00_sga",
+                   "Vroeggeboorte"  = "c00_preterm_birth", 
+                   "Zuigelingensterfte" = "c00_infant_mortality",
+                   "Jeugdbescherming" = "c11_youth_protection",
+                   "Zorgkosten" = "c11_youth_health_costs", 
+                   "Zorgkosten" = "c16_youth_health_costs", 
+                   "Jeugdbescherming" = "c16_youth_protection",
+                   "Zorgkosten" = "c30_total_health_costs", 
+                   "Gebruikt ziekenhuiszorg" = "c30_hospital", 
+                   "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
+                   "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
+                   "Gebruikt medicijnen" = "c30_pharma")
 
-HealthChoices <- c("Zorgkosten" = "c30_total_health_costs", 
-                       "Gebruikt ziekenhuiszorg" = "c30_hospital", 
-                       "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
-                       "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
-                       "Gebruikt medicijnen" = "c30_pharma", 
-                       "Zorgkosten" = "c11_youth_health_costs", 
-                       "Zorgkosten" = "c16_youth_health_costs", 
-                       "Jeugdbescherming" = "c11_youth_protection",
-                       "Jeugdbescherming" = "c16_youth_protection",
-                       "Laag geboortegewicht" = "c00_sga",
-                       "Vroeggeboorte"  = "c00_preterm_birth", 
-                       "Zuigelingensterfte" = "c00_infant_mortality")
-
-EducationChoices <- c("Eindtoetsadvies vmbo-GL en hoger" = "c11_vmbo_gl_test",        
-                      "Eindtoetsadvies havo en hoger" = "c11_havo_test",           
+EducationChoices <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_gl_test",        
+                      "Eindtoetsadvies havo of hoger" = "c11_havo_test",           
                       "Eindtoetsadvies vwo" = "c11_vwo_test",                    
                       "Eindtoets rekenen streefniveau" = "c11_math",           
                       "Eindtoets lezen streefniveau" = "c11_reading",           
                       "Eindtoets taalverzorging streefniveau" = "c11_language",  
-                      "Schooladvies vmbo-GL en hoger" = "c11_vmbo_gl_final",            
-                      "Schooladvies havo en hoger" = "c11_havo_final",           
+                      "Schooladvies vmbo-GL of hoger" = "c11_vmbo_gl_final",            
+                      "Schooladvies havo of hoger" = "c11_havo_final",           
                       "Schooladvies vwo" = "c11_vwo_final" ,                      
                       "Schooladvies hoger dan eindtoetsadvies" = "c11_over_advice", 
                       "Schooladvies lager dan eindtoetsadvies" = "c11_under_advice", 
-                      "Volgt vmbo-GL of hoger" = "c16_vmbo_gl",                  
-                      "Volgt havo of hoger" = "c16_havo",                     
-                      "Volgt vwo" = "c16_vwo",                               
+                      "Vmbo-GL of hoger" = "c16_vmbo_gl",                  
+                      "Havo of hoger" = "c16_havo",                     
+                      "Vwo" = "c16_vwo",                               
                       "Startkwalificatie behaald" = "c21_high_school_attained",             
-                      "Volgend/ gevolgd hbo of hoger" = "c21_hbo_followed",         
-                      "Volgend/ gevolgd universiteit" = "c21_uni_followed",         
-                      "Diploma hbo of hoger" = "c30_hbo_attained",                  
-                      "Diploma universiteit" = "c30_wo_attained")
+                      "Volgend/gevolgd hbo of hoger" = "c21_hbo_followed",         
+                      "Volgend/gevolgd universiteit" = "c21_uni_followed",         
+                      "Hbo of hoger" = "c30_hbo_attained",                  
+                      "Universiteit" = "c30_wo_attained")
 
-HouseChoices <- c("Huiseigenaar" = "c30_home_owner", 
-                 "Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
-                 "Woonoppervlak per lid huishouden" = "c16_living_space_pp")
+HouseChoices <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
+                 "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
+                 "Eigen woning" = "c30_home_owner")
 
 #### DEMOGRAFIC GROUPS ####
 
@@ -80,9 +80,10 @@ HouseholdChoices <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
 
 #### HOVER TEXT ####
-line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De optie <i>Mediaan</i> is alleen beschikbaar voor continue uitkomstmaten."
 
-# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De optie <i>Mediaan, 25e kwantiel en 75e kwantiel</i> zijn alleen beschikbaar voor continue uitkomstmaten. De opties <i>Median</i> toont de mediaan van de groep. De opties <i>25e kwantiel</i> toont het 25ste kwanteiel van de groep. De opties <i>75e kwantiel</i> toont het 75ste kwanteiel van de groep."
+# line_hovertext <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep.<br><br>De opties <i>Mediaan, 25e kwantiel</i> en <i>75e kwantiel</i> zijn alleen beschikbaar voor continue uitkomstmaten."
 
 
 
@@ -91,14 +92,18 @@ parents_hovertext <- "<i>Kenmerk van de ouders</i> staat op de horizontale as va
 
 #### FREQUENTLY ASKED QUESTONS ####
 
-faq_q1 <- HTML(paste(str_wrap("Vraag 1: waarom is dit de eerste veelgestelde vraag? 
-Dit is gewoon opvulling om te zien hoe dit eruit zien met een lange vraag", width = 60), sep = "<br/>"))
-faq_a1 <- "Antwoord op de vraag! Dit is gewoon opvulling om te zien hoe dit eruit zien met een lang antwoord.
-Antwoord op de vraag! Dit is gewoon opvulling om te zien hoe dit eruit zien met een lang antwoord.
-Antwoord op de vraag! Dit is gewoon opvulling om te zien hoe dit eruit zien met een lang antwoord.
-Antwoord op de vraag! Dit is gewoon opvulling om te zien hoe dit eruit zien met een lang antwoord.
-Antwoord op de vraag! Dit is gewoon opvulling om te zien hoe dit eruit zien met een lang antwoord."
-
+faq_q1 <- HTML(paste(str_wrap("Vraag 1: hoe wordt Opleiding Ouders gedefinieerd, 
+waarom is het alleen beschikbaar voor een paar uitkomstmaten en waarom zijn er maar drie categorieën?", width = 60), sep = "<br/>"))
+faq_a1 <- HTML(paste0("<p>Opleiding ouders wordt gedefinieerd als de hoogst 
+                              behaalde opleiding van één van de ouders. Voor opleiding 
+                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+                              
+                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
+                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo. 
+                             Het opleidingsniveau 'geen hbo of wo' kan hierdoor niet verder 
+                             gedifferentieerd worden.</p>"))
 
 faq_q2 <- "Vraag 2: waarom is dit de tweede veelgestelde vraag?"
 faq_a2 <- "Antwoord op de vraag!"
