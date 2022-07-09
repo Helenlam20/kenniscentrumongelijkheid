@@ -446,4 +446,7 @@ bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als 
 bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
 
 
-
+# Get formatted datetime
+get_datetime <- function() {
+  return(format(Sys.time(), "%Y-%m-%d %H_%M_%S"))
+} 
