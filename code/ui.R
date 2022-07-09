@@ -46,6 +46,8 @@ body <- dashboardBody(
   useShinyjs(),
   useSweetAlert(), 
   tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
+  # JS cookie library
+  tags$script(src = paste0("https://cdn.jsdelivr.net/npm/js-cookie@rc/","dist/js.cookie.min.js")), 
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
   theme_poor_mans_flatly,
@@ -235,14 +237,11 @@ ui <- dashboardPage(
     titleWidth = 470, 
     title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
                       style = "font-weight: bold;"
-    )
-    # tags$li(class = "dropdown", actionBttn(
-    #   inputId = "beginscherm",
-    #   label = "Beginscherm", 
-    #   style = "unite",
-    #   color = "success",
-    #   icon = icon("question")
-    # ))
+                      
+    ),
+    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
+    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
+
   ),
   sidebar = sidebar,
   body = body  
