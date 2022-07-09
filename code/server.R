@@ -70,7 +70,7 @@ server <- function(input, output, session) {
   # take a screenshot
   observeEvent(input$screenshot, {
     screenshot(scale = 1,
-               filename = paste0("screenshot ", Sys.time()))
+               filename = paste0("screenshot ", get_datetime()))
   }, ignoreInit = FALSE)
   
   
@@ -1061,7 +1061,7 @@ observeEvent(input$user_reset, {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("data ", Sys.time(), ".zip")
+      paste0("data ", get_datetime(), ".zip")
     },
     content = function(file) {
       
@@ -1071,7 +1071,7 @@ observeEvent(input$user_reset, {
       zip_files <- c()
       
       # get files
-      csv_name <- paste0("data ", Sys.time(), ".csv")
+      csv_name <- paste0("data ", get_datetime(), ".csv")
       write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
@@ -1092,7 +1092,7 @@ observeEvent(input$user_reset, {
   output$downloadPlot <- downloadHandler(
   
     filename = function() {
-      paste0("fig ", Sys.time(), ".zip")
+      paste0("fig ", get_datetime(), ".zip")
     },
     content = function(file) {
       
@@ -1115,7 +1115,7 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig_with_caption ", Sys.time(), ".pdf")
+      fig_name <- paste0("fig_with_caption ", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
@@ -1132,7 +1132,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- paste0("fig ", Sys.time(), ".pdf")
+      fig_name <- paste0("fig ", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))
