@@ -1187,10 +1187,10 @@ observeEvent(input$user_reset, {
       # TODO: add legend
       fig_name <- paste0("fig_with_caption_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 14)
+          width = 9, height = 15)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
-                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN CIJFERS AMSTERDAM\n\n\n", 
+                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN AMSTERDAM\n\n\n", 
                                   CaptionFile(), caption_sep, 
                                   "ALGEMENE UITLEG\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                                   caption_sep, "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),

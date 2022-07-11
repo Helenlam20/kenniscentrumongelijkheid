@@ -1,3 +1,3 @@
-UITLEG DASHBOARD ONGELIJKHEID IN CIJFERS AMSTERDAM 
+UITLEG DASHBOARD ONGELIJKHEID IN AMSTERDAM 
 ================================================================================
 
