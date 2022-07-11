@@ -67,6 +67,31 @@ server <- function(input, output, session) {
   # })
   
   
+  # text of tabbox 1 for parents characteristics
+  observe({
+    if (input$parents_options == "Opleiding ouders") {
+      
+      updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
+                               choices = c("Uitkomstmaat", "Opleiding ouders"),
+                               inline = TRUE, 
+                               prettyOptions = list(
+                                 icon = icon("check"),
+                                 bigger = TRUE,
+                                 status = "info", 
+                                 animation = "smooth"))
+                               
+    } else {
+      updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
+                               choices = c("Uitkomstmaat", "Inkomen ouders"),
+                               inline = TRUE, 
+                               prettyOptions = list(
+                                 icon = icon("check"),
+                                 bigger = TRUE,
+                                 status = "info", 
+                                 animation = "smooth"))
+    }
+  })
+
   # take a screenshot
   observeEvent(input$screenshot, {
     screenshot(scale = 1,
@@ -1047,7 +1072,32 @@ observeEvent(input$user_reset, {
   #### ALGEMEEN ####
   output$selected_outcome <- renderPrint({
     
-    algemeenText()
+    if (input$SwitchTabbox1 == "Uitkomstmaat") {
+      algemeenText()
+      
+    } else if (input$SwitchTabbox1 == "Opleiding ouders") {
+      HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+                              behaalde opleiding van één van de ouders. Voor opleiding 
+                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+                              
+                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
+                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo. 
+                             Het opleidingsniveau <i>geen hbo of wo</i> kan hierdoor niet verder 
+                             gedifferentieerd worden.</p>"))
+      
+    } else if (input$SwitchTabbox1 == "Inkomen ouders") {
+      
+      HTML(paste0("<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde 
+      gezamelijk bruto-inkomen van ouders (zie tab <i>Werkwijze</i> voor meer informatie).</p>
+      
+      <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. 
+      Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de 
+      ouders bij elkaar op. Als slechts een ouder bekend is, dan gebruiken we alleen dat inkomen van 
+      de ouder.</p>"))
+      
+    }
     
   })
 
