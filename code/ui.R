@@ -113,7 +113,15 @@ body <- dashboardBody(
                        ),
                        column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome")),
+                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome"),
+                                         br(),
+                                         prettyRadioButtons(
+                                           inputId = "SwitchTabbox1", label = "Toon uitleg van:",
+                                           choices = c("Uitkomstmaat", "Inkomen ouders"),
+                                           icon = icon("check"), inline = TRUE,
+                                           bigger = TRUE, selected = "Uitkomstmaat",
+                                           status = "info", animation = "smooth")
+                                         ),
                                 tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
                                          br(), 
                                          prettyRadioButtons(
