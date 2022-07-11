@@ -241,7 +241,7 @@ ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
     titleWidth = 470, 
-    title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
+    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
     )
     # tags$li(class = "dropdown", actionBttn(
