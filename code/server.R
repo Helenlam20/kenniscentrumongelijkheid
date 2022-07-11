@@ -153,13 +153,26 @@ server <- function(input, output, session) {
 
   # DOWNLOAD REACTIVE ----------------------------------------------------
   
-  txtFile <- reactive({
+  TxtFile <- reactive({
     
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
 
+    
+    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
+                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
+                      input$huishouden1, "(aantal ouders in gezin)")
+    caption2 <- ""
+    if(!input$OnePlot) {
+      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
+                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
+                        input$huishouden2, "(aantal ouders in gezin)")
+    }
+    
+    caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 75), collapse = "\n")
+    
     text <- c(temp_txt,
-              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
+              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")\n"), caption, 
               readme_sep, "ALGEMENE UITLEG","", 
               paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"),
               readme_sep, "WAT ZIE IK?", "", 
@@ -167,6 +180,23 @@ server <- function(input, output, session) {
               readme_sep, "CAUSALITEIT", "", causal_text, 
               readme_sep, "LICENTIE", "", caption_license)
     
+    
+  })
+  
+  # caption of the groups in download file
+  CaptionFile <- reactive({
+    
+    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
+                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
+                      input$huishouden1, "(aantal ouders in gezin)")
+    caption2 <- ""
+    if(!input$OnePlot) {
+      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
+                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
+                        input$huishouden2, "(aantal ouders in gezin)")
+    }
+    
+    caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 85), collapse = "\n")
     
   })
   
@@ -1061,7 +1091,7 @@ observeEvent(input$user_reset, {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("data ", get_datetime(), ".zip")
+      paste0("data_", get_datetime(), ".zip")
     },
     content = function(file) {
       
@@ -1071,13 +1101,13 @@ observeEvent(input$user_reset, {
       zip_files <- c()
       
       # get files
-      csv_name <- paste0("data ", get_datetime(), ".csv")
+      csv_name <- paste0("data_", get_datetime(), ".csv")
       write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
       fileConn <- file("README.txt")
-      writeLines(txtFile(), fileConn)
+      writeLines(TxtFile(), fileConn)
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
@@ -1092,20 +1122,10 @@ observeEvent(input$user_reset, {
   output$downloadPlot <- downloadHandler(
   
     filename = function() {
-      paste0("fig ", get_datetime(), ".zip")
+      paste0("fig_", get_datetime(), ".zip")
     },
     content = function(file) {
-      
-      caption1 <- paste(strwrap(paste("Blauwe groep:", input$geografie1, "-", 
-                                      input$geslacht1, "-", input$migratie1, "-", 
-                                      input$huishouden1), width = 70), collapse = "\n")
-      caption2 <- ""
-      if(!input$OnePlot) {
-        caption2 <- paste(strwrap(paste("Groene groep:", input$geografie2, "-", 
-                                        input$geslacht2, "-", input$migratie2, "-", 
-                                        input$huishouden2), width = 70), collapse = "\n")
-      }
-      
+
   
       # set temporary dir
       labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
@@ -1115,12 +1135,13 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig_with_caption ", get_datetime(), ".pdf")
+      fig_name <- paste0("fig_with_caption_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 9, height = 14)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
                  caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN CIJFERS AMSTERDAM\n\n\n", 
+                                  CaptionFile(), caption_sep, 
                                   "ALGEMENE UITLEG\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                                   caption_sep, "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
                                   caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"), 
@@ -1132,7 +1153,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- paste0("fig ", get_datetime(), ".pdf")
+      fig_name <- paste0("fig_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))
@@ -1141,7 +1162,7 @@ observeEvent(input$user_reset, {
       
       # write txt file
       fileConn <- file("README.txt")
-      writeLines(txtFile(), fileConn)
+      writeLines(TxtFile(), fileConn)
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
