@@ -68,12 +68,17 @@ server <- function(input, output, session) {
   
   
   # text of tabbox 1 for parents characteristics
-  observe({
+  observeEvent(input$parents_options, {
+    selected_option <- input$SwitchTabbox1
+    
     if (input$parents_options == "Opleiding ouders") {
+      
+      if (selected_option != "Uitkomstmaat") {selected_option <- "Opleiding ouders"}
       
       updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
                                choices = c("Uitkomstmaat", "Opleiding ouders"),
                                inline = TRUE, 
+                               selected = selected_option, 
                                prettyOptions = list(
                                  icon = icon("check"),
                                  bigger = TRUE,
@@ -81,9 +86,13 @@ server <- function(input, output, session) {
                                  animation = "smooth"))
                                
     } else {
+      
+      if (selected_option != "Uitkomstmaat") {selected_option <- "Inkomen ouders"}
+      
       updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
                                choices = c("Uitkomstmaat", "Inkomen ouders"),
                                inline = TRUE, 
+                               selected = selected_option, 
                                prettyOptions = list(
                                  icon = icon("check"),
                                  bigger = TRUE,
