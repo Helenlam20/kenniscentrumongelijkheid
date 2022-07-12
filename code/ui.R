@@ -240,7 +240,7 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
-    titleWidth = 470, 
+    titleWidth = 400, 
     title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
     )
