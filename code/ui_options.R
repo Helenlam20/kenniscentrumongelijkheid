@@ -55,10 +55,10 @@ EducationChoices <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_gl_test",
                       "Havo of hoger" = "c16_havo",                     
                       "Vwo" = "c16_vwo",                               
                       "Startkwalificatie behaald" = "c21_high_school_attained",             
-                      "Volgend/gevolgd hbo of hoger" = "c21_hbo_followed",         
-                      "Volgend/gevolgd universiteit" = "c21_uni_followed",         
-                      "Hbo of hoger" = "c30_hbo_attained",                  
-                      "Universiteit" = "c30_wo_attained")
+                      "Hbo of hoger" = "c21_hbo_followed",         
+                      "Universiteit" = "c21_uni_followed",         
+                      "Diploma hbo of hoger" = "c30_hbo_attained",                  
+                      "Diploma universiteit" = "c30_wo_attained")
 
 HouseChoices <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
                  "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
