@@ -1,0 +1,7 @@
+---
+title: "videos"
+output: html_document
+---
+# Uitlegvideo's
+
+Hier gaan we uitleg geven over de figuren van het dashboard (en de functionaliteiten van het dashboard). 

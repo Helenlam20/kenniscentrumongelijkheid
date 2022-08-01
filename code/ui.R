@@ -24,9 +24,9 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Help", tabName = "help", icon = icon("question")),
-      # menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
-      # menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      # menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
+      # menuItem("FAQ", tabName = "faq", icon = icon("question")),
+      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
@@ -50,6 +50,7 @@ body <- dashboardBody(
   tags$script(src = paste0("https://cdn.jsdelivr.net/npm/js-cookie@rc/","dist/js.cookie.min.js")), 
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+  tags$head(includeHTML(("www/google-analytics.html"))),
   theme_poor_mans_flatly,
   tabItems(
     # gradient
@@ -115,7 +116,15 @@ body <- dashboardBody(
                        ),
                        column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome")),
+                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome"),
+                                         br(),
+                                         prettyRadioButtons(
+                                           inputId = "SwitchTabbox1", label = "Toon uitleg van:",
+                                           choices = c("Uitkomstmaat", "Inkomen ouders"),
+                                           icon = icon("check"), inline = TRUE,
+                                           bigger = TRUE, selected = "Uitkomstmaat",
+                                           status = "info", animation = "smooth")
+                                         ),
                                 tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
                                          br(), 
                                          prettyRadioButtons(
@@ -184,10 +193,17 @@ body <- dashboardBody(
     ),
     
     # tab content
-    tabItem(tabName = "help",
+    tabItem(tabName = "videos",
             box(status = "primary", 
-                includeMarkdown("markdown/help.Rmd")
-            )
+                includeMarkdown("markdown/videos.Rmd")
+            ), 
+            box(status = "primary", 
+                HTML('<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/k3NVzWiOhyU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-lFq7c_zMW4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))
+            
+            
+            
+            
     ),
 
     tabItem(tabName = "faq", status = "primary",
@@ -234,8 +250,8 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title="Dashboard Ongelijkheid in Amsterdam",
   header = dashboardHeader(
-    titleWidth = 470, 
-    title = tags$span("Dashboard Ongelijkheid in Cijfers Amsterdam", 
+    titleWidth = 400, 
+    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
                       
     ),

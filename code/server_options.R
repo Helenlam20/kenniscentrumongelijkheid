@@ -33,15 +33,15 @@ data_group2_color <- "#18bc9c"
 # linetype
 linetype1_reg <- "longdash"
 linetype1_mean <- "longdash"
-linetype1_median <- "longdash"
-linetype1_q25 <- "longdash"
-linetype1_q75 <- "longdash"
+# linetype1_median <- "longdash"
+# linetype1_q25 <- "longdash"
+# linetype1_q75 <- "longdash"
 
 linetype2_reg <- "dotted"
 linetype2_mean <- "dotted"
-linetype2_median <- "dotted"
-linetype1_q25 <- "dotted"
-linetype1_q75 <- "dotted"
+# linetype2_median <- "dotted"
+# linetype1_q25 <- "dotted"
+# linetype1_q75 <- "dotted"
 
 # Add color functions
 add_text_color_html <- function(text, color) {
@@ -285,12 +285,11 @@ caption_sep <-
 "\n\n=========================================================================\n"
 caption_license <- paste0(
 "Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
-van Erasmus School of Economics, met ondersteuning van Kenniscentrum Ongelijkheid. 
-De figuur en onderliggende data zijn beschikbaar volgens een Creative Commons 
-BY-NC-SA 4.0 licentie, altijd onder vermelding van auteurs en de website 
-ongelijkheidincijfers.amsterdam. Bij vragen kunt u contact opnemen met 
-ravesteijn@ese.eur.nl"   
-
+van Erasmus School of Economics, met ondersteuning van Kenniscentrum 
+Ongelijkheid. De figuur en onderliggende data zijn beschikbaar volgens een 
+Creative Commons BY-NC-SA 4.0 licentie, altijd onder vermelding van auteurs en 
+de website ongelijkheidincijfers.amsterdam. Bij vragen kunt u contact opnemen 
+met ravesteijn@ese.eur.nl"
 )
 
 
@@ -448,5 +447,5 @@ bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
 
 # Get formatted datetime
 get_datetime <- function() {
-  return(format(Sys.time(), "%Y-%m-%d %H_%M_%S"))
+  str_replace(format(Sys.time(), "%Y-%m-%d %H-%M-%S"), " ", "_")
 } 

@@ -66,6 +66,40 @@ server <- function(input, output, session) {
 
   
   
+  # text of tabbox 1 for parents characteristics
+  observeEvent(input$parents_options, {
+    selected_option <- input$SwitchTabbox1
+    
+    if (input$parents_options == "Opleiding ouders") {
+      
+      if (selected_option != "Uitkomstmaat") {selected_option <- "Opleiding ouders"}
+      
+      updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
+                               choices = c("Uitkomstmaat", "Opleiding ouders"),
+                               inline = TRUE, 
+                               selected = selected_option, 
+                               prettyOptions = list(
+                                 icon = icon("check"),
+                                 bigger = TRUE,
+                                 status = "info", 
+                                 animation = "smooth"))
+                               
+    } else {
+      
+      if (selected_option != "Uitkomstmaat") {selected_option <- "Inkomen ouders"}
+      
+      updatePrettyRadioButtons(session, "SwitchTabbox1", label = "Toon uitleg van:", 
+                               choices = c("Uitkomstmaat", "Inkomen ouders"),
+                               inline = TRUE, 
+                               selected = selected_option, 
+                               prettyOptions = list(
+                                 icon = icon("check"),
+                                 bigger = TRUE,
+                                 status = "info", 
+                                 animation = "smooth"))
+    }
+  })
+
   # take a screenshot
   observeEvent(input$screenshot, {
     screenshot(scale = 1,
@@ -152,13 +186,26 @@ server <- function(input, output, session) {
 
   # DOWNLOAD REACTIVE ----------------------------------------------------
   
-  txtFile <- reactive({
+  TxtFile <- reactive({
     
     # select outcome from outcome_dat
     labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
 
+    
+    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
+                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
+                      input$huishouden1, "(aantal ouders in gezin)")
+    caption2 <- ""
+    if(!input$OnePlot) {
+      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
+                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
+                        input$huishouden2, "(aantal ouders in gezin)")
+    }
+    
+    caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 75), collapse = "\n")
+    
     text <- c(temp_txt,
-              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
+              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")\n"), caption, 
               readme_sep, "ALGEMENE UITLEG","", 
               paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"),
               readme_sep, "WAT ZIE IK?", "", 
@@ -166,6 +213,23 @@ server <- function(input, output, session) {
               readme_sep, "CAUSALITEIT", "", causal_text, 
               readme_sep, "LICENTIE", "", caption_license)
     
+    
+  })
+  
+  # caption of the groups in download file
+  CaptionFile <- reactive({
+    
+    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
+                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
+                      input$huishouden1, "(aantal ouders in gezin)")
+    caption2 <- ""
+    if(!input$OnePlot) {
+      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
+                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
+                        input$huishouden2, "(aantal ouders in gezin)")
+    }
+    
+    caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 85), collapse = "\n")
     
   })
   
@@ -246,7 +310,7 @@ server <- function(input, output, session) {
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
                               "% van de ", labels_dat$population, " op de horizontale as", range, 
                               " binnen de betreffende groep. De verticale as toont het ", 
-                              statistic_type_text, " met een ", tolower(labels_dat$outcome_name)))
+                              statistic_type_text, tolower(labels_dat$outcome_name)))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
       axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
@@ -332,18 +396,18 @@ server <- function(input, output, session) {
           if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
           
           if (perc_html != "100") {
-            main_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+            main_text <- paste("<p>De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                                " met ouders met de laagste inkomens in de blauwe groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name), 
-                               paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
+                               paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was.</p><p>De meest rechter ", 
                                add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                                " met ouders met de hoogste inkomens in de blauwe groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name),
-                               paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                               paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.</p>")
             
           } else if (perc_html == "100") {
             main_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
@@ -452,18 +516,18 @@ server <- function(input, output, session) {
           if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
           
           if (perc_html != "100") {
-            main_text <- paste("De meest linker", add_bold_text_html(text="groene stip", color=data_group2_color), 
+            main_text <- paste("<p>De meest linker", add_bold_text_html(text="groene stip", color=data_group2_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                                " met ouders met de laagste inkomens in de groene groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name), 
-                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter", 
+                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was.</p><p>De meest rechter", 
                                add_bold_text_html(text="groene stip", color=data_group2_color), 
                                "laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                                "met ouders met de hoogste inkomens in de groene groep", 
                                paste0("(gemiddeld €",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), 
                                       "per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
-                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.</p>")
             
           } else if (perc_html == "100") {
             main_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),
@@ -1016,7 +1080,32 @@ observeEvent(input$user_reset, {
   #### ALGEMEEN ####
   output$selected_outcome <- renderPrint({
     
-    algemeenText()
+    if (input$SwitchTabbox1 == "Uitkomstmaat") {
+      algemeenText()
+      
+    } else if (input$SwitchTabbox1 == "Opleiding ouders") {
+      HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+                              behaalde opleiding van één van de ouders. Voor opleiding 
+                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+                              
+                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
+                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo. 
+                             Het opleidingsniveau <i>geen hbo of wo</i> kan hierdoor niet verder 
+                             gedifferentieerd worden.</p>"))
+      
+    } else if (input$SwitchTabbox1 == "Inkomen ouders") {
+      
+      HTML(paste0("<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde 
+      gezamelijk bruto-inkomen van ouders (zie tab <i>Werkwijze</i> voor meer informatie).</p>
+      
+      <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. 
+      Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de 
+      ouders bij elkaar op. Als slechts een ouder bekend is, dan gebruiken we alleen dat inkomen van 
+      de ouder.</p>"))
+      
+    }
     
   })
 
@@ -1060,7 +1149,7 @@ observeEvent(input$user_reset, {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("data ", get_datetime(), ".zip")
+      paste0("data_", get_datetime(), ".zip")
     },
     content = function(file) {
       
@@ -1070,13 +1159,13 @@ observeEvent(input$user_reset, {
       zip_files <- c()
       
       # get files
-      csv_name <- paste0("data ", get_datetime(), ".csv")
+      csv_name <- paste0("data_", get_datetime(), ".csv")
       write.csv(DataDownload(), csv_name)
       zip_files <- c(zip_files, csv_name)
       
       # write txt file
       fileConn <- file("README.txt")
-      writeLines(txtFile(), fileConn)
+      writeLines(TxtFile(), fileConn)
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
@@ -1091,20 +1180,10 @@ observeEvent(input$user_reset, {
   output$downloadPlot <- downloadHandler(
   
     filename = function() {
-      paste0("fig ", get_datetime(), ".zip")
+      paste0("fig_", get_datetime(), ".zip")
     },
     content = function(file) {
-      
-      caption1 <- paste(strwrap(paste("Blauwe groep:", input$geografie1, "-", 
-                                      input$geslacht1, "-", input$migratie1, "-", 
-                                      input$huishouden1), width = 70), collapse = "\n")
-      caption2 <- ""
-      if(!input$OnePlot) {
-        caption2 <- paste(strwrap(paste("Groene groep:", input$geografie2, "-", 
-                                        input$geslacht2, "-", input$migratie2, "-", 
-                                        input$huishouden2), width = 70), collapse = "\n")
-      }
-      
+
   
       # set temporary dir
       labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
@@ -1114,12 +1193,13 @@ observeEvent(input$user_reset, {
       
       # get plot
       # TODO: add legend
-      fig_name <- paste0("fig_with_caption ", get_datetime(), ".pdf")
+      fig_name <- paste0("fig_with_caption_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 14)
+          width = 9, height = 15)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
-                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN CIJFERS AMSTERDAM\n\n\n", 
+                 caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN AMSTERDAM\n\n\n", 
+                                  CaptionFile(), caption_sep, 
                                   "ALGEMENE UITLEG\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                                   caption_sep, "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
                                   caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"), 
@@ -1131,7 +1211,7 @@ observeEvent(input$user_reset, {
       zip_files <- c(zip_files, fig_name)
       
       # figure no caption 
-      fig_name <- paste0("fig ", get_datetime(), ".pdf")
+      fig_name <- paste0("fig_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
           width = 10, height = 6)
       print(vals$plot + labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")")))
@@ -1140,7 +1220,7 @@ observeEvent(input$user_reset, {
       
       # write txt file
       fileConn <- file("README.txt")
-      writeLines(txtFile(), fileConn)
+      writeLines(TxtFile(), fileConn)
       close(fileConn)
       zip_files <- c(zip_files, "README.txt")
       
