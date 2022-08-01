@@ -7,7 +7,7 @@ output: html_document
 
 
 ### Licentie
-Het dashboard <i>Ongelijkheid in Amsterdam</i>  is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics, met ondersteuning van Kenniscentrum 
+Het dashboard Ongelijkheid in Amsterdam is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics, met ondersteuning van Kenniscentrum 
 Ongelijkheid. De figuur en onderliggende data zijn beschikbaar volgens een 
 Creative Commons BY-NC-SA 4.0 licentie, altijd onder vermelding van de 
 auteurs en de website [ongelijkheidincijfers.amsterdam](https://www.ongelijkheidincijfers.amsterdam).

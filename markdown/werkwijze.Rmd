@@ -5,13 +5,15 @@ output: html_document
 
 # Werkwijze
 
-Het dashboard <i>Ongelijkheid in Amsterdam</i> is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics in samenwerking met Kenniscentrum Ongelijkheid over de sociaaleconomische ongelijkheid binnen de Metropoolregio Amsterdam. 
+Het dashboard Ongelijkheid in Amsterdam is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics en de Vrije Universiteit Amsterdam in samenwerking met Kenniscentrum Ongelijkheid (KCO) over de ontwikkeling van ongelijkheid over de tijd binnen de Metropoolregio Amsterdam. 
 
-<b>Doel:</b> het doel is het bijdrage aan het beschrijven, begrijpen en aanpakken van ongelijkheid binnen Amsterdam met beschrijvende statistiek.
+Het dashboard geeft inzicht op de ongelijkheden die zich voordoen in verschillende domeinen en levensfasen en in de samenhang daartussen. Het gaat zowel over wonen, gezondheid en welzijn, werk en inkomen en onderwijs, waarbij ongelijkheden in het ene domein van invloed kunnen zijn op kansen in het andere domein. 
 
-<b>Hoe:</b> met behulp van een interactief en intuïtief dashboard krijgt de gebruiker inzicht in de relatie tussen omstandigheden in de jeugd en ongelijkheid in uitkomsten voor individuen die zijn opgegroeid in Amsterdam.
+<b>Doel:</b> Het doel van Kenniscentrum Ongelijkheid is het beschrijven, begrijpen en aanpakken van ongelijkheid in de Metropoolregio Amsterdam. Het dashboard Ongelijkheid in Amsterdam draagt hieraan bij door beschrijvende statistiek over ongelijkheid beschikbaar te stellen. Hiermee kunnen andere partners van het kenniscentrum ongelijkheid gerichter aanpakken.
 
-<b>Wat:</b> aan de hand van beschrijvende statistiek maken we inzichtelijk waar, wanneer en hoe ongelijkheid ontstaat en zich manifesteert in de Metropoolregio Amsterdam.
+<b>Hoe:</b> Met behulp van een interactieve en intuïtieve website krijgt de gebruiker inzicht in de relatie tussen omstandigheden in de jeugd en uitkomsten over de levensloop voor mensen die zijn opgegroeid in Metropoolregio Amsterdam. We gebruiken gedetailleerde gegevens over alle mensen die vanaf de jaren negentig tot nu zijn opgegroeid in de Metropoolregio Amsterdam. 
+
+<b>Wat:</b> Aan de hand van beschrijvende statistieken maakt het dashboard inzichtelijk waar, wanneer en hoe ongelijkheid ontstaat in de Metropoolregio Amsterdam.
 
 Lees hier het rapport over de werkwijze van het dashboard: <a href="werkwijze.pdf" download="werkwijze ongelijkheid in Amsterdam.pdf">Download werkwijze rapport</a>
 

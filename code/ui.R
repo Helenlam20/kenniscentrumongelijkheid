@@ -24,8 +24,8 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Help", tabName = "help", icon = icon("question")),
-      # menuItem("FAQ", tabName = "faq", icon = icon("question-sign", lib = "glyphicon")),
+      # menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
+      # menuItem("FAQ", tabName = "faq", icon = icon("question")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
@@ -191,10 +191,17 @@ body <- dashboardBody(
     ),
     
     # tab content
-    tabItem(tabName = "help",
+    tabItem(tabName = "videos",
             box(status = "primary", 
-                includeMarkdown("markdown/help.Rmd")
-            )
+                includeMarkdown("markdown/videos.Rmd")
+            ), 
+            box(status = "primary", 
+                HTML('<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/k3NVzWiOhyU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-lFq7c_zMW4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))
+            
+            
+            
+            
     ),
 
     tabItem(tabName = "faq", status = "primary",
@@ -247,7 +254,7 @@ ui <- dashboardPage(
     )
     # tags$li(class = "dropdown", actionBttn(
     #   inputId = "beginscherm",
-    #   label = "Beginscherm", 
+    #   label = "Beginscherm",
     #   style = "unite",
     #   color = "success",
     #   icon = icon("question")

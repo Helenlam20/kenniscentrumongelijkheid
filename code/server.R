@@ -18,12 +18,12 @@ server <- function(input, output, session) {
   # # welcome pop-up
   # shinyalert(
   #   title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
-  #   text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+  #   text = HTML("Het dashboard Ongelijkheid in Amsterdam geeft inzicht in de samenhang tussen de omstandigheden
   #   waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
   #               <br><br><b>Stap 1:</b> kies een uitkomstmaat.
   #               <br><b>Stap 2:</b> kies een kenmerk van ouders.
   #               <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-  #               <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #               <br><br>Voor meer informatie over het dashboard, zie tabblad Uitlegvideo's."),
   #   size = "s",
   #   closeOnEsc = TRUE,
   #   closeOnClickOutside = TRUE,
@@ -44,12 +44,12 @@ server <- function(input, output, session) {
   #   sendSweetAlert(
   #     session = session,
   #     title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
-  #     text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+  #     text = HTML("Het dashboard Ongelijkheid in Amsterdam geeft inzicht in de samenhang tussen de omstandigheden
   #   waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
   #               <br><br><b>Stap 1:</b> kies een uitkomstmaat.
   #               <br><b>Stap 2:</b> kies een kenmerk van ouders.
   #               <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-  #               <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #               <br><br>Voor meer informatie over het dashboard, zie tabblad Uitlegvideo's."),
   #     size = "s",
   #     closeOnEsc = TRUE,
   #     closeOnClickOutside = TRUE,
