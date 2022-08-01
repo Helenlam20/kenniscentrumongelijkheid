@@ -74,3 +74,12 @@ for (let faq_box of faq_boxes) {
     let collapse_btn = faq_box.getElementsByClassName("btn")[0];
     header.addEventListener("click", ()=>collapse_btn.click());
 }
+
+// Show beginscherm on first start
+$(document).on('shiny:connected', function(){
+    let user_visited = Cookies.get("user_visited");
+    if(user_visited === undefined) {
+        Shiny.setInputValue("beginscherm", true);
+        Cookies.set("user_visited", true);
+    }
+})
