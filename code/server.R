@@ -15,56 +15,55 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
-  # welcome pop-up
-  observeEvent(input$beginscherm, {
-      sendSweetAlert(
-        session = session,
-        title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
-        text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
-      waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
-                  <br><br><b>Stap 1:</b> kies een uitkomstmaat.
-                  <br><b>Stap 2:</b> kies een kenmerk van ouders.
-                  <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-                  <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
-        
-        btn_labels = "Doorgaan",
-        btn_colors = "#18BC9C",
-        html = TRUE,
-        closeOnClickOutside = TRUE,
-        showCloseButton = TRUE,
-        imageUrl = "logo_button_shadow.svg",
-        imageWidth = 150,
-        imageHeight = 150
-      )
-  })
+  # # welcome pop-up
+  # observeEvent(input$beginscherm, {
+  #     sendSweetAlert(
+  #       session = session,
+  #       title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
+  #       text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+  #     waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
+  #                 <br><br><b>Stap 1:</b> kies een uitkomstmaat.
+  #                 <br><b>Stap 2:</b> kies een kenmerk van ouders.
+  #                 <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
+  #                 <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #       
+  #       btn_labels = "Doorgaan",
+  #       btn_colors = "#18BC9C",
+  #       html = TRUE,
+  #       closeOnClickOutside = TRUE,
+  #       showCloseButton = TRUE,
+  #       imageUrl = "logo_button_shadow.svg",
+  #       imageWidth = 150,
+  #       imageHeight = 150
+  #     )
+  # })
+  # 
+  # observeEvent(input$reset_cookies, {
+  #   confirmSweetAlert(
+  #     session = getDefaultReactiveDomain(),
+  #     "remove_cookies",
+  #     title = "Cookies verwijderen",
+  #     text = "Wil alle cookies verwijderen?",
+  #     type = NULL,
+  #     btn_labels = c("Nee", "Ja"),
+  #     btn_colors = c("#18BC9C", "#18BC9C"),
+  #     closeOnClickOutside = TRUE,
+  #     showCloseButton = TRUE,
+  #     allowEscapeKey = TRUE,
+  #     cancelOnDismiss = TRUE,
+  #     html = TRUE,
+  #     imageUrl = "logo_button_shadow.svg",
+  #     imageWidth = 150,
+  #     imageHeight = 150
+  #   )
+  # })
+  # 
+  # observeEvent(input$remove_cookies, {
+  #   if(input$remove_cookies) {
+  #     runjs('Cookies.remove("user_visited");')
+  #   }
+  # })
 
-  observeEvent(input$reset_cookies, {
-    confirmSweetAlert(
-      session = getDefaultReactiveDomain(),
-      "remove_cookies",
-      title = "Cookies verwijderen",
-      text = "Wil alle cookies verwijderen?",
-      type = NULL,
-      btn_labels = c("Nee", "Ja"),
-      btn_colors = c("#18BC9C", "#18BC9C"),
-      closeOnClickOutside = TRUE,
-      showCloseButton = TRUE,
-      allowEscapeKey = TRUE,
-      cancelOnDismiss = TRUE,
-      html = TRUE,
-      imageUrl = "logo_button_shadow.svg",
-      imageWidth = 150,
-      imageHeight = 150
-    )
-  })
-
-  observeEvent(input$remove_cookies, {
-    if(input$remove_cookies) {
-      runjs('Cookies.remove("user_visited");')
-    }
-  })
-
-  
   
   # text of tabbox 1 for parents characteristics
   observeEvent(input$parents_options, {
