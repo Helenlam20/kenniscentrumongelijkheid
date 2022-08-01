@@ -48,6 +48,7 @@ body <- dashboardBody(
   tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
   tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+  tags$head(includeHTML(("www/google-analytics.html"))),
   theme_poor_mans_flatly,
   tabItems(
     # gradient

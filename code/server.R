@@ -311,7 +311,7 @@ server <- function(input, output, session) {
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
                               "% van de ", labels_dat$population, " op de horizontale as", range, 
                               " binnen de betreffende groep. De verticale as toont het ", 
-                              statistic_type_text, " met een ", tolower(labels_dat$outcome_name)))
+                              statistic_type_text, tolower(labels_dat$outcome_name)))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
       axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
@@ -397,18 +397,18 @@ server <- function(input, output, session) {
           if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
           
           if (perc_html != "100") {
-            main_text <- paste("De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
+            main_text <- paste("<p>De meest linker ", add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                                " met ouders met de laagste inkomens in de blauwe groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(1)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name), 
-                               paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was. De meest rechter ", 
+                               paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text), "was.</p><p>De meest rechter ", 
                                add_bold_text_html(text="blauwe stip", color=data_group1_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                                " met ouders met de hoogste inkomens in de blauwe groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, " met een ", tolower(labels_dat$outcome_name),
-                               paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                               paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text), "was.</p>")
             
           } else if (perc_html == "100") {
             main_text <- paste("De", add_bold_text_html(text="blauwe stip", color=data_group1_color),
@@ -517,18 +517,18 @@ server <- function(input, output, session) {
           if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
           
           if (perc_html != "100") {
-            main_text <- paste("De meest linker", add_bold_text_html(text="groene stip", color=data_group2_color), 
+            main_text <- paste("<p>De meest linker", add_bold_text_html(text="groene stip", color=data_group2_color), 
                                " laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population, 
                                " met ouders met de laagste inkomens in de groene groep ", 
                                paste0("(gemiddeld € ",  decimal0(data_group2$parents_income[as.numeric(1)]*1000), 
                                       " per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name), 
-                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was. De meest rechter", 
+                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was.</p><p>De meest rechter", 
                                add_bold_text_html(text="groene stip", color=data_group2_color), 
                                "laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                                "met ouders met de hoogste inkomens in de groene groep", 
                                paste0("(gemiddeld €",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), 
                                       "per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
-                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.")
+                               paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.</p>")
             
           } else if (perc_html == "100") {
             main_text <- paste("De", add_bold_text_html(text="groene stip", color=data_group2_color),

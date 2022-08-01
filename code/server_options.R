@@ -33,13 +33,13 @@ data_group2_color <- "#18bc9c"
 # linetype
 linetype1_reg <- "longdash"
 linetype1_mean <- "longdash"
-linetype1_median <- "longdash"
+# linetype1_median <- "longdash"
 # linetype1_q25 <- "longdash"
 # linetype1_q75 <- "longdash"
 
 linetype2_reg <- "dotted"
 linetype2_mean <- "dotted"
-linetype2_median <- "dotted"
+# linetype2_median <- "dotted"
 # linetype1_q25 <- "dotted"
 # linetype1_q75 <- "dotted"
 
