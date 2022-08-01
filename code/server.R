@@ -60,7 +60,7 @@ server <- function(input, output, session) {
   # 
   # observeEvent(input$remove_cookies, {
   #   if(input$remove_cookies) {
-  #     runjs('Cookies.remove("user_visited");')
+  #     runjs('Object.keys(Cookies.get()).forEach(function(cookieName) {Cookies.remove(cookieName);});')
   #   }
   # })
 
