@@ -33,6 +33,16 @@ document.getElementById('user_reset').addEventListener('click', function(){
     })
 });
 
+// Disable line options when shiny is busy with the plot
+document.getElementsByName('line_options').forEach((current)=>{
+    current.addEventListener('click', () =>{
+        let option_state = current.disabled;
+        current.disabled = true;
+        $(document).one('shiny:idle', ()=>{
+            current.disabled = option_state;
+        })
+    })
+})
 
 // Limit the maximum aspect ratio of the body on ultra-wide monitors to ~16:9
 function limit_body_width() {

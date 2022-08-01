@@ -15,6 +15,10 @@
     margin-right: 15px;
 }
 
+.faq .box-header {
+    cursor: pointer;
+}
+
 body {
     margin: auto;
     background-color: #f5f5f5;
