@@ -25,7 +25,7 @@ server <- function(input, output, session) {
   #                 <br><br><b>Stap 1:</b> kies een uitkomstmaat.
   #                 <br><b>Stap 2:</b> kies een kenmerk van ouders.
   #                 <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-  #                 <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Help.</i>"),
+  #                 <br><br>Voor meer informatie over het dashboard, zie tabblad <i>Werkwijze & Uitlegvideo's.</i>"),
   #       
   #       btn_labels = "Doorgaan",
   #       btn_colors = "#18BC9C",
@@ -309,7 +309,7 @@ server <- function(input, output, session) {
       axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
                               "% van de ", labels_dat$population, " op de horizontale as", range, 
                               " binnen de betreffende groep. De verticale as toont het ", 
-                              statistic_type_text, tolower(labels_dat$outcome_name)))
+                              statistic_type_text, tolower(labels_dat$outcome_name), "."))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
       axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
@@ -349,7 +349,7 @@ server <- function(input, output, session) {
     }    
     
     # output
-    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
+    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, ".</p>",
                 "<p>", group1_text, " ", group2_text, "</p>", 
                 "<p>", axis_text, "</p>"))
     
@@ -1097,7 +1097,7 @@ observeEvent(input$user_reset, {
     } else if (input$SwitchTabbox1 == "Inkomen ouders") {
       
       HTML(paste0("<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde 
-      gezamelijk bruto-inkomen van ouders (zie tab <i>Werkwijze</i> voor meer informatie).</p>
+      gezamelijk bruto-inkomen van ouders.</p>
       
       <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. 
       Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de 

@@ -25,8 +25,8 @@ sidebar <-
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       # menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
-      # menuItem("FAQ", tabName = "faq", icon = icon("question")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      # menuItem("Veelgestelde vragen", tabName = "faq", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard

@@ -5,11 +5,11 @@ output: html_document
 
 # Werkwijze
 
-Het dashboard Ongelijkheid in Amsterdam is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics en de Vrije Universiteit Amsterdam in samenwerking met Kenniscentrum Ongelijkheid (KCO) over de ontwikkeling van ongelijkheid over de tijd binnen de Metropoolregio Amsterdam. 
+Het dashboard <i>Ongelijkheid in Amsterdam</i> is een project van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics en de Vrije Universiteit Amsterdam in samenwerking met Kenniscentrum Ongelijkheid (KCO) over de ontwikkeling van ongelijkheid over de tijd binnen de Metropoolregio Amsterdam. 
 
 Het dashboard geeft inzicht op de ongelijkheden die zich voordoen in verschillende domeinen en levensfasen en in de samenhang daartussen. Het gaat zowel over wonen, gezondheid en welzijn, werk en inkomen en onderwijs, waarbij ongelijkheden in het ene domein van invloed kunnen zijn op kansen in het andere domein. 
 
-<b>Doel:</b> Het doel van Kenniscentrum Ongelijkheid is het beschrijven, begrijpen en aanpakken van ongelijkheid in de Metropoolregio Amsterdam. Het dashboard Ongelijkheid in Amsterdam draagt hieraan bij door beschrijvende statistiek over ongelijkheid beschikbaar te stellen. Hiermee kunnen andere partners van het kenniscentrum ongelijkheid gerichter aanpakken.
+<b>Doel:</b> Het doel van Kenniscentrum Ongelijkheid is het beschrijven, begrijpen en aanpakken van ongelijkheid in de Metropoolregio Amsterdam. Het dashboard <i>Ongelijkheid in Amsterdam</i> draagt hieraan bij door beschrijvende statistiek over ongelijkheid beschikbaar te stellen. Hiermee kunnen andere partners van het kenniscentrum ongelijkheid gerichter aanpakken.
 
 <b>Hoe:</b> Met behulp van een interactieve en intuïtieve website krijgt de gebruiker inzicht in de relatie tussen omstandigheden in de jeugd en uitkomsten over de levensloop voor mensen die zijn opgegroeid in Metropoolregio Amsterdam. We gebruiken gedetailleerde gegevens over alle mensen die vanaf de jaren negentig tot nu zijn opgegroeid in de Metropoolregio Amsterdam. 
 
