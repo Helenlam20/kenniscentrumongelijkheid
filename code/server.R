@@ -349,7 +349,7 @@ server <- function(input, output, session) {
     }    
     
     # output
-    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, ".</p>",
+    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
                 "<p>", group1_text, " ", group2_text, "</p>", 
                 "<p>", axis_text, "</p>"))
     
