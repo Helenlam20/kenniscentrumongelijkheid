@@ -24,9 +24,9 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
+      menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
-      # menuItem("Veelgestelde vragen", tabName = "faq", icon = icon("question")),
+      menuItem("Veelgestelde vragen", tabName = "faq", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
@@ -254,9 +254,9 @@ ui <- dashboardPage(
     title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
                       
-    )
-    # tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
-    # tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
+    ),
+    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
+    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
 
   ),
   sidebar = sidebar,
