@@ -24,7 +24,7 @@ sidebar <-
         "<br>"
       )),
       menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      # menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
+      menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
       menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       # menuItem("Veelgestelde vragen", tabName = "faq", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("address-book"))
@@ -198,8 +198,8 @@ body <- dashboardBody(
                 includeMarkdown("markdown/videos.Rmd")
             ), 
             box(status = "primary", 
-                HTML('<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/k3NVzWiOhyU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-lFq7c_zMW4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))
+                HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/9Cpt2bRC5HI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                     <iframe width="560" height="315" src="https://www.youtube.com/embed/T2ue6RRrnfk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))
             
             
             

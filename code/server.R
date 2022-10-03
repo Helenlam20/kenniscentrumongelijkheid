@@ -15,7 +15,7 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
-  # # welcome pop-up
+  # welcome pop-up
   # observeEvent(input$beginscherm, {
   #     sendSweetAlert(
   #       session = session,
