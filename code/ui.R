@@ -62,8 +62,8 @@ body <- dashboardBody(
                               box(height = NULL, title = "Uitkomstmaat", width = NULL,
                                   status = "primary", solidHeader = TRUE,
                                   pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
-                                              selected = "c11_living_space_pp",
-                                              # selected = "c11_havo_test",
+                                              # selected = "c11_living_space_pp",
+                                              selected = "c11_havo_test",
                                               choices = list(`Gezondheid en welzijn` = HealthChoices,
                                                              `Onderwijs` = EducationChoices,
                                                              `Wonen` = HouseChoices,
@@ -81,7 +81,8 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde", "Mediaan"),
+                                    choices = c("Lijn", "Gemiddelde"),
+                                    # choices = c("Lijn", "Gemiddelde", "Mediaan"),
                                     # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
