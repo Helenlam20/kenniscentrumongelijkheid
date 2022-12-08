@@ -255,10 +255,9 @@ ui <- dashboardPage(
     title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
                       
-    )
-    # ,
-    # tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
-    # tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
+    ),
+    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
+    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
 
   ),
   sidebar = sidebar,

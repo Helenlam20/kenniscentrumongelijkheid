@@ -283,8 +283,7 @@ readme_sep <- c("",
 
 caption_sep <- 
 "\n\n=========================================================================\n"
-caption_license <- paste0(
-"Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
+caption_license <- paste0("Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
 van Erasmus Universiteit Rotterdam en de Vrije Universiteit Amsterdam, met 
 ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
 zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
