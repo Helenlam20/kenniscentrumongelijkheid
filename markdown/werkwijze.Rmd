@@ -15,5 +15,5 @@ Het dashboard geeft inzicht in de ongelijkheden die zich voordoen in verschillen
 
 <b>Wat:</b> aan de hand van beschrijvende statistieken maakt het dashboard inzichtelijk waar, wanneer (dus op welke leeftijd) en hoe ongelijkheid ontstaat in de Metropoolregio Amsterdam.
 
-Lees hier het rapport over de werkwijze van het dashboard: <a href="werkwijze.pdf" download="werkwijze ongelijkheid in Amsterdam.pdf">Download werkwijze rapport</a>
+<a href="werkwijze.pdf" download="werkwijze ongelijkheid in Amsterdam.pdf">Download hier het rapport over de werkwijze van het dashboard</a>
 

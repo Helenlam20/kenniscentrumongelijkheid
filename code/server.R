@@ -19,7 +19,7 @@ server <- function(input, output, session) {
   observeEvent(input$beginscherm, {
       sendSweetAlert(
         session = session,
-        title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
+        title = "Welkom op het Dashboard Ongelijkheid in Amsterdam!",
         text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
       waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
                   <br><br><b>Stap 1:</b> kies een uitkomstmaat.
