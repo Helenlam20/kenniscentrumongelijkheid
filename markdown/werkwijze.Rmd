@@ -5,7 +5,7 @@ output: html_document
 
 # Werkwijze
 
-Het dashboard Ongelijkheid in Amsterdam is een onderzoeksproject van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus Universiteit Rotterdam en de Vrije Universiteit Amsterdam in samenwerking met Kenniscentrum Ongelijkheid over de ontwikkeling van ongelijkheid over de levensloop binnen de Metropoolregio Amsterdam. 
+Het dashboard Ongelijkheid in Amsterdam is een onderzoeksproject van Helen Lam, Bastian Ravesteijn en Coen van de Kraats van Erasmus School of Economics en de Vrije Universiteit Amsterdam in samenwerking met Kenniscentrum Ongelijkheid over de ontwikkeling van ongelijkheid over de levensloop binnen de Metropoolregio Amsterdam. 
 
 Het dashboard geeft inzicht in de ongelijkheden die zich voordoen in verschillende domeinen en levensfasen en in de samenhang daartussen. Daarbij wordt gekeken naar wonen, gezondheid en welzijn, werk en inkomen en onderwijs. 
 
