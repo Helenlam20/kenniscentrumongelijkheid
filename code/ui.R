@@ -82,8 +82,6 @@ body <- dashboardBody(
                                                         size = "extra-small")
                                     ),
                                     choices = c("Lijn", "Gemiddelde"),
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan"),
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
