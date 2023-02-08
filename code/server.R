@@ -15,54 +15,55 @@ source("./code/server_options.R")
 #### DEFINE SERVER ####
 server <- function(input, output, session) {
   
-  # # welcome pop-up
-  # observeEvent(input$beginscherm, {
-  #     sendSweetAlert(
-  #       session = session,
-  #       title = "Welkom op Dashboard Ongelijkheid in Amsterdam!",
-  #       text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
-  #     waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
-  #                 <br><br><b>Stap 1:</b> kies een uitkomstmaat.
-  #                 <br><b>Stap 2:</b> kies een kenmerk van ouders.
-  #                 <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-  #                 <br><br>Voor meer informatie over het dashboard, zie <i>Uitlegvideo's</i> en <i>Werkwijze.</i>"),
-  # 
-  #       btn_labels = "Doorgaan",
-  #       btn_colors = "#18BC9C",
-  #       html = TRUE,
-  #       closeOnClickOutside = TRUE,
-  #       showCloseButton = TRUE,
-  #       imageUrl = "logo_button_shadow.svg",
-  #       imageWidth = 150,
-  #       imageHeight = 150
-  #     )
-  # })
-  # 
-  # observeEvent(input$reset_cookies, {
-  #   confirmSweetAlert(
-  #     session = getDefaultReactiveDomain(),
-  #     "remove_cookies",
-  #     title = "Cookies verwijderen",
-  #     text = "Wil alle cookies verwijderen?",
-  #     type = NULL,
-  #     btn_labels = c("Nee", "Ja"),
-  #     btn_colors = c("#18BC9C", "#18BC9C"),
-  #     closeOnClickOutside = TRUE,
-  #     showCloseButton = TRUE,
-  #     allowEscapeKey = TRUE,
-  #     cancelOnDismiss = TRUE,
-  #     html = TRUE,
-  #     imageUrl = "logo_button_shadow.svg",
-  #     imageWidth = 150,
-  #     imageHeight = 150
-  #   )
-  # })
-  # 
-  # observeEvent(input$remove_cookies, {
-  #   if(input$remove_cookies) {
-  #     runjs('Object.keys(Cookies.get()).forEach(function(cookieName) {Cookies.remove(cookieName);});')
-  #   }
-  # })
+  # welcome pop-up
+  observeEvent(input$beginscherm, {
+      sendSweetAlert(
+        session = session,
+        title = "Welkom op het Dashboard Ongelijkheid in Amsterdam!",
+        text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
+      waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
+                  <br><br><b>Stap 1:</b> kies een uitkomstmaat.
+                  <br><b>Stap 2:</b> kies een kenmerk van ouders.
+                  <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
+                  <br><br>Voor meer informatie over het dashboard, zie <i>Uitlegvideo's</i> en <i>Werkwijze.</i>
+                  <br><br>Deze website maakt gebruik van cookies."),
+
+        btn_labels = "Doorgaan",
+        btn_colors = "#18BC9C",
+        html = TRUE,
+        closeOnClickOutside = TRUE,
+        showCloseButton = TRUE,
+        imageUrl = "logo_button_shadow.svg",
+        imageWidth = 150,
+        imageHeight = 150
+      )
+  })
+
+  observeEvent(input$reset_cookies, {
+    confirmSweetAlert(
+      session = getDefaultReactiveDomain(),
+      "remove_cookies",
+      title = "Cookies verwijderen",
+      text = "Wil alle cookies verwijderen?",
+      type = NULL,
+      btn_labels = c("Nee", "Ja"),
+      btn_colors = c("#18BC9C", "#18BC9C"),
+      closeOnClickOutside = TRUE,
+      showCloseButton = TRUE,
+      allowEscapeKey = TRUE,
+      cancelOnDismiss = TRUE,
+      html = TRUE,
+      imageUrl = "logo_button_shadow.svg",
+      imageWidth = 150,
+      imageHeight = 150
+    )
+  })
+
+  observeEvent(input$remove_cookies, {
+    if(input$remove_cookies) {
+      runjs('Object.keys(Cookies.get()).forEach(function(cookieName) {Cookies.remove(cookieName);});')
+    }
+  })
 
   
   # text of tabbox 1 for parents characteristics
@@ -191,27 +192,24 @@ server <- function(input, output, session) {
     labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
 
     
-    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
-                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
+    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1,
+                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -",
                       input$huishouden1, "(aantal ouders in gezin)")
     caption2 <- ""
     if(!input$OnePlot) {
-      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
-                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
+      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2,
+                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -",
                         input$huishouden2, "(aantal ouders in gezin)")
     }
     
     caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 75), collapse = "\n")
     
     text <- c(temp_txt,
-              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")\n"), caption, 
-              readme_sep, "ALGEMENE UITLEG","", 
-              paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n"),
-              readme_sep, "WAT ZIE IK?", "", 
-              paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n"), 
-              readme_sep, "CAUSALITEIT", "", causal_text, 
-              readme_sep, "LICENTIE", "", caption_license)
-    
+              paste0(labels_dat$outcome_name, " (", labels_dat$population, ")\n"), caption, readme_sep, 
+              "\n", paste0("ALGEMENE UITLEG", "\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n")),
+              "\n", paste0("WAT ZIE IK?", "\n",paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n")), 
+              "\n", paste0("CAUSALITEIT", "\n", causal_text), 
+              "\n", paste0("LICENTIE", "\n", caption_license))
     
   })
   
@@ -251,31 +249,6 @@ server <- function(input, output, session) {
     }
   })
   
-  
-  
-  # GET MEDIAN, 25E & 75E QUANTILE --------------------------------------
-
-  get_median_dat1 <- reactive({
-    
-    if (input$outcome %in% continuous) {
-      median_dat1 <- subset(median_dat, median_dat$uitkomst == input$outcome &
-                              median_dat$geografie == input$geografie1 & 
-                              median_dat$geslacht == input$geslacht1 &
-                              median_dat$migratieachtergrond == input$migratie1 & 
-                              median_dat$huishouden == input$huishouden1)
-    }
-  })
-  
-  get_median_dat2 <- reactive({
-    
-    if (input$outcome %in% continuous) {
-      median_dat2 <- subset(median_dat, median_dat$uitkomst == input$outcome &
-                              median_dat$geografie == input$geografie2 & 
-                              median_dat$geslacht == input$geslacht2 &
-                              median_dat$migratieachtergrond == input$migratie2 & 
-                              median_dat$huishouden == input$huishouden2)
-    }
-  })
   
   
   # ALGEMEEN TEXT REACTIVE ---------------------------------------------
@@ -373,10 +346,6 @@ server <- function(input, output, session) {
     total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
     total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
     
-    # get median, 25e en 75e quantile
-    median_dat1 <- get_median_dat1()
-    median_dat2 <- get_median_dat2()
-    
     # load data
     dat <- filterData()
     data_group1 <- subset(dat, dat$group == "Blauwe groep")
@@ -417,7 +386,6 @@ server <- function(input, output, session) {
                                paste0(prefix_text, decimal1(data_group1$mean), postfix_text), "was.")
           }
           mean_text <- ""
-          median_text <- ""
           # if user has clicked on the line button
           if (!is.null(input$line_options)) {
             
@@ -432,20 +400,10 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
-            # add median text to tabbox
-            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
-              median_text <- paste(median_text, gen_median_text(
-                labels_dat$outcome_name, 
-                add_bold_text_html(text="blauwe groep", color=data_group1_color),
-                median_dat1$median,
-                prefix_text,
-                postfix_text
-              ))
-            }
           }
           
           HTML(paste0("<p>", main_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, "</p>"))
           
         } else if (input$parents_options == "Opleiding ouders") {
           
@@ -468,7 +426,6 @@ server <- function(input, output, session) {
           }
           
           mean_text <- ""
-          median_text <- ""
           # if user has clicked on the mean button
           if (!is.null(input$line_options)) {
             if ("Gemiddelde" %in% input$line_options) {
@@ -482,20 +439,10 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
-            # add median text to tabbox
-            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
-              median_text <- paste(median_text, gen_median_text(
-                labels_dat$outcome_name, 
-                add_bold_text_html(text="blauwe groep", color=data_group1_color),
-                median_dat1$median,
-                prefix_text,
-                postfix_text
-              ))
-            }
           }
           
           HTML(paste0("<p>", bar_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, "</p>"))
           
         }
         
@@ -538,7 +485,6 @@ server <- function(input, output, session) {
                                paste0(prefix_text, decimal1(data_group2$mean), postfix_text), "was.")
           }
           mean_text <- ""
-          median_text <- ""
           # if user has clicked on the line button
           if (!is.null(input$line_options)) {
             
@@ -553,20 +499,10 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
-            # add median text to tabbox
-            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
-              median_text <- paste(median_text, gen_median_text(
-                labels_dat$outcome_name, 
-                add_bold_text_html(text="groene groep", color=data_group2_color),
-                median_dat2$median,
-                prefix_text,
-                postfix_text
-              ))
-            }
           }
           
           HTML(paste0("<p>", main_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, "</p>"))
           
         } else if (input$parents_options == "Opleiding ouders") {
           
@@ -588,7 +524,6 @@ server <- function(input, output, session) {
           }
           
           mean_text <- ""
-          median_text <- ""
           # if user has clicked on the mean button
           if (!is.null(input$line_options)) {
             if ("Gemiddelde" %in% input$line_options) {
@@ -602,20 +537,10 @@ server <- function(input, output, session) {
                 postfix_text
               ))
             }
-            # add median text to tabbox
-            if ("Mediaan" %in% input$line_options & input$outcome %in% continuous) {
-              median_text <- paste(median_text, gen_median_text(
-                labels_dat$outcome_name, 
-                add_bold_text_html(text="groene groep", color=data_group2_color),
-                median_dat2$median,
-                prefix_text,
-                postfix_text
-              ))
-            }
           }
           
           HTML(paste0("<p>", bar_text, "</p>",
-                      "<p>", mean_text, median_text, "</p>"))
+                      "<p>", mean_text, "</p>"))
           
         }
 
@@ -647,16 +572,10 @@ server <- function(input, output, session) {
     # Parse additional input options
     line_option_selected <- FALSE
     mean_option_selected <- FALSE
-    median_option_selected <- FALSE
-    q25_option_selected <- FALSE
-    q75_option_selected <- FALSE
     if (!is.null(input$line_options)) {
   
       line_option_selected <- "Lijn"  %in% input$line_options
       mean_option_selected <- "Gemiddelde" %in% input$line_options
-      median_option_selected <- "Mediaan" %in% input$line_options & input$outcome %in% continuous
-      q25_option_selected <- "25e kwantiel" %in% input$line_options & input$outcome %in% continuous
-      q75_option_selected <- "75e kwantiel" %in% input$line_options & input$outcome %in% continuous
       
       # regression line
       # TODO: Add check for data_group2 when data_group1 is empty
@@ -688,7 +607,6 @@ server <- function(input, output, session) {
 
       # Plot for data_group1 
       if (data_group1_has_data()) {
-        median_dat1 <- get_median_dat1()
         
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
@@ -703,23 +621,10 @@ server <- function(input, output, session) {
           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
         }
-        # Plot median line if it is selected
-        if (median_option_selected) {
-          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_median) 
-        }
-        # Plot 25e quantile line if it is selected
-        if (q25_option_selected) {
-          plot <- plot + gen_q25_line(median_dat1, data_group1_color, linetype1_q25) 
-        }
-        # Plot 75e quantile line if it is selected
-        if (q75_option_selected) {
-          plot <- plot + gen_q75_line(median_dat1, data_group1_color, linetype1_q75) 
-        }
       }
 
       # Plot for data_group2
       if (data_group2_has_data()) { 
-        median_dat2 <- get_median_dat2()
         
         # Highlight points
         if (input$tabset1 == "Wat zie ik?")
@@ -732,19 +637,6 @@ server <- function(input, output, session) {
         if (mean_option_selected) {
           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
-        }
-        
-        if (median_option_selected) {
-          # get the median of the groups
-          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_median) 
-        }
-        # Plot 25e quantile line if it is selected
-        if (q25_option_selected) {
-          plot <- plot + gen_q25_line(median_dat2, data_group2_color, linetype1_q25) 
-        }
-        # Plot 75e quantile line if it is selected
-        if (q75_option_selected) {
-          plot <- plot + gen_q75_line(median_dat2, data_group2_color, linetype1_q75) 
         }
       }     
        
@@ -782,19 +674,6 @@ server <- function(input, output, session) {
         }
       }
       
-      if (median_option_selected) {
-        # get median of the groups
-        if (data_group1_has_data()) {
-          median_dat1 <- get_median_dat1()
-          plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
-        }
-        if (data_group2_has_data()) {
-          median_dat2 <- get_median_dat2()
-          plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
-          
-        }
-      }
-      
       
       #### ALTERNATIVE BUBBLE PLOT ####
      } else if (input$change_barplot) {
@@ -828,19 +707,6 @@ server <- function(input, output, session) {
          }
        }
        
-       if (median_option_selected) {
-         # get median of the groups
-         if (data_group1_has_data()) {
-           median_dat1 <- get_median_dat1()
-           plot <- plot + gen_median_line(median_dat1, data_group1_color, linetype1_mean) 
-         }
-         if (data_group2_has_data()) {
-           median_dat2 <- get_median_dat2()
-           plot <- plot + gen_median_line(median_dat2, data_group2_color, linetype2_mean) 
-           
-         }
-       }
-
        
         # BUBBLE PLOT
         plot <- plot +
@@ -1194,15 +1060,15 @@ observeEvent(input$user_reset, {
       # TODO: add legend
       fig_name <- paste0("fig_with_caption_", get_datetime(), ".pdf")
       pdf(fig_name, encoding = "ISOLatin9.enc", 
-          width = 9, height = 15)
+          width = 9, height = 14)
       print(vals$plot + 
             labs(title = paste0(labels_dat$outcome_name, " (", labels_dat$population, ")"), 
                  caption = paste0(caption_sep, "UITLEG DASHBOARD ONGELIJKHEID IN AMSTERDAM\n\n\n", 
                                   CaptionFile(), caption_sep, 
-                                  "ALGEMENE UITLEG\n\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
-                                  caption_sep, "WAT ZIE IK?\n\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
-                                  caption_sep, "CAUSALITEIT\n\n", paste(strwrap(causal_text, width = 85), collapse = "\n"), 
-                                  caption_sep, "LICENTIE\n\n", caption_license)
+                                  "\nALGEMENE UITLEG\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
+                                  "\n\nWAT ZIE IK?\n", paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
+                                  "\n\nCAUSALITEIT\n", paste(strwrap(causal_text, width = 85), collapse = "\n"), 
+                                  "\n\nLICENTIE\n", caption_license)
                  ) 
             )
       

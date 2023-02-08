@@ -33,15 +33,9 @@ data_group2_color <- "#18bc9c"
 # linetype
 linetype1_reg <- "longdash"
 linetype1_mean <- "longdash"
-linetype1_median <- "longdash"
-# linetype1_q25 <- "longdash"
-# linetype1_q75 <- "longdash"
 
 linetype2_reg <- "dotted"
 linetype2_mean <- "dotted"
-linetype2_median <- "dotted"
-# linetype1_q25 <- "dotted"
-# linetype1_q75 <- "dotted"
 
 # Add color functions
 add_text_color_html <- function(text, color) {
@@ -176,30 +170,6 @@ gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text,
   return(text)
 }
 
-# create median text for tabbox
-gen_median_text <- function(outcome_input, group_type_text, 
-                          group_median, prefix_text, postfix_text) {
-  text <- HTML(paste0("De mediaan ", tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
-  return(text)
-}
-
-# create quantile 25 text for tabbox
-gen_q25_text <- function(outcome_input, group_type_text, 
-                            group_median, prefix_text, postfix_text) {
-  text <- HTML(paste0("De 25e kwantiel van ", tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
-  return(text)
-}
-
-# create quantile 75 text for tabbox
-gen_q75_text <- function(outcome_input, group_type_text, 
-                            group_median, prefix_text, postfix_text) {
-  text <- HTML(paste0("De 75e kwantiel van ", tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal1(group_median), postfix_text), "."))
-  return(text)
-}
-
 
 #### FIGURE PLOT ####
 
@@ -283,9 +253,8 @@ readme_sep <- c("",
 
 caption_sep <- 
 "\n\n=========================================================================\n"
-caption_license <- paste0(
-"Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
-van Erasmus Universiteit Rotterdam en de Vrije Universiteit Amsterdam, met 
+caption_license <- paste0("Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
+van Erasmus School of Economics en de Vrije Universiteit Amsterdam, met 
 ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
 zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
 onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. 
@@ -347,13 +316,6 @@ gen_mean_line <- function(dat, color, linetype) {
   return(plot)
 }
 
-gen_median_line <- function(dat, color, linetype) {
-  plot <- geom_abline(
-    aes(intercept = dat$median, slope = 0),
-    linetype = linetype, size=0.5, color = color
-  ) 
-  return(plot)
-}
 
 gen_q25_line <- function(dat, color, linetype) {
   plot <- geom_abline(

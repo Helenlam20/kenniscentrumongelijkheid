@@ -4,8 +4,6 @@
 outcome_dat <- read_excel("./data/outcome_table.xlsx", sheet = "outcome")
 area_dat <- read_excel("./data/outcome_table.xlsx", sheet = "area")
 
-median_dat <- read_rds(file.path("./data/median_tab.rds"))
-
 
 for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   

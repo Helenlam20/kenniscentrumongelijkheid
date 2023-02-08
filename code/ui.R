@@ -82,8 +82,6 @@ body <- dashboardBody(
                                                         size = "extra-small")
                                     ),
                                     choices = c("Lijn", "Gemiddelde"),
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan"),
-                                    # choices = c("Lijn", "Gemiddelde", "Mediaan", "25e kwantiel", "75e kwantiel"),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
@@ -255,10 +253,9 @@ ui <- dashboardPage(
     title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
                       style = "font-weight: bold;"
                       
-    )
-    # ,
-    # tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
-    # tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
+    ),
+    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
+    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
 
   ),
   sidebar = sidebar,
