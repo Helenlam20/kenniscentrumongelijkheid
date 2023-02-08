@@ -80,6 +80,6 @@ $(document).on('shiny:connected', function(){
     let user_visited = Cookies.get("user_visited");
     if(user_visited === undefined) {
         Shiny.setInputValue("beginscherm", true);
-        Cookies.set("user_visited", true);
+        Cookies.set("user_visited", true, {expires: 365});
     }
 })
