@@ -23,11 +23,11 @@ sidebar <-
         "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width='65%'>",
         "<br>"
       )),
-      menuItem("Figuur", tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
-      menuItem("Uitlegvideo's", tabName = "videos", icon = icon("video")),
-      menuItem("Werkwijze", tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
-      # menuItem("Veelgestelde vragen", tabName = "faq", icon = icon("question")),
-      menuItem("Contact", tabName = "contact", icon = icon("address-book"))
+      menuItem(lang[["menu_figure"]], tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
+      menuItem(lang[["menu_video"]], tabName = "videos", icon = icon("video")),
+      menuItem(lang[["menu_methodology"]], tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      # menuItem(lang[["menu_faq"]], tabName = "faq", icon = icon("question")),
+      menuItem(lang[["menu_contact"]] , tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
   ) # end shinydashboard
 
@@ -35,8 +35,8 @@ sidebar <-
 
 body <- dashboardBody(
   disconnectMessage(
-    text = "Je sessie is verlopen, laad de applicatie opnieuw.",
-    refresh = "Klik hier om te vernieuwen",
+    text = lang[["disconnect_message"]],
+    refresh = lang[["disconnect_refresh"]],
     background = "#3498db",
     colour = "white",
     overlayColour = "grey",
@@ -59,20 +59,20 @@ body <- dashboardBody(
               column(width = 9,
                      fluidRow(
                        column(width = 5,
-                              box(height = NULL, title = "Uitkomstmaat", width = NULL,
+                              box(height = NULL, title = lang[["box_outcome"]], width = NULL,
                                   status = "primary", solidHeader = TRUE,
-                                  pickerInput("outcome", label = "Selecteer hier een uitkomstmaat", 
+                                  pickerInput("outcome", label = lang[["box_outcome_select_outcome"]], 
                                               # selected = "c11_living_space_pp",
                                               selected = "c11_havo_test",
-                                              choices = list(`Gezondheid en welzijn` = HealthChoices,
-                                                             `Onderwijs` = EducationChoices,
-                                                             `Wonen` = HouseChoices,
-                                                             `Werk en inkomen` = MoneyChoices),
+                                              choices = list(`Gezondheid en welzijn` = lang[["health_choices"]],
+                                                             `Onderwijs` = lang[["education_choices"]],
+                                                             `Wonen` = lang[["house_choices"]],
+                                                             `Werk en inkomen` = lang[["money_choices"]]),
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
                                     inputId = "line_options",
-                                    label = h5(HTML("<b>Selecteer hier een optie:</b>"),
+                                    label = h5(HTML(lang[["box_outcome_select_line_option"]]),
                                                tags$style("#q_line {vertical-align: middle; width: 25px;
                                                           height: 25px; font-size: 11px;
                                                           border: 2px solid #e7e7e7; border-radius: 100%;
@@ -81,18 +81,18 @@ body <- dashboardBody(
                                                bsButton("q_line", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Lijn", "Gemiddelde"),
+                                    choices = c(lang[["line"]], lang[["average"]]),
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_line", title = "Lijn opties",
-                                            content = HTML(line_hovertext),
+                                  bsPopover(id = "q_line", title = lang[["box_outcome_select_line_option_hover"]],
+                                            content = HTML(lang[["box_outcome_select_line_option_hovertext"]]),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
                                   prettyRadioButtons(
                                     inputId = "parents_options",
-                                    label = h5(HTML("<b>Selecteer hier een kenmerk van ouders:</b>"),
+                                    label = h5(HTML(lang[["box_outcome_select_parent_option"]]),
                                                tags$style("#q_parents {vertical-align: middle; width: 25px;
                                                           height: 25px; font-size: 11px;
                                                           border: 2px solid #e7e7e7; border-radius: 100%;
@@ -101,13 +101,13 @@ body <- dashboardBody(
                                                bsButton("q_parents", label = NULL, icon = icon("question"), 
                                                         size = "extra-small")
                                     ),
-                                    choices = c("Inkomen ouders", "Opleiding ouders"),
+                                    choices = c(lang[["parent_income"]], lang[["parent_education"]]),
                                     icon = icon("check"), inline = TRUE,
-                                    bigger = TRUE, selected = "Inkomen ouders",
+                                    bigger = TRUE, 
                                     status = "info", animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_parents", title = "Kenmerk van ouders optie",
-                                            content = HTML(parents_hovertext),
+                                  bsPopover(id = "q_parents", title = lang[["box_outcome_select_parent_option_hover"]],
+                                            content = HTML(lang[["box_outcome_select_parent_option_hovertext"]]),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),
@@ -115,77 +115,71 @@ body <- dashboardBody(
                        ),
                        column(width = 7, tabBox(
                                 id = "tabset1", height = NULL, width = NULL,
-                                tabPanel("Algemene uitleg", htmlOutput("selected_outcome"),
+                                tabPanel(lang[["box_text_general"]] , htmlOutput("selected_outcome"),
                                          br(),
                                          prettyRadioButtons(
-                                           inputId = "SwitchTabbox1", label = "Toon uitleg van:",
-                                           choices = c("Uitkomstmaat", "Inkomen ouders"),
+                                           inputId = "SwitchTabbox1", label = lang[["box_text_switch_label"]],
+                                           choices = c(lang[["outcome_measure"]], lang[["parent_income"]]),
                                            icon = icon("check"), inline = TRUE,
-                                           bigger = TRUE, selected = "Uitkomstmaat",
+                                           bigger = TRUE, 
                                            status = "info", animation = "smooth")
                                          ),
-                                tabPanel("Wat zie ik?", htmlOutput("sample_uitleg"), 
+                                tabPanel(lang[["box_text_what_do_i_see"]], htmlOutput("sample_uitleg"), 
                                          br(), 
                                          prettyRadioButtons(
-                                           inputId = "SwitchColor", label = "Toon uitleg van:", 
-                                           choices = c("Blauwe groep", "Groene groep"),
+                                           inputId = "SwitchColor", label = lang[["box_text_switch_label"]], 
+                                           choices = c(lang[["blue_group"]] , lang[["green_group"]]),
                                            icon = icon("check"), inline = TRUE,
-                                           bigger = TRUE, selected = "Blauwe groep",
+                                           bigger = TRUE, 
                                            status = "info", animation = "smooth")
                                          ), 
-                                tabPanel("Causaliteit", causal_text)),
+                                tabPanel(lang[["box_text_causality"]] , lang[["box_text_causality_text"]])),
                        ),
                      ),
                      box(collapsible = FALSE, status = "primary",
                          title = textOutput("title_plot"), width = NULL, solidHeader = T,
                          dropdownButton(
-                           sliderInput("y_axis", "Verticale as (Y-as):", min=0, max=100, value=c(25,75), dragRange=FALSE),
-                           sliderInput("x_axis", "Horizontale as (X-as):", min=0, max=750, value=c(25,75), dragRange=FALSE),
-                           actionButton("user_reset", "Reset", width = "100%"),
+                           sliderInput("y_axis", lang[["y_axis_label"]], min=0, max=100, value=c(25,75), dragRange=FALSE),
+                           sliderInput("x_axis", lang[["x_axis_label"]], min=0, max=750, value=c(25,75), dragRange=FALSE),
+                           actionButton("user_reset", lang[["reset"]], width = "100%"),
                            inline = TRUE, circle = F,
                            icon = icon("gear"), width = "300px"
                          )%>% tagAppendAttributes(class = "dropup"),
-                         downloadButton(outputId = "downloadData", label = "Download data"),
-                         downloadButton(outputId = "downloadPlot", label = "Download figuur"),
-                         actionButton("screenshot", "Maak een screenshot", icon = icon("camera"), 
+                         downloadButton(outputId = "downloadData", label = lang[["download_data"]] ),
+                         downloadButton(outputId = "downloadPlot", label = lang[["download_figure"]] ),
+                         actionButton("screenshot", lang[["make_screenshot"]] , icon = icon("camera"), 
                                       icon.library = "font awesome"),
-                         prettySwitch(inputId = "change_barplot", label = HTML("<b> Toon alternatief staafdiagram</b>"),
+                         prettySwitch(inputId = "change_barplot", label = HTML(lang[["alternative_box_plot_label"]]),
                                       status = "info", inline = TRUE, fill = T, bigger = T),
                          shinycssloaders::withSpinner(plotlyOutput("main_figure", height = "450"), 
                                                       type = 1, color = "#18BC9C", size = 1.5)),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = "Blauwe groep", width = NULL, status = "info", solidHeader = TRUE,
-                         pickerInput("geografie1", label = "Gebied", selected = "Nederland",
+                         title = lang[["blue_group"]], width = NULL, status = "info", solidHeader = TRUE,
+                         pickerInput("geografie1", label = lang[["area"]], selected = lang[["the_netherlands"]],
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
-                         selectizeInput(inputId = "geslacht1", label = "Geslacht",
-                                        choices = GenderChoices,
-                                        selected = GenderChoices[1]),
-                         selectizeInput(inputId = "migratie1", label = "Migratieachtergrond",
-                                        choices = MigrationChoices,
-                                        selected = MigrationChoices[1]),
-                         selectizeInput(inputId = "huishouden1", label = "Aantal ouders in gezin",
-                                        choices = HouseholdChoices,
-                                        selected = HouseholdChoices[1]),
-                         prettySwitch(inputId = "OnePlot", label = HTML("<b> Toon één groep</b>"),
+                         selectizeInput(inputId = "geslacht1", label = lang[["gender"]] ,
+                                        choices = lang[["gender_choices"]]),
+                         selectizeInput(inputId = "migratie1", label = lang[["migration_background"]],
+                                        choices = lang[["migration_choices"]]),
+                         selectizeInput(inputId = "huishouden1", label = lang[["parent_amount_label"]],
+                                        choices = lang[["household_choices"]]),
+                         prettySwitch(inputId = "OnePlot", label = HTML(lang[["one_group_label"]]),
                                       status = "info", inline = TRUE, fill = T, bigger = T)
                      ),
                      box(height = NULL, id="box_groene_group",
-                         title = "Groene groep", width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
-                         pickerInput("geografie2", label = "Gebied", selected = "Purmerend",
+                         title = lang[["green_group"]], width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
+                         pickerInput("geografie2", label = lang[["area"]], selected = "Purmerend",
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
-                         selectizeInput(inputId = "geslacht2", label = "Geslacht",
-                                        choices = GenderChoices,
-                                        selected = GenderChoices[1]),
-                         selectizeInput(inputId = "migratie2", label = "Migratieachtergrond",
-                                        choices = MigrationChoices,
-                                        selected = MigrationChoices[1]),
-                         selectizeInput(inputId = "huishouden2", label = "Aantal ouders in gezin",
-                                        choices = HouseholdChoices,
-                                        selected = HouseholdChoices[1])
+                         selectizeInput(inputId = "geslacht2", label = lang[["gender"]],
+                                        choices = lang[["gender_choices"]]),
+                         selectizeInput(inputId = "migratie2", label = lang[["migration_background"]],
+                                        choices = lang[["migration_choices"]]),
+                         selectizeInput(inputId = "huishouden2", label = lang[["parent_amount_label"]],
+                                        choices = lang[["household_choices"]]),
                      ),
               )
             )
@@ -194,7 +188,7 @@ body <- dashboardBody(
     # tab content
     tabItem(tabName = "videos",
             box(status = "primary", 
-                includeMarkdown("markdown/videos.Rmd")
+                includeMarkdown(lang[["loc_videos.Rmd"]])
             ), 
             box(status = "primary", 
                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/9Cpt2bRC5HI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -206,7 +200,7 @@ body <- dashboardBody(
     ),
 
     tabItem(tabName = "faq", status = "primary",
-            box(h1("Veelgestelde vragen"),
+            box(h1(lang[["menu_faq"]]),
                 box(title = faq_q1, 
                     status = "primary", solidHeader = T, collapsed = T, collapsible = T, width = 350, 
                     faq_a1) %>% tagAppendAttributes(class = "faq"),
@@ -227,7 +221,7 @@ body <- dashboardBody(
     # tab content
     tabItem(tabName = "werkwijze",
             column(width = 6, box(width = 300, status = "primary",
-                includeMarkdown("markdown/werkwijze.Rmd")
+                includeMarkdown(lang[["loc_werkwijze.Rmd"]])
             )),
             column(width = 6, 
                    ),
@@ -237,7 +231,7 @@ body <- dashboardBody(
     # tab content
     tabItem(tabName = "contact",
             box(status = "primary", 
-              includeMarkdown("markdown/contact.Rmd")
+              includeMarkdown(lang[["loc_contact.Rmd"]])
             )
     )
     
@@ -247,10 +241,10 @@ body <- dashboardBody(
 
 #### DEFINE UI ####
 ui <- dashboardPage(
-  title="Dashboard Ongelijkheid in Amsterdam",
+  title=lang[["title"]],
   header = dashboardHeader(
     titleWidth = 400, 
-    title = tags$span("Dashboard Ongelijkheid in Amsterdam", 
+    title = tags$span(lang[["title"]], 
                       style = "font-weight: bold;"
                       
     ),

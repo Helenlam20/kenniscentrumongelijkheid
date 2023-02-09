@@ -27,11 +27,13 @@ library(shinyjs)
 library(shinyalert)
 library(shinyscreenshot)
 library(shinydisconnect)
+library(r2r)
 
 
 
 #### RUN APP ####
 source("./startup.R")
+source("./lang/lang.R")
 source("./code/Theme_PoorMansFlatly.R")
 source("./code/ui.R")
 source("./code/server.R")

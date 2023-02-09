@@ -19,16 +19,9 @@ server <- function(input, output, session) {
   observeEvent(input$beginscherm, {
       sendSweetAlert(
         session = session,
-        title = "Welkom op het Dashboard Ongelijkheid in Amsterdam!",
-        text = HTML("Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
-      waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
-                  <br><br><b>Stap 1:</b> kies een uitkomstmaat.
-                  <br><b>Stap 2:</b> kies een kenmerk van ouders.
-                  <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
-                  <br><br>Voor meer informatie over het dashboard, zie <i>Uitlegvideo's</i> en <i>Werkwijze.</i>
-                  <br><br>Deze website maakt gebruik van cookies."),
-
-        btn_labels = "Doorgaan",
+        title = lang[["welcome_popup_title"]],
+        text = HTML(lang[["welcome_popup_text"]]),
+        btn_labels = lang[["welcome_popup_continue"]],
         btn_colors = "#18BC9C",
         html = TRUE,
         closeOnClickOutside = TRUE,
