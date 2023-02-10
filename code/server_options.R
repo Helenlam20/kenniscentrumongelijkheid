@@ -411,3 +411,12 @@ bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
 get_datetime <- function() {
   str_replace(format(Sys.time(), "%Y-%m-%d %H-%M-%S"), " ", "_")
 } 
+
+# Dynamic text
+add_dynamic_text <- function(text, lang_dynamic_map) {
+    for (identifier in keys(lang_dynamic_map)) {
+      text <- str_replace_all(text, identifier, paste0(lang_dynamic_map[[identifier]]))
+
+    }
+    return(text)
+}

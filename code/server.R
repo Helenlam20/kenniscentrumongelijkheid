@@ -278,10 +278,16 @@ server <- function(input, output, session) {
                               statistic_type_text, tolower(labels_dat$outcome_name), "."))
       
     } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
-      axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
-                               tolower(labels_dat$outcome_name), 
-                               " van ", labels_dat$population,
-                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
+      # axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
+      #                          tolower(labels_dat$outcome_name), 
+      #                          " van ", labels_dat$population,
+      #                          ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
+      lang_dynamic_map <- hashmap()
+      lang_dynamic_map[["<<statistic_type>>"]] <- statistic_type_text
+      lang_dynamic_map[["<<label_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
+      lang_dynamic_map[["<<label_population>>"]] <- labels_dat$population
+      axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_income"]], lang_dynamic_map))
+
     
       } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
       axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, 

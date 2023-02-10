@@ -1,0 +1,1 @@
+lang[["general_text_axis_parent_income"]] <- "Elke staaf in het figuur toont het <<statistic_type>> met een <<label_outcome_name_lowercase>> van <<label_population>>, uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."
