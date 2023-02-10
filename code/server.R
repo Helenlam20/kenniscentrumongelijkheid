@@ -471,8 +471,8 @@ server <- function(input, output, session) {
                                add_bold_text_html(text="groene stip", color=data_group2_color), 
                                "laat zien dat, voor de", paste0(perc_html, "%"), labels_dat$population,
                                "met ouders met de hoogste inkomens in de groene groep", 
-                               paste0("(gemiddeld €",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), 
-                                      "per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
+                               paste0("(gemiddeld € ",  decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000), 
+                                      " per jaar),"), "het", statistic_type_text, "met een", tolower(labels_dat$outcome_name),
                                paste0(prefix_text, decimal1(data_group2$mean[as.numeric(num_rows)]), postfix_text), "was.</p>")
             
           } else if (perc_html == "100") {
