@@ -260,42 +260,34 @@ server <- function(input, output, session) {
     data_group2 <- subset(dat, dat$group == "Groene groep")
     N2 <- decimal0(sum(data_group2$N))
 
+    lang_dynamic_map <- hashmap()
+    lang_dynamic_map[["<<statistic_type>>"]] <- statistic_type_text
+    lang_dynamic_map[["<<input_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
+    lang_dynamic_map[["<<input_population>>"]] <- labels_dat$population
+    axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_education"]], lang_dynamic_map))
+
     if(!data_group1_has_data() && !data_group2_has_data()) {
       # No data
       axis_text <- ""
     } else if (input$parents_options == "Inkomen ouders") {
       # get html bin
       perc_html <- get_perc_per_bin_html(data_group1)
-      if (!(input$OnePlot)) {perc_html <- get_perc_html(data_group1, data_group2)}
-      # if dat has more than 1 bin then add range to text
-      if (perc_html != 100) {
-        range <- paste0(" gerangschikt van laag naar hoog ouderlijk inkomen ")
-      } else {range <- ""}
-      
-      axis_text <- HTML(paste0("Elke stip in het figuur is gebaseerd op ", perc_html, 
-                              "% van de ", labels_dat$population, " op de horizontale as", range, 
-                              " binnen de betreffende groep. De verticale as toont het ", 
-                              statistic_type_text, tolower(labels_dat$outcome_name), "."))
-      
-    } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
-      # axis_text <- HTML(paste0("Elke staaf in het figuur toont het ", statistic_type_text, " met een ",
-      #                          tolower(labels_dat$outcome_name), 
-      #                          " van ", labels_dat$population,
-      #                          ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."))
-      lang_dynamic_map <- hashmap()
-      lang_dynamic_map[["<<statistic_type>>"]] <- statistic_type_text
-      lang_dynamic_map[["<<label_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
-      lang_dynamic_map[["<<label_population>>"]] <- labels_dat$population
+      if (!(input$OnePlot)) {
+        perc_html <- get_perc_html(data_group1, data_group2)
+      }
+      lang_dynamic_map[["<<plot_bar_bin_percentage>>"]] <- perc_html
+      lang_dynamic_map[["<<general_text_plot_order_if_available>>"]] <- ""
+      if(perc_html != 100)
+        lang_dynamic_map[["<<general_text_plot_order_if_available>>"]] <- lang[["general_text_plot_order"]]
+
       axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_income"]], lang_dynamic_map))
 
-    
-      } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
-      axis_text <- HTML(paste0("Elke lollipop (lijn met stip) in het figuur toont het ", statistic_type_text, 
-                               " met een ", tolower(labels_dat$outcome_name), " van ", labels_dat$population,
-                               ", uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. 
-                               De bolgrootte is afhankelijk van het aantal mensen dat in de lollipop zit binnen een groep. 
-                               Hierdoor kan de gebruiker in één oogopslag zien hoeveel mensen er in een lollipop zitten."))
-      }
+    } else if(input$parents_options == "Opleiding ouders" & !input$change_barplot) {
+      axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_education"]], lang_dynamic_map))
+
+    } else if(input$parents_options == "Opleiding ouders" & input$change_barplot) {
+      axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_education_lollipop"]], lang_dynamic_map))
+    }
     
     group1_text <- gen_algemeen_group_text(
       group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
