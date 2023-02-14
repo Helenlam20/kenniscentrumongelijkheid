@@ -16,7 +16,7 @@ lang[["green_group"]] = "Groene groep"
 # Side menu
 lang[["menu_figure"]] <- "Figuur"
 lang[["menu_video"]] <- "Uitlegvideo's"
-lang[["menu_methodology"]] <- "Werkwijze"
+lang[["menu_method"]] <- "Werkwijze"
 lang[["menu_faq"]] <- "Veelgestelde vragen"
 lang[["menu_contact"]] <- "Contact"
 

@@ -263,6 +263,8 @@ server <- function(input, output, session) {
     lang_dynamic_map <- hashmap()
     lang_dynamic_map[["<<statistic_type>>"]] <- statistic_type_text
     lang_dynamic_map[["<<input_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
+    lang_dynamic_map[["<<input_outcome_name>>"]] <- labels_dat$outcome_name
+    lang_dynamic_map[["<<input_outcome_name_definition>>"]] <- labels_dat$definition
     lang_dynamic_map[["<<input_population>>"]] <- labels_dat$population
     axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_education"]], lang_dynamic_map))
 
@@ -290,32 +292,38 @@ server <- function(input, output, session) {
     }
     
     group1_text <- gen_algemeen_group_text(
-      group_type_text = add_bold_text_html(text="blauwe groep", color=data_group1_color),
+      group_type_text = add_bold_text_html(text=tolower(lang["blue_group"]), color=data_group1_color),
       group_data_size = N1,
       geslacht_input = input$geslacht1,
       migratie_input = input$migratie1,
       huishouden_input = input$huishouden1,
       geografie_input = input$geografie1,
-      populatie_input = labels_dat$population
+      populatie_input = labels_dat$population,
+      lang_dynamic_map = lang_dynamic_map
     )
     
     group2_text <- ""
     if (!input$OnePlot) {
       group2_text <- gen_algemeen_group_text(
-        group_type_text = add_bold_text_html(text="groene groep", color=data_group2_color),
+        group_type_text = add_bold_text_html(text=tolower(lang[["green_group"]]), color=data_group2_color),
         group_data_size = N2,
         geslacht_input = input$geslacht2,
         migratie_input = input$migratie2,
         huishouden_input = input$huishouden2,
         geografie_input = input$geografie2,
-        populatie_input = labels_dat$population
+        populatie_input = labels_dat$population,
+        lang_dynamic_map = lang_dynamic_map
       )
     }    
-    
+    lang_dynamic_map[["<<general_text_group1>>"]] <- group1_text
+    lang_dynamic_map[["<<general_text_group2>>"]] <- group2_text
+    lang_dynamic_map[["<<general_text_axis>>"]] <- axis_text
+
     # output
-    HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
-                "<p>", group1_text, " ", group2_text, "</p>", 
-                "<p>", axis_text, "</p>"))
+    HTML(add_dynamic_text(lang[["general_text"]], lang_dynamic_map))
+    # HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
+    #             "<p>", group1_text, " ", group2_text, "</p>", 
+    #             "<p>", axis_text, "</p>"))
     
   })
   
@@ -940,26 +948,27 @@ observeEvent(input$user_reset, {
       algemeenText()
       
     } else if (input$SwitchTabbox1 == "Opleiding ouders") {
-      HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
-                              behaalde opleiding van één van de ouders. Voor opleiding 
-                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+      # HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+      #                         behaalde opleiding van één van de ouders. Voor opleiding 
+      #                         ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
                               
-                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
-                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
-                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
-                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo. 
-                             Het opleidingsniveau <i>geen hbo of wo</i> kan hierdoor niet verder 
-                             gedifferentieerd worden.</p>"))
-      
+      #                         <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+      #                         jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+      #                         gegevens over de opleidingen van ouders pas beschikbaar zijn 
+      #                         vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo. 
+      #                        Het opleidingsniveau <i>geen hbo of wo</i> kan hierdoor niet verder 
+      #                        gedifferentieerd worden.</p>"))
+      HTML(lang[["general_text_explanation_parent_education"]])
     } else if (input$SwitchTabbox1 == "Inkomen ouders") {
+      HTML(lang[["general_text_explanation_parent_income"]])
       
-      HTML(paste0("<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde 
-      gezamelijk bruto-inkomen van ouders.</p>
+      # HTML(paste0("<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde 
+      # gezamelijk bruto-inkomen van ouders.</p>
       
-      <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. 
-      Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de 
-      ouders bij elkaar op. Als slechts een ouder bekend is, dan gebruiken we alleen dat inkomen van 
-      de ouder.</p>"))
+      # <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. 
+      # Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de 
+      # ouders bij elkaar op. Als slechts een ouder bekend is, dan gebruiken we alleen dat inkomen van 
+      # de ouder.</p>"))
       
     }
     

@@ -2,7 +2,7 @@ lang[["title"]] <- "Opportunity Gap"
 
 lang[["menu_figure"]] <- "Figure"
 lang[["menu_video"]] <- "Video"
-lang[["menu_methodology"]] <- "Methodology"
+lang[["menu_method"]] <- "Method"
 lang[["menu_faq"]] <- "Frequently Asked Questions"
 lang[["menu_contact"]] <- "Contact"
 

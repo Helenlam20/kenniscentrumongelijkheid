@@ -133,32 +133,40 @@ gen_nodata_found <- function(group_type_text) {
 # Generate text for the "Algemeen" tab
 gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, 
                                     migratie_input, huishouden_input, geografie_input, 
-                                    populatie_input) {
+                                    populatie_input, lang_dynamic_map) {
   
+  lang_dynamic_map[["<<var_group_id>>"]] <- group_type_text
   if (group_data_size <= 0) {
-    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+    group_text <- add_dynamic_text(lang[["no_group_data"]], lang_dynamic_map)
     return(group_text)
   }
-
-  sex_text <- subset(html_text$html_text, html_text$input_text == geslacht_input)
+  
+  lang_dynamic_map[["<<var_input_migration_adjective>>"]] <- lang[["adjective_map"]][[geslacht_input]]
   migration_text <- ""
+  if (migratie_input == "Zonder migratieachtergrond")
+    migration_text <- add_dynamic_text(lang[["general_text_group_text_without_migration"]], lang_dynamic_map)
+  else if (migratie_input != "Totaal" )
+    migration_text <- lang[["general_text_group_text_with_migration"]]
+
+  lang_dynamic_map[["<<var_input_household>>"]] <- tolower(huishouden_input)
   household_text <- ""
-
-  if (migratie_input != "Totaal" & migratie_input != "Zonder migratieachtergrond")
-    migration_text <- paste("met een", subset(html_text$html_text, 
-                                              html_text$input_text == migratie_input), 
-                            "migratieachtergrond")
-  else if (migratie_input == "Zonder migratieachtergrond")
-    migration_text <- paste0(("zonder een migratieachtergrond"))
-
-  
   if (huishouden_input != "Totaal")
-    household_text <- paste("in een", tolower(huishouden_input))
+    household_text <- add_dynamic_text(lang[["general_text_group_text_household"]], lang_dynamic_map)
+
   
-  group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, sex_text, 
-                            populatie_input, migration_text, "die zijn opgegroeid", household_text, 
-                            "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
   
+  lang_dynamic_map[["<<var_group_size>>"]] <- group_data_size
+  lang_dynamic_map[["<<var_input_gender_adjective>>"]] <- lang[["adjective_map"]][[geslacht_input]]
+  lang_dynamic_map[["<<var_input_population>>"]] <- populatie_input
+  lang_dynamic_map[["<<general_text_migration_if_available>>"]] <- migration_text
+  lang_dynamic_map[["<<general_text_household_if_available>>"]] <- household_text
+  lang_dynamic_map[["<<var_input_geography>>"]] <- geografie_input
+  
+  # group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, gender_adjective, 
+  #                           populatie_input, migration_text, "die zijn opgegroeid", household_text, 
+  #                           "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
+  group_text <- add_dynamic_text(lang[["general_text_groupX"]], lang_dynamic_map)
+
   return(group_text)
 }
 

@@ -25,7 +25,7 @@ sidebar <-
       )),
       menuItem(lang[["menu_figure"]], tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
       menuItem(lang[["menu_video"]], tabName = "videos", icon = icon("video")),
-      menuItem(lang[["menu_methodology"]], tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
+      menuItem(lang[["menu_method"]], tabName = "werkwijze", icon = icon("info-sign", lib = "glyphicon")),
       # menuItem(lang[["menu_faq"]], tabName = "faq", icon = icon("question")),
       menuItem(lang[["menu_contact"]] , tabName = "contact", icon = icon("address-book"))
     )  # end sidebar menu
