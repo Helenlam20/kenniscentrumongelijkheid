@@ -178,6 +178,11 @@ gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text,
   return(text)
 }
 
+gen_wat_zie_ik_group_text <- function(group_id, lang_dynamic_map) {
+
+  
+}
+
 
 #### FIGURE PLOT ####
 

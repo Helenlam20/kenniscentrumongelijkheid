@@ -34,3 +34,8 @@ lang[["general_text_explanation_parent_education"]] <- "<p><b>Opleiding ouders</
 
 lang[["general_text_explanation_parent_income"]] <- "<p><b>Inkomen ouders</b> wordt gedefinieerd als het gemiddelde gezamelijk bruto-inkomen van ouders.</p> <p>We berekenen eerst het gemiddeld bruto-inkomen van elk ouder gemeten in 2018 euro's. Voor de kinderen waarvan twee ouders bekend zijn, tellen we het gemiddelde inkomen van de ouders bij elkaar op. Als slechts een ouder bekend is, dan gebruiken we alleen dat inkomen van de ouder.</p>"
 
+# Wat zie ik 
+lang[["dot"]] <- "stip"
+lang[["bar"]] <- "staaf"
+
+lang[["what_do_i_see_text_parent_income_multiple_datapoints"]] <- "<p>De meest linker <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per_bin>> <<input_population>> met ouders met de laagste inkomens in de <<var_group_id>> gemiddeld €<<var_data_parent_lowest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_lowest_mean>> was.</p><p>De meest rechter <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per_bin>> <<input_population>> met ouders met de hoogste inkomens in de blauwe groep gemiddeld €<<var_data_parent_highest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_highest_mean>> was.</p>" 

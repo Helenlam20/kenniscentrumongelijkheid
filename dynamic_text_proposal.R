@@ -5,7 +5,7 @@
 
 data_group1_color = <<color_group1>>
 labels_dat$population = <<label_population>>
-perc_html = <<data_percentage>>
+paste0(perc_html, "%") = <<data_percentage_per_bin>>
 decimal0(data_group1$parents_income[as.numeric(1)]*1000) = <<data1_parents_lowest_income>>
 decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000) = <<data1_parents_highest_income>>
 decimal0(data_group1$parents_income*1000) = <<data2_parents_income>>
@@ -20,7 +20,7 @@ paste0(prefix_text, decimal1(data_group1$mean), postfix_text) = <<data1_mean>>
 
 labels_dat$outcome_name = <<label_outcome_name>>
 labels_dat$population = <<label_population>>
-total_group1$mean = <<data_total_mean>>
+total_group1$mean = <<var_data_total_mean>>
 
 
 ## colors

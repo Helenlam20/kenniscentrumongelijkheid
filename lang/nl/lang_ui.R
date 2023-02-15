@@ -12,6 +12,9 @@ lang[["average"]] = "Gemiddelde"
 lang[["blue_group"]] = "Blauwe groep"
 lang[["green_group"]] = "Groene groep"
 
+lang[["blue_adjective"]] <- "blauwe"
+lang[["green_adjective"]] <- "groene"
+
 
 # Side menu
 lang[["menu_figure"]] <- "Figuur"
