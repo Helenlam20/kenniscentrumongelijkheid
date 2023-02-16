@@ -321,9 +321,6 @@ server <- function(input, output, session) {
 
     # output
     HTML(add_dynamic_text(lang[["general_text"]], lang_dynamic_map))
-    # HTML(paste0("<p><b>", labels_dat$outcome_name, "</b> ", labels_dat$definition, "</p>",
-    #             "<p>", group1_text, " ", group2_text, "</p>", 
-    #             "<p>", axis_text, "</p>"))
     
   })
   
@@ -363,14 +360,23 @@ server <- function(input, output, session) {
         has_data <- TRUE 
         data_identifier <- lang[["bar"]]
         if (input$parents_options == "Inkomen ouders")
-          data_identifier <- lang[["stip"]]
+          data_identifier <- lang[["dot"]]
 
         lang_dynamic_map[["<<var_group_datapoint_id>>"]] <-  add_bold_text_html(text=paste(lang[["blue_adjective"]], data_identifier), color=data_group1_color)
         lang_dynamic_map[["<<var_group_id>>"]] <- tolower(lang[["blue_group"]])
+        lang_dynamic_map[["<<var_group_id_colored>>"]] <- add_bold_text_html(text=lang_dynamic_map[["<<var_group_id>>"]], color=data_group1_color)
         lang_dynamic_map[["<<var_data_parent_lowest_income>>"]] <- decimal0(data_group1$parents_income[as.numeric(1)]*1000)
         lang_dynamic_map[["<<var_data_parent_highest_income>>"]] <- decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000)
         lang_dynamic_map[["<<var_data_lowest_mean>>"]] <- paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text)
         lang_dynamic_map[["<<var_data_highest_mean>>"]] <- paste0(prefix_text, decimal1(data_group1$mean[as.numeric(num_rows)]), postfix_text)
+
+        # Single point (1 point is 100%)
+        lang_dynamic_map[["<<var_data_parent_income>>"]] <- lang_dynamic_map[["<<var_data_parent_lowest_income>>"]]
+        lang_dynamic_map[["<<var_data_mean>>"]] <- lang_dynamic_map[["<<var_data_lowest_mean>>"]]
+
+        # Mean
+        lang_dynamic_map[["<<var_total_mean>>"]] <- paste0(prefix_text, decimal1(total_group1$mean), postfix_text)
+
 
     } else if (input$SwitchColor == "Groene groep" && data_group2_has_data()) {
         has_data <- TRUE 
@@ -389,17 +395,30 @@ server <- function(input, output, session) {
         lang_dynamic_map[["<<data_percentage_per_bin>>"]] = paste0(perc_html, "%")
 
 
+        main_text <- ""
         if (perc_html == "100") {
           # One dot is 100%
-
+          main_text <- HTML(add_dynamic_text(lang[["what_do_i_see_text_parent_income_single_datapoint"]], lang_dynamic_map))
         } else {
           # One dot is less than 100%
-          HTML(add_dynamic_text(lang[["what_do_i_see_text_parent_income_multiple_datapoints"]], lang_dynamic_map))
+          main_text <-HTML(add_dynamic_text(lang[["what_do_i_see_text_parent_income_multiple_datapoints"]], lang_dynamic_map))
         }
 
       } else if(input$parents_options == "Opleiding ouders") {
 
       }
+
+      # Mean text
+      mean_text <- ""
+      if (!is.null(input$line_options) && "Gemiddelde" %in% input$line_options) {
+        mean_text <- HTML(add_dynamic_text(lang[["what_do_i_see_text_mean"]], lang_dynamic_map))
+      }
+
+      HTML(paste0("<p>", main_text, "</p>",
+                  "<p>", mean_text, "</p>"))
+
+      
+
     }
 
     # # text for switch

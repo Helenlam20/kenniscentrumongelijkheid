@@ -135,7 +135,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
                                     migratie_input, huishouden_input, geografie_input, 
                                     populatie_input, lang_dynamic_map) {
   
-  lang_dynamic_map[["<<var_group_id>>"]] <- group_type_text
+  lang_dynamic_map[["<<var_group_id_colored>>"]] <- group_type_text
   if (group_data_size <= 0) {
     group_text <- add_dynamic_text(lang[["no_group_data"]], lang_dynamic_map)
     return(group_text)
@@ -162,9 +162,6 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   lang_dynamic_map[["<<general_text_household_if_available>>"]] <- household_text
   lang_dynamic_map[["<<var_input_geography>>"]] <- geografie_input
   
-  # group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, gender_adjective, 
-  #                           populatie_input, migration_text, "die zijn opgegroeid", household_text, 
-  #                           "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
   group_text <- add_dynamic_text(lang[["general_text_groupX"]], lang_dynamic_map)
 
   return(group_text)
