@@ -81,12 +81,12 @@ get_postfix <- function(outcome) {
 
 
 # html text
-html_text <- data.frame(
-  input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", 
-                 "Suriname", "Nederlandse Antillen"),
-  html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", 
-                "Surinaamse", "Antilliaanse")
-)
+# html_text <- data.frame(
+#   input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", 
+#                  "Suriname", "Nederlandse Antillen"),
+#   html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", 
+#                 "Surinaamse", "Antilliaanse")
+# )
 
 #### SIGNS FOR HTML TEXT ####
 
@@ -117,9 +117,9 @@ get_perc_html <- function(data_group1, data_group2) {
 # select statistics based on an outcome
 get_stat_per_outcome_html <- function(sample_dat){
   if (sample_dat$analyse_outcome %in% continuous) {
-    stat <- " gemiddelde "
+    stat <- paste0(" ", lang[["statistic_average"]]," ")
   } else if (sample_dat$analyse_outcome %in% dummy) {
-    stat <- " percentage "
+    stat <- paste0(" ", lang[["statistic_percentage"]]," ")
   }
   return(stat)
 } 
@@ -263,13 +263,7 @@ readme_sep <- c("",
 
 caption_sep <- 
 "\n\n=========================================================================\n"
-caption_license <- paste0("Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
-van Erasmus School of Economics en de Vrije Universiteit Amsterdam, met 
-ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
-zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
-onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. 
-Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"
-)
+caption_license <- paste0(lang[["license_text"]])
 
 
 

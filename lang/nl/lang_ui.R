@@ -2,19 +2,26 @@
 lang[["title"]] <- "Dashboard Ongelijkheid in Amsterdam" 
 
 # General
-lang[["outcome_measure"]] = "Uitkomstmaat"
-lang[["parent_income"]] = "Inkomen ouders"
-lang[["parent_education"]] = "Opleiding ouders"
+lang[["outcome_measure"]] <- "Uitkomstmaat"
+lang[["parent_income"]] <- "Inkomen ouders"
+lang[["parent_education"]] <- "Opleiding ouders"
 
-lang[["line"]] = "Lijn"
-lang[["average"]] = "Gemiddelde"
+lang[["line"]] <- "Lijn"
+lang[["average"]] <- "Gemiddelde"
 
-lang[["blue_group"]] = "Blauwe groep"
-lang[["green_group"]] = "Groene groep"
+lang[["blue_group"]] <- "Blauwe groep"
+lang[["green_group"]] <- "Groene groep"
 
 lang[["blue_adjective"]] <- "blauwe"
 lang[["green_adjective"]] <- "groene"
 
+lang[["yes"]] <- "Ja"
+lang[["no"]] <- "Nee"
+
+lang[["statistic_average"]] <- "gemiddelde"
+lang[["statistic_percentage"]] <- "percentage"
+
+lang[["download_readme_title"]] <- "UITLEG DASHBOARD ONGELIJKHEID IN AMSTERDAM"
 
 # Side menu
 lang[["menu_figure"]] <- "Figuur"
@@ -38,6 +45,10 @@ lang[["welcome_popup_text"]] <- "Het dashboard <i>Ongelijkheid in Amsterdam</i> 
                   <br><br>Deze website maakt gebruik van cookies."
 lang[["welcome_popup_continue"]] <- "Doorgaan"
 
+# Cookie popup
+lang[["cookie_popup_title"]] <- "Cookies verwijderen"
+lang[["cookie_popup_text"]] <- "Wil alle cookies verwijderen?"
+
 # Outcome selection box
 lang[["box_outcome"]] <- "Uitkomstmaat"
 lang[["box_outcome_select_outcome"]] <- "Selecteer hier een uitkomstmaat"
@@ -52,40 +63,49 @@ lang[["box_outcome_select_parent_option_hover"]] <- "Kenmerk van ouders optie"
 lang[["box_outcome_select_parent_option_hovertext"]] <- "<i>Kenmerk van de ouders</i> staat op de horizontale as van de figuur.<br><br>De optie <i>Opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en leeringen in groep 8."
 
 # Explaination text box
-lang[["box_text_general"]] = "Algemene uitleg"
-lang[["box_text_what_do_i_see"]] = "Wat zie ik?"
-lang[["box_text_causality"]] = "Causaliteit"
+lang[["box_text_general"]] <- "Algemene uitleg"
+lang[["box_text_what_do_i_see"]] <- "Wat zie ik?"
+lang[["box_text_causality"]] <- "Causaliteit"
+lang[["box_text_licence"]] <- "Licentie"
 
-lang[["box_text_causality_text"]] = "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen
+lang[["box_text_causality_text"]] <- "Het dashboard toont de samenhang tussen de omstandigheden waarin kinderen
 opgroeien en hun uitkomsten over de levensloop. Maar die omstandigheden 
 hangen samen met eindeloos veel factoren die ook van invloed zijn en
 waarvoor niet te controleren valt. Daarom moeten deze patronen niet worden 
 gezien als bewijs voor oorzakelijke verbanden."
 
-lang[["box_text_switch_label"]] = "Toon uitleg van:"
+lang[["box_text_switch_label"]] <- "Toon uitleg van:"
+
+
+# Graph 
+lang[["plot_no_data"]] <- "Geen data beschikbaar"
+lang[["plot_graph_x_label"]] <- "Jaarlijks inkomen ouders (keer € 1.000)"
+lang[["plot_bar_x_label"]] <- "Hoogst behaalde opleiding ouders"
+lang[["plot_bubble_x_label"]] <- lang[["plot_bar_x_label"]]
+
 
 # Graph options
-lang[["download_data"]] = "Download data"
-lang[["download_figure"]] = "Download figuur"
+lang[["download_data"]] <- "Download data"
+lang[["download_figure"]] <- "Download figuur"
 
-lang[["make_screenshot"]] = "Maak een screenshot"
+lang[["make_screenshot"]] <- "Maak een screenshot"
 
-lang[["alternative_box_plot_label"]] = "<b> Toon alternatief staafdiagram</b>"
+lang[["alternative_box_plot_label"]] <- "<b> Toon alternatief staafdiagram</b>"
 
 # Graph adjustments
-lang[["y_axis_label"]] = "Verticale as (Y-as):"
-lang[["x_axis_label"]] = "Horizontale as (X-as):"
-lang[["reset"]] = "Reset"
+lang[["y_axis_label"]] <- "Verticale as (Y-as):"
+lang[["x_axis_label"]] <- "Horizontale as (X-as):"
+lang[["reset"]] <- "Reset"
 
 # Blue/green group adjustments
-lang[["the_netherlands"]] = "Nederland"
+lang[["the_netherlands"]] <- "Nederland"
 
-lang[["area"]] = "Gebied"
-lang[["gender"]] = "Geslacht"
-lang[["migration_background"]] = "Migratieachtergrond"
+lang[["area"]] <- "Gebied"
+lang[["gender"]] <- "Geslacht"
+lang[["migration_background"]] <- "Migratieachtergrond"
 
-lang[["parent_amount_label"]] = "Aantal ouders in gezin"
-lang[["one_group_label"]] = "<b> Toon één groep</b>"
+lang[["parent_amount_label"]] <- "Aantal ouders in gezin"
+lang[["one_group_label"]] <- "<b> Toon één groep</b>"
 
 # Choices
 lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
@@ -141,3 +161,17 @@ lang[["migration_choices"]] <- c("Totaal", "Zonder migratieachtergrond", "Turkij
                       "Suriname", "Nederlandse Antillen")
 
 lang[["household_choices"]] <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
+
+# Label identifiers
+# !!! This has to be consistent with the definition column in outcome_table.xlsx
+lang[["label_newborn"]] <- "pasgeborenen" 
+lang[["label_students_in_grade_8"]] <- "leerlingen in groep 8" 
+
+
+# License
+lang[["license_text"]] <- "Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
+van Erasmus School of Economics en de Vrije Universiteit Amsterdam, met 
+ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
+zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
+onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. 
+Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"
