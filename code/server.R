@@ -185,14 +185,22 @@ server <- function(input, output, session) {
     labels_dat <- subset(outcome_dat, outcome_dat$analyse_outcome == input$outcome)
 
     
-    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1,
-                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -",
-                      input$huishouden1, "(aantal ouders in gezin)")
+    caption1 <- paste(
+        sprintf("%s:", lang[["blue_group"]]), 
+        input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
+        input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
+        input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
+        input$huishouden1, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+    )
     caption2 <- ""
     if(!input$OnePlot) {
-      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2,
-                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -",
-                        input$huishouden2, "(aantal ouders in gezin)")
+      caption2 <- paste(
+        sprintf("%s:", lang[["green_group"]]), 
+        input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
+        input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
+        input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
+        input$huishouden2, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+    )
     }
     
     caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 75), collapse = "\n")
@@ -209,14 +217,22 @@ server <- function(input, output, session) {
   # caption of the groups in download file
   CaptionFile <- reactive({
     
-    caption1 <- paste("BLAUWE GROEP:", input$geografie1, "(gebied) -", input$geslacht1, 
-                      "(geslacht) -", input$migratie1, "(migratieachtergrond) -", 
-                      input$huishouden1, "(aantal ouders in gezin)")
+    caption1 <- paste(
+        sprintf("%s:", lang[["blue_group"]]), 
+        input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
+        input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
+        input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
+        input$huishouden1, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+    )
     caption2 <- ""
     if(!input$OnePlot) {
-      caption2 <- paste("GROENE GROEP:", input$geografie2, "(gebied) -", input$geslacht2, 
-                        "(geslacht) -", input$migratie2, "(migratieachtergrond) -", 
-                        input$huishouden2, "(aantal ouders in gezin)")
+      caption2 <- paste(
+        sprintf("%s:", lang[["green_group"]]), 
+        input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
+        input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
+        input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
+        input$huishouden2, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+    )
     }
     
     caption <- paste(strwrap(paste0(caption1, "\n\n", caption2), width = 85), collapse = "\n")
@@ -339,8 +355,8 @@ server <- function(input, output, session) {
     postfix_text <- get_postfix(input$outcome)
     
     # get average of total group
-    total_group1 <- dataInput1()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
-    total_group2 <- dataInput2()  %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+    total_group1 <- dataInput1()  %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+    total_group2 <- dataInput2()  %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
     
     # load data
     dat <- filterData()
@@ -415,7 +431,8 @@ server <- function(input, output, session) {
 
     if(!has_data) {
       # Generate no data message
-      HTML(gen_nodata_found(lang_dynamic_map[["<<var_group_id_colored>>"]]))
+      # HTML(gen_nodata_found(lang_dynamic_map[["<<var_group_id_colored>>"]]))
+      HTML(add_dynamic_text(lang[["no_group_data"]], lang_dynamic_map))
     } else {
       if (input$parents_options == lang[["parent_income"]]) {
         perc_html <- get_perc_per_bin_html(data_group1)
@@ -515,7 +532,7 @@ server <- function(input, output, session) {
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
-          total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
         }
       }
@@ -532,7 +549,7 @@ server <- function(input, output, session) {
           plot <- plot + gen_regression_line(data_group2, data_group2_color, polynom, linetype2_reg)
 
         if (mean_option_selected) {
-          total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
         }
       }     
@@ -560,12 +577,12 @@ server <- function(input, output, session) {
       if (mean_option_selected) {
         # get average of the groups
         if (data_group1_has_data()) {
-          total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
         }
         
         if (data_group2_has_data()) {
-          total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+          total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
           
         }
@@ -593,12 +610,12 @@ server <- function(input, output, session) {
        if (mean_option_selected) {
          # get average of the groups
          if (data_group1_has_data()) {
-           total_group1 <- dataInput1() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+           total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
            plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
          }
          
          if (data_group2_has_data()) {
-           total_group2 <- dataInput2() %>% filter(bins == "Totaal", opleiding_ouders == "Totaal")
+           total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
            plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
            
          }

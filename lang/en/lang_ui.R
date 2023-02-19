@@ -1,4 +1,5 @@
 lang[["title"]] <- "Opportunity Gap" 
+lang[["title_width"]] <- 300
 
 lang[["menu_figure"]] <- "Figure"
 lang[["menu_video"]] <- "Video"

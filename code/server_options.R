@@ -125,10 +125,10 @@ get_stat_per_outcome_html <- function(sample_dat){
 } 
 
 # no data found
-gen_nodata_found <- function(group_type_text) {
-    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
-    return(group_text)
-  }
+# gen_nodata_found <- function(group_type_text) {
+#     group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+#     return(group_text)
+#   }
 
 # Generate text for the "Algemeen" tab
 gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, 
@@ -167,18 +167,18 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   return(group_text)
 }
 
-# create mean text for tabbox
-gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
-                          total_group_mean, prefix_text, postfix_text) {
-  text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
-  return(text)
-}
+# # create mean text for tabbox
+# gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
+#                           total_group_mean, prefix_text, postfix_text) {
+#   text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
+#                       group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
+#   return(text)
+# }
 
-gen_wat_zie_ik_group_text <- function(group_id, lang_dynamic_map) {
+# gen_wat_zie_ik_group_text <- function(group_id, lang_dynamic_map) {
 
   
-}
+# }
 
 
 #### FIGURE PLOT ####
@@ -286,9 +286,9 @@ gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
   plot <- ggplot() +
     suppressWarnings(geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Inkomen ouders: € ", decimal0(parents_income * 1000),
-                                              "</br>Aantal mensen: ", decimal0(N))),
+                                              "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+                                              "</br>", lang[["plot_hover_parent_income"]] , decimal0(parents_income * 1000),
+                                              "</br>", lang[["plot_hover_number_of_people"]], decimal0(N))),
                 size=3)) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
   return(plot)
 }
@@ -340,8 +340,8 @@ gen_q75_line <- function(dat, color, linetype) {
 gen_bar_plot <- function(data, prefix_text, postfix_text) {
   plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group,
                 text = paste0("<b>", geografie, "</b></br>",
-                "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                "</br>Aantal mensen: ", decimal0(N)))
+                "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+                "</br>", lang[["plot_hover_number_of_people"]], decimal0(N)))
                 )
 
   return(plot)
@@ -353,9 +353,9 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
                    position = position_dodge(width = 1)) +
     suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = bubble_size, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                              "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
                                               # "</br>Bubble size: ", decimal2(bubble_size), "%", 
-                                              "</br>Aantal mensen: ", decimal0(N))),
+                                              "</br>", lang[["plot_hover_number_of_people"]], decimal0(N))),
                position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
   return(plot)
@@ -399,16 +399,16 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
 
 
 # tabbox for opleiding ouders
-bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
-                              behaalde opleiding van één van de ouders. Voor opleiding 
-                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+# bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+#                               behaalde opleiding van één van de ouders. Voor opleiding 
+#                               ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
   
-                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
-                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
-                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
-                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo</p>"))
+#                               <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+#                               jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+#                               gegevens over de opleidingen van ouders pas beschikbaar zijn 
+#                               vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo</p>"))
 
-bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
+# bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
 
 
 # Get formatted datetime

@@ -1,5 +1,6 @@
 # Dashboard
-lang[["title"]] <- "Dashboard Ongelijkheid in Amsterdam" 
+lang[["title"]] <- "Dashboard Ongelijkheid in Amsterdam"
+lang[["title_width"]] <- 400 
 
 # General
 lang[["outcome_measure"]] <- "Uitkomstmaat"
@@ -83,6 +84,11 @@ lang[["plot_graph_x_label"]] <- "Jaarlijks inkomen ouders (keer € 1.000)"
 lang[["plot_bar_x_label"]] <- "Hoogst behaalde opleiding ouders"
 lang[["plot_bubble_x_label"]] <- lang[["plot_bar_x_label"]]
 
+# Graph hover label
+lang[["plot_hover_outcome"]] <- "Uitkomst: "
+lang[["plot_hover_parent_income"]] <- "Inkomen ouders: € "
+lang[["plot_hover_number_of_people"]] <- "Aantal mensen: "
+
 
 # Graph options
 lang[["download_data"]] <- "Download data"
@@ -108,6 +114,17 @@ lang[["parent_amount_label"]] <- "Aantal ouders in gezin"
 lang[["one_group_label"]] <- "<b> Toon één groep</b>"
 
 # Choices
+lang[["health_catogory_label"]] <- "Gezondheid en welzijn" 
+lang[["education_catogory_label"]] <- "Onderwijs" 
+lang[["house_catogory_label"]] <- "Wonen" 
+lang[["money_catogory_label"]] <- "Werk en inkomen" 
+
+lang[["geography_label_the_netherlands"]] <- "Nederland"
+lang[["geography_label_metropolis_amsterdam"]] <- "Metropool Amsterdam"
+lang[["geography_label_municipalities_amsterdam"]] <- "Gemeenten in Metropool Amsterdam"
+lang[["geography_label_districts_amsterdam"]] <- "Stadsdelen in Amsterdam"
+lang[["geography_label_areas_amsterdam"]] <- "Gebieden in Amsterdam"
+
 lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
                  "Werkt" = "c30_employed", 
                  "Gewerkte uren per week (werkenden)" = "c30_hrs_work_pw", 
@@ -162,10 +179,19 @@ lang[["migration_choices"]] <- c("Totaal", "Zonder migratieachtergrond", "Turkij
 
 lang[["household_choices"]] <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
+# !!! This has to be consistent with the .rds data files
+lang[["total"]] <- "Totaal"
+
 # Label identifiers
 # !!! This has to be consistent with the definition column in outcome_table.xlsx
 lang[["label_newborn"]] <- "pasgeborenen" 
 lang[["label_students_in_grade_8"]] <- "leerlingen in groep 8" 
+
+# !!! This has to be consistent with outcome_table.xlsx
+lang[["label_municipality"]] <- "Gemeente"
+lang[["label_district"]] <- "Stadsdeel"
+lang[["label_neighbourhood"]] <- "Wijk"
+
 
 
 # License

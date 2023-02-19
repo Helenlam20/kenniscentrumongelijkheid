@@ -64,10 +64,7 @@ body <- dashboardBody(
                                   pickerInput("outcome", label = lang[["box_outcome_select_outcome"]], 
                                               # selected = "c11_living_space_pp",
                                               selected = "c11_havo_test",
-                                              choices = list(`Gezondheid en welzijn` = lang[["health_choices"]],
-                                                             `Onderwijs` = lang[["education_choices"]],
-                                                             `Wonen` = lang[["house_choices"]],
-                                                             `Werk en inkomen` = lang[["money_choices"]]),
+                                              choices = outcomeChoices,
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
                                   prettyCheckboxGroup(
@@ -192,10 +189,7 @@ body <- dashboardBody(
             ), 
             box(status = "primary", 
                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/9Cpt2bRC5HI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                     <iframe width="560" height="315" src="https://www.youtube.com/embed/T2ue6RRrnfk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))
-            
-            
-            
+                     <iframe width="560" height="315" src="https://www.youtube.com/embed/T2ue6RRrnfk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'))            
             
     ),
 
@@ -243,7 +237,7 @@ body <- dashboardBody(
 ui <- dashboardPage(
   title=lang[["title"]],
   header = dashboardHeader(
-    titleWidth = 400, 
+    titleWidth = lang[["title_width"]], 
     title = tags$span(lang[["title"]], 
                       style = "font-weight: bold;"
                       

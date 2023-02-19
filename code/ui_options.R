@@ -65,10 +65,30 @@
 
 #### DEMOGRAFIC GROUPS ####
 
-GeoChoices <- list("Nederland", "Metropool Amsterdam",
-                   `Gemeenten in Metropool Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Gemeente")),
-                   `Stadsdelen in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                   `Gebieden in Amsterdam` = sort(subset(area_dat$geografie, area_dat$type == "Wijk")))
+GeoChoices <- list(lang[["geography_label_the_netherlands"]], lang[["geography_label_metropolis_amsterdam"]],
+                   sort(subset(area_dat$geografie, area_dat$type == lang[["label_municipality"]] )),
+                   sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
+                   sort(subset(area_dat$geografie, area_dat$type == lang[["label_district"]] )))
+names(GeoChoices) <- c(
+    "", "",
+    lang[["geography_label_municipalities_amsterdam"]],
+    lang[["geography_label_districts_amsterdam"]],
+    lang[["geography_label_areas_amsterdam"]]
+)
+
+outcomeChoices <- list(
+    lang[["health_choices"]], 
+    lang[["education_choices"]],
+    lang[["house_choices"]],
+    lang[["money_choices"]]
+)
+
+names(outcomeChoices) <- c(
+    lang[["health_catogory_label"]], 
+    lang[["education_catogory_label"]],
+    lang[["house_catogory_label"]],
+    lang[["money_catogory_label"]]
+)
 
 # GenderChoices <- c("Totaal", "Mannen", "Vrouwen")
 

@@ -32,8 +32,8 @@ library(r2r)
 
 
 #### RUN APP ####
-source("./startup.R")
 source("./lang/lang.R")
+source("./startup.R")
 source("./code/Theme_PoorMansFlatly.R")
 source("./code/ui.R")
 source("./code/server.R")
