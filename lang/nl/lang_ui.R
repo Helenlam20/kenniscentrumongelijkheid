@@ -179,7 +179,10 @@ lang[["migration_choices"]] <- c("Totaal", "Zonder migratieachtergrond", "Turkij
 
 lang[["household_choices"]] <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
-# !!! This has to be consistent with the .rds data files
+# !!! This has to be consistent with the migration
+lang[["no_migrationbackground"]] <- "Zonder migratieachtergrond"
+
+# !!! This has to be consistent with the .rds data files and gender/migraion/household options
 lang[["total"]] <- "Totaal"
 
 # Label identifiers

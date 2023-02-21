@@ -186,20 +186,20 @@ server <- function(input, output, session) {
 
     
     caption1 <- paste(
-        sprintf("%s:", lang[["blue_group"]]), 
+        sprintf("%s:", toupper(lang[["blue_group"]])), 
         input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
-        input$huishouden1, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+        input$huishouden1, sprintf("(%s)",tolower(lang[["parent_amount_label"]]))
     )
     caption2 <- ""
     if(!input$OnePlot) {
       caption2 <- paste(
-        sprintf("%s:", lang[["green_group"]]), 
+        sprintf("%s:", toupper(lang[["green_group"]])), 
         input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
-        input$huishouden2, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+        input$huishouden2, sprintf("(%s)",tolower(lang[["parent_amount_label"]]))
     )
     }
     
@@ -209,7 +209,7 @@ server <- function(input, output, session) {
               paste0(labels_dat$outcome_name, " (", labels_dat$population, ")\n"), caption, readme_sep, 
               "\n", paste0(toupper(lang[["box_text_general"]]), "\n", paste(strwrap(HTML_to_plain_text(algemeenText()), width = 75), collapse = "\n")),
               "\n", paste0(toupper(lang[["box_text_what_do_i_see"]]), "\n",paste(strwrap(HTML_to_plain_text(watzieikText()), width = 75), collapse = "\n")), 
-              "\n", paste0(toupper(lang[["box_text_causality"]]), "\n", causal_text), 
+              "\n", paste0(toupper(lang[["box_text_causality"]]), "\n", lang[["box_text_causality_text"]] ), 
               "\n", paste0(toupper(lang[["box_text_licence"]]), "\n", caption_license))
     
   })
@@ -218,20 +218,20 @@ server <- function(input, output, session) {
   CaptionFile <- reactive({
     
     caption1 <- paste(
-        sprintf("%s:", lang[["blue_group"]]), 
+        sprintf("%s:", toupper(lang[["blue_group"]])), 
         input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
-        input$huishouden1, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+        input$huishouden1, sprintf("(%s)",tolower(lang[["parent_amount_label"]])) 
     )
     caption2 <- ""
     if(!input$OnePlot) {
       caption2 <- paste(
-        sprintf("%s:", lang[["green_group"]]), 
+        sprintf("%s:", toupper(lang[["green_group"]])), 
         input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
-        input$huishouden2, sprintf("(%s) -",tolower(lang[["parent_amount_label"]])), 
+        input$huishouden2, sprintf("(%s)",tolower(lang[["parent_amount_label"]]))
     )
     }
     
@@ -293,7 +293,7 @@ server <- function(input, output, session) {
       if (!(input$OnePlot)) {
         perc_html <- get_perc_html(data_group1, data_group2)
       }
-      lang_dynamic_map[["<<plot_bar_bin_percentage>>"]] <- perc_html
+      lang_dynamic_map[["<<data_percentage_per>>"]] = paste0(perc_html, "%")
       lang_dynamic_map[["<<general_text_plot_order_if_available>>"]] <- ""
       if(perc_html != 100)
         lang_dynamic_map[["<<general_text_plot_order_if_available>>"]] <- lang[["general_text_plot_order"]]
@@ -439,7 +439,7 @@ server <- function(input, output, session) {
         if (!(input$OnePlot)) {
           perc_html <- get_perc_html(data_group1, data_group2)
         }
-        lang_dynamic_map[["<<data_percentage_per_bin>>"]] = paste0(perc_html, "%")
+        lang_dynamic_map[["<<data_percentage_per>>"]] = paste0(perc_html, "%")
 
         main_text <- ""
         if (perc_html == "100") {
@@ -963,7 +963,7 @@ observeEvent(input$user_reset, {
                                   CaptionFile(), caption_sep, 
                                   paste0("\n", toupper(lang[["box_text_general"]]) ,"\n"), paste(strwrap(HTML_to_plain_text(algemeenText()), width = 85), collapse = "\n"),
                                   paste0("\n\n", toupper(lang[["box_text_what_do_i_see"]]) ,"\n"), paste(strwrap(HTML_to_plain_text(watzieikText()), width = 85), collapse = "\n"),
-                                  paste0("\n\n", toupper(lang[["box_text_causality"]]) ,"\n"), paste(strwrap(causal_text, width = 85), collapse = "\n"), 
+                                  paste0("\n\n", toupper(lang[["box_text_causality"]]) ,"\n"), paste(strwrap(lang[["box_text_causality_text"]] , width = 85), collapse = "\n"), 
                                   paste0("\n\n", toupper(lang[["box_text_licence"]]) ,"\n"), caption_license)
                  ) 
             )

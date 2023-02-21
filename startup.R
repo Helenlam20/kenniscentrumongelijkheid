@@ -24,8 +24,7 @@ rm(bins20, bins10, bins5, mean, parents_edu)
 # temp_txt <- paste(readLines("./data/README.txt"))
 temp_txt <- paste0(
   lang[["download_readme_title"]], "\n",
-  "================================================================================",
-  "\n\n\n"
+  "================================================================================\n"
   )
 
 

@@ -141,16 +141,18 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
     return(group_text)
   }
   
-  lang_dynamic_map[["<<var_input_migration_adjective>>"]] <- lang[["adjective_map"]][[geslacht_input]]
+  
   migration_text <- ""
-  if (migratie_input == "Zonder migratieachtergrond")
+  if (migratie_input == lang[["no_migrationbackground"]])
     migration_text <- add_dynamic_text(lang[["general_text_group_text_without_migration"]], lang_dynamic_map)
-  else if (migratie_input != "Totaal" )
+  else if (migratie_input != "Totaal" ) {
+    lang_dynamic_map[["<<var_input_migration_adjective>>"]] <- lang[["adjective_map"]][[migratie_input]]
     migration_text <- lang[["general_text_group_text_with_migration"]]
+  }
 
   lang_dynamic_map[["<<var_input_household>>"]] <- tolower(huishouden_input)
   household_text <- ""
-  if (huishouden_input != "Totaal")
+  if (huishouden_input != lang[["total"]])
     household_text <- add_dynamic_text(lang[["general_text_group_text_household"]], lang_dynamic_map)
 
   

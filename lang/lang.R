@@ -31,13 +31,12 @@ set_lang_sources <- function(site_lang) {
 }
 
 
-site_lang <- "en"
+site_lang <- "nl"
 
 lang <- hashmap()
-# source("./lang/nl/lang_ui.R")
 set_lang_sources("nl")
 
-if (exists("site_lang") && site_lang == "en") {
+if (exists("site_lang")) {
     set_lang_sources(site_lang)
 }
 

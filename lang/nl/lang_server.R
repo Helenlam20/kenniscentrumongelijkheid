@@ -13,7 +13,7 @@ insert(lang[["adjective_map"]], "Nederlandse Antillen", "Antilliaanse")
 # Algemeen tekst
 lang[["general_text_plot_order"]] <- " gerangschikt van laag naar hoog ouderlijk inkomen "
 
-lang[["general_text_axis_parent_income"]] <- "Elke stip in het figuur is gebaseerd op <<plot_bar_bin_percentage>>% van de <<input_population>> op de horizontale as <<general_text_plot_order_if_available>> binnen de betreffende groep. De verticale as toont het <<statistic_type>> <<input_outcome_name_lowercase>>."
+lang[["general_text_axis_parent_income"]] <- "Elke stip in het figuur is gebaseerd op <<data_percentage_per>> van de <<input_population>> op de horizontale as <<general_text_plot_order_if_available>> binnen de betreffende groep. De verticale as toont het <<statistic_type>> <<input_outcome_name_lowercase>>."
 
 lang[["general_text_axis_parent_education"]] <- "Elke staaf in het figuur toont het <<statistic_type>> met een <<input_outcome_name_lowercase>> van <<input_population>>, uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders."
 
@@ -38,9 +38,9 @@ lang[["general_text_explanation_parent_income"]] <- "<p><b>Inkomen ouders</b> wo
 lang[["dot"]] <- "stip"
 lang[["bar"]] <- "staaf"
 
-lang[["what_do_i_see_text_parent_income_multiple_datapoints"]] <- "<p>De meest linker <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per_bin>> <<input_population>> met ouders met de laagste inkomens in de <<var_group_id>> (gemiddeld € <<var_data_parent_lowest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_lowest_mean>> was.</p><p>De meest rechter <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per_bin>> <<input_population>> met ouders met de hoogste inkomens in de <<var_group_id>> (gemiddeld € <<var_data_parent_highest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_highest_mean>> was.</p>" 
+lang[["what_do_i_see_text_parent_income_multiple_datapoints"]] <- "<p>De meest linker <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per>> <<input_population>> met ouders met de laagste inkomens in de <<var_group_id>> (gemiddeld € <<var_data_parent_lowest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_lowest_mean>> was.</p><p>De meest rechter <<var_group_datapoint_id>> laat zien dat, voor de <<data_percentage_per>> <<input_population>> met ouders met de hoogste inkomens in de <<var_group_id>> (gemiddeld € <<var_data_parent_highest_income>> per jaar), het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_highest_mean>> was.</p>" 
 
-lang[["what_do_i_see_text_parent_income_single_datapoint"]] <- "De <<var_group_datapoint_id>> met een jaarlijks inkomen ouders van € <<var_data_parent_income>>, laat zien dat, voor de <<data_percentage_per_bin>> <<input_population>> het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_mean>> was."
+lang[["what_do_i_see_text_parent_income_single_datapoint"]] <- "De <<var_group_datapoint_id>> met een jaarlijks inkomen ouders van € <<var_data_parent_income>>, laat zien dat, voor de <<data_percentage_per>> <<input_population>> het <<statistic_type>> met een <<input_outcome_name_lowercase>> <<var_data_mean>> was."
 
 lang[["what_do_i_see_text_mean"]] <- "Het totale <<statistic_type>> <<input_outcome_name_lowercase>> van de <<var_group_id_colored>> is <<var_total_mean>>."
 
