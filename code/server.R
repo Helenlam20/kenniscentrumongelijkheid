@@ -508,15 +508,15 @@ server <- function(input, output, session) {
           
           if (data_group2_has_data()) {
             bar_text <- paste("De linker", add_bold_text_html(text="groene staaf", color=data_group2_color), 
-                              "laat zien dat, voor", labels_dat$population, "die ouders hebben die geen
+                              "laat zien dat, voor", labels_dat$population, "met ouders die geen
                               hbo of wo opleiding hebben, het", statistic_type_text, tolower(labels_dat$outcome_name), 
                               paste0(prefix_text, decimal1(data_group2$mean[3]), postfix_text), 
                               "was. De middelste ", add_bold_text_html(text="groene staaf", color=data_group2_color), 
-                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder die
                               een hbo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
                               paste0(prefix_text, decimal1(data_group2$mean[2]), postfix_text), 
                               "was. De rechter ", add_bold_text_html(text="groene staaf", color=data_group2_color), 
-                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder 
+                              "laat zien dat, voor", labels_dat$population, "met tenminste één ouder die
                               een wo opleiding heeft, het", statistic_type_text, tolower(labels_dat$outcome_name), 
                               paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text), "was.")
           } else {
