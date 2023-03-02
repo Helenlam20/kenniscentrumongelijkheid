@@ -30,3 +30,6 @@ body {
   font-family: 'Helvetica', 'Open Sans', Helvetica,Arial,sans-serif;
 }
 
+iframe {
+    max-width: 100% !important;
+}

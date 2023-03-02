@@ -81,12 +81,12 @@ get_postfix <- function(outcome) {
 
 
 # html text
-html_text <- data.frame(
-  input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", 
-                 "Suriname", "Nederlandse Antillen"),
-  html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", 
-                "Surinaamse", "Antilliaanse")
-)
+# html_text <- data.frame(
+#   input_text = c("Totaal", "Mannen", "Vrouwen", "Nederland", "Turkije", "Marokko", 
+#                  "Suriname", "Nederlandse Antillen"),
+#   html_text = c("", "mannelijke", "vrouwelijke", "Nederlandse", "Turkse", "Marokkaanse", 
+#                 "Surinaamse", "Antilliaanse")
+# )
 
 #### SIGNS FOR HTML TEXT ####
 
@@ -117,58 +117,70 @@ get_perc_html <- function(data_group1, data_group2) {
 # select statistics based on an outcome
 get_stat_per_outcome_html <- function(sample_dat){
   if (sample_dat$analyse_outcome %in% continuous) {
-    stat <- " gemiddelde "
+    stat <- paste0(" ", lang[["statistic_average"]]," ")
   } else if (sample_dat$analyse_outcome %in% dummy) {
-    stat <- " percentage "
+    stat <- paste0(" ", lang[["statistic_percentage"]]," ")
   }
   return(stat)
 } 
 
 # no data found
-gen_nodata_found <- function(group_type_text) {
-    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
-    return(group_text)
-  }
+# gen_nodata_found <- function(group_type_text) {
+#     group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+#     return(group_text)
+#   }
 
 # Generate text for the "Algemeen" tab
 gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_input, 
                                     migratie_input, huishouden_input, geografie_input, 
-                                    populatie_input) {
+                                    populatie_input, lang_dynamic_map) {
   
+  lang_dynamic_map[["<<var_group_id_colored>>"]] <- group_type_text
   if (group_data_size <= 0) {
-    group_text <- paste0("Geen data gevonden voor de ", group_type_text, ".")
+    group_text <- add_dynamic_text(lang[["no_group_data"]], lang_dynamic_map)
     return(group_text)
   }
-
-  sex_text <- subset(html_text$html_text, html_text$input_text == geslacht_input)
+  
+  
   migration_text <- ""
+  if (migratie_input == lang[["no_migrationbackground"]])
+    migration_text <- add_dynamic_text(lang[["general_text_group_text_without_migration"]], lang_dynamic_map)
+  else if (migratie_input != "Totaal" ) {
+    lang_dynamic_map[["<<var_input_migration_adjective>>"]] <- lang[["adjective_map"]][[migratie_input]]
+    migration_text <- lang[["general_text_group_text_with_migration"]]
+  }
+
+  lang_dynamic_map[["<<var_input_household>>"]] <- tolower(huishouden_input)
   household_text <- ""
-
-  if (migratie_input != "Totaal" & migratie_input != "Zonder migratieachtergrond")
-    migration_text <- paste("met een", subset(html_text$html_text, 
-                                              html_text$input_text == migratie_input), 
-                            "migratieachtergrond")
-  else if (migratie_input == "Zonder migratieachtergrond")
-    migration_text <- paste0(("zonder een migratieachtergrond"))
+  if (huishouden_input != lang[["total"]])
+    household_text <- add_dynamic_text(lang[["general_text_group_text_household"]], lang_dynamic_map)
 
   
-  if (huishouden_input != "Totaal")
-    household_text <- paste("in een", tolower(huishouden_input))
   
-  group_text <- HTML(paste("De", group_type_text, "bestaat uit", group_data_size, sex_text, 
-                            populatie_input, migration_text, "die zijn opgegroeid", household_text, 
-                            "in", paste0(geografie_input, "."))) # "paste0" to ensure the full stop (".") doesn't have a space before
+  lang_dynamic_map[["<<var_group_size>>"]] <- group_data_size
+  lang_dynamic_map[["<<var_input_gender_adjective>>"]] <- lang[["adjective_map"]][[geslacht_input]]
+  lang_dynamic_map[["<<var_input_population>>"]] <- populatie_input
+  lang_dynamic_map[["<<general_text_migration_if_available>>"]] <- migration_text
+  lang_dynamic_map[["<<general_text_household_if_available>>"]] <- household_text
+  lang_dynamic_map[["<<var_input_geography>>"]] <- geografie_input
   
+  group_text <- add_dynamic_text(lang[["general_text_groupX"]], lang_dynamic_map)
+
   return(group_text)
 }
 
-# create mean text for tabbox
-gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
-                          total_group_mean, prefix_text, postfix_text) {
-  text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
-                      group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
-  return(text)
-}
+# # create mean text for tabbox
+# gen_mean_text <- function(statistic_type_text, outcome_input, group_type_text, 
+#                           total_group_mean, prefix_text, postfix_text) {
+#   text <- HTML(paste0("Het totale ", statistic_type_text, tolower(outcome_input), " van de ",  
+#                       group_type_text, " is ",paste0(prefix_text, decimal1(total_group_mean), postfix_text), "."))
+#   return(text)
+# }
+
+# gen_wat_zie_ik_group_text <- function(group_id, lang_dynamic_map) {
+
+  
+# }
 
 
 #### FIGURE PLOT ####
@@ -253,13 +265,7 @@ readme_sep <- c("",
 
 caption_sep <- 
 "\n\n=========================================================================\n"
-caption_license <- paste0("Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
-van Erasmus School of Economics en de Vrije Universiteit Amsterdam, met 
-ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
-zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
-onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. 
-Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"
-)
+caption_license <- paste0(lang[["license_text"]])
 
 
 
@@ -282,9 +288,9 @@ gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
   plot <- ggplot() +
     suppressWarnings(geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                                              "</br>Inkomen ouders: € ", decimal0(parents_income * 1000),
-                                              "</br>Aantal mensen: ", decimal0(N))),
+                                              "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+                                              "</br>", lang[["plot_hover_parent_income"]] , decimal0(parents_income * 1000),
+                                              "</br>", lang[["plot_hover_number_of_people"]], decimal0(N))),
                 size=3)) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
   return(plot)
 }
@@ -336,8 +342,8 @@ gen_q75_line <- function(dat, color, linetype) {
 gen_bar_plot <- function(data, prefix_text, postfix_text) {
   plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group,
                 text = paste0("<b>", geografie, "</b></br>",
-                "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
-                "</br>Aantal mensen: ", decimal0(N)))
+                "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+                "</br>", lang[["plot_hover_number_of_people"]], decimal0(N)))
                 )
 
   return(plot)
@@ -349,9 +355,9 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
                    position = position_dodge(width = 1)) +
     suppressWarnings(geom_point(data = data, aes(x = opleiding_ouders, y = mean, colour = group, size = bubble_size, 
                                 text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>Uitkomst: ", prefix_text, decimal2(mean), postfix_text,
+                                              "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
                                               # "</br>Bubble size: ", decimal2(bubble_size), "%", 
-                                              "</br>Aantal mensen: ", decimal0(N))),
+                                              "</br>", lang[["plot_hover_number_of_people"]], decimal0(N))),
                position = position_dodge(width = 1))) +
     scale_size("", range = c(5, 25), guide = 'none')
   return(plot)
@@ -359,7 +365,7 @@ gen_bubble_plot <- function(data, prefix_text, postfix_text) {
 
 
 get_rounded_slider_steps <- function(data_min, data_max) {
-  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10, 20, 50, 100, 250, 500, 1000)
+  possible_steps <- c(0.05, 0.1, 0.25, 0.5, 1, 5, 10, 20, 50, 100, 250, 500, 1000, 2500, 5000)
   steps_between = 50
 
   # Calculate the size of the step
@@ -395,19 +401,28 @@ get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
 
 
 # tabbox for opleiding ouders
-bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
-                              behaalde opleiding van één van de ouders. Voor opleiding 
-                              ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
+# bar_text_data <- HTML(paste0("<p><b>Opleiding ouders</b> wordt gedefinieerd als de hoogst 
+#                               behaalde opleiding van één van de ouders. Voor opleiding 
+#                               ouders hebben we drie categorieën: geen wo en hbo, hbo en wo.</p>
   
-                              <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
-                              jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
-                              gegevens over de opleidingen van ouders pas beschikbaar zijn 
-                              vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo</p>"))
+#                               <p>We kunnen alleen de opleidingen van de ouders bepalen voor de 
+#                               jongere geboortecohorten (groep 8 en pasgeborenen), omdat de 
+#                               gegevens over de opleidingen van ouders pas beschikbaar zijn 
+#                               vanaf 1983 voor wo, 1986 voor hbo en 2004 voor mbo</p>"))
 
-bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
+# bar_text_nodata <- HTML(paste0("Geen data gevonden voor de staafdiagrammen"))
 
 
 # Get formatted datetime
 get_datetime <- function() {
   str_replace(format(Sys.time(), "%Y-%m-%d %H-%M-%S"), " ", "_")
 } 
+
+# Dynamic text
+add_dynamic_text <- function(text, lang_dynamic_map) {
+    for (identifier in keys(lang_dynamic_map)) {
+      text <- str_replace_all(text, identifier, paste0(lang_dynamic_map[[identifier]]))
+
+    }
+    return(text)
+}
