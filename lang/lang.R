@@ -31,7 +31,7 @@ set_lang_sources <- function(site_lang) {
 }
 
 
-site_lang <- "nl"
+# site_lang <- "nl"
 
 lang <- hashmap()
 set_lang_sources("nl")
