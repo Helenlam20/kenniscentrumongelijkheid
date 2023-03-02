@@ -1,0 +1,13 @@
+---
+title: "videos"
+output: html_document
+---
+# Uitlegvideo's
+
+Een uitleg van de interactieve website [ongelijkheidincijfers.amsterdam](https://www.ongelijkheidincijfers.amsterdam), waarop te zien is hoe de kansenkloof zich vanaf jonge leeftijd opent in de Metropoolregio Amsterdam.
+
+
+1. In de eerste video **Wat is het Dashboard Ongelijkheid in Amsterdam?** leggen we uit wat het Dasboard Ongelijkheid in Amsterdam is. 
+2. In de tweede video **Wat zie ik op het Dashboard Ongelijkheid in Amsterdam?** leggen we uit hoe de gebruiker een grafiek op het Dashboard Ongelijkheid in Amsterdam kan lezen. 
+
+
