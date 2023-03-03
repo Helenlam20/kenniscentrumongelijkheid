@@ -281,7 +281,7 @@ server <- function(input, output, session) {
     lang_dynamic_map[["<<input_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
     lang_dynamic_map[["<<input_outcome_name>>"]] <- labels_dat$outcome_name
     lang_dynamic_map[["<<input_outcome_name_definition>>"]] <- labels_dat$definition
-    lang_dynamic_map[["<<input_population>>"]] <- labels_dat$population
+    lang_dynamic_map[["<<input_population>>"]] <- tolower(labels_dat$population)
     axis_text <- HTML(add_dynamic_text(lang[["general_text_axis_parent_education"]], lang_dynamic_map))
 
     if(!data_group1_has_data() && !data_group2_has_data()) {
@@ -367,7 +367,7 @@ server <- function(input, output, session) {
     lang_dynamic_map <- hashmap()
     lang_dynamic_map[["<<statistic_type>>"]] <- statistic_type_text
     lang_dynamic_map[["<<input_outcome_name_lowercase>>"]] <- tolower(labels_dat$outcome_name)
-    lang_dynamic_map[["<<input_population>>"]] <- labels_dat$population
+    lang_dynamic_map[["<<input_population>>"]] <- tolower(labels_dat$population)
 
 
     has_data <- FALSE

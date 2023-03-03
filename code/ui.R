@@ -82,7 +82,7 @@ body <- dashboardBody(
                                     bigger = TRUE, icon = icon("check-square-o"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_line", title = lang[["box_outcome_select_line_option_hover"]],
+                                  bsPopover(id = "q_line", title = "",
                                             content = HTML(lang[["box_outcome_select_line_option_hovertext"]]),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
@@ -103,7 +103,7 @@ body <- dashboardBody(
                                     bigger = TRUE, 
                                     status = "info", animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_parents", title = lang[["box_outcome_select_parent_option_hover"]],
+                                  bsPopover(id = "q_parents", title = "",
                                             content = HTML(lang[["box_outcome_select_parent_option_hovertext"]]),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")

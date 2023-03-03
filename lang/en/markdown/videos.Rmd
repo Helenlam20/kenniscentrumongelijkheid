@@ -1,0 +1,13 @@
+---
+title: "videos"
+output: html_document
+---
+# Explanatory videos
+
+An explanation (in Dutch) of the interactive website [opportunitygap.nl](https://www.opportunitygap.nl), which shows how the so-called <i>opportunity gap</i> opens up from a young age. 
+
+
+1. In the first video **Wat is het Dashboard Ongelijkheid in Amsterdam?** we explain what the interactive website <i>The Opportunity Gap in the Netherlands</i> is. 
+2. In the second video **Wat zie ik op het Dashboard Ongelijkheid in Amsterdam?** explain how a visitor of the interactive website <i>The Opportunity Gap in the Netherlands</i> can interpret a figure on the website. 
+
+
