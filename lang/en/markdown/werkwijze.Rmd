@@ -1,0 +1,17 @@
+---
+title: "Method"
+output: html_document
+---
+
+# Method
+
+The interactive website <i>The Opportunity Gap in the Netherlands</i> is a research project of Helen Lam, Bastian Ravesteijn and Coen van de Kraats of Erasmus School of Economics, in collaboration with Kenniscentrum Ongelijkheid on the development of inequality over the life cycle within the Amsterdam metropolitan area. 
+
+The dashboard provides insight in the inequalities across various domains and ages. 
+
+<b>How:</b> this intuitive and interactive website provides insights into the relationship between circumstances in childhood and outcomes from birth throug adulthood of people who grew up in the Amsterdam metropolitan area. The results are based on all individual who grew up in the Amsterdam metropolitan area in specific years from the 1990s until now.
+
+<b>What:</b> based on descriptive statistics, this website shows how, when (at what age), and where inequalities arise in the Amsterdam metropolitan area. 
+
+<a href="werkwijze.pdf" download="werkwijze ongelijkheid in Amsterdam.pdf">Download the report describing the method of how the results on The Opportunity Gap in the Netherlands are created (currently available in Dutch only).</a>
+

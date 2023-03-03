@@ -65,10 +65,10 @@
 
 #### DEMOGRAFIC GROUPS ####
 
-GeoChoices <- list(lang[["geography_label_the_netherlands"]], lang[["geography_label_metropolis_amsterdam"]],
+GeoChoices <- list(lang[["geography_label_the_netherlands"]], lang[["geography_label_metropolis_amsterdam"]] ,
                    sort(subset(area_dat$geografie, area_dat$type == lang[["label_municipality"]] )),
-                   sort(subset(area_dat$geografie, area_dat$type == "Stadsdeel")),
-                   sort(subset(area_dat$geografie, area_dat$type == lang[["label_district"]] )))
+                   sort(subset(area_dat$geografie, area_dat$type == lang[["label_district"]])),
+                   sort(subset(area_dat$geografie, area_dat$type == lang[["label_neighbourhood"]] )))
 names(GeoChoices) <- c(
     "", "",
     lang[["geography_label_municipalities_amsterdam"]],

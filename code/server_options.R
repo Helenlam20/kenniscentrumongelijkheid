@@ -159,7 +159,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   
   lang_dynamic_map[["<<var_group_size>>"]] <- group_data_size
   lang_dynamic_map[["<<var_input_gender_adjective>>"]] <- lang[["adjective_map"]][[geslacht_input]]
-  lang_dynamic_map[["<<var_input_population>>"]] <- populatie_input
+  lang_dynamic_map[["<<var_input_population>>"]] <- tolower(populatie_input)
   lang_dynamic_map[["<<general_text_migration_if_available>>"]] <- migration_text
   lang_dynamic_map[["<<general_text_household_if_available>>"]] <- household_text
   lang_dynamic_map[["<<var_input_geography>>"]] <- geografie_input
