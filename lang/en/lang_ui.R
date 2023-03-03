@@ -194,8 +194,4 @@ lang[["label_neighbourhood"]] <- "Neighborhood"
 
 
 # License
-lang[["license_text"]] <- "This figure was created by Helen Lam, Bastian Ravesteijn, and Coen van de Kraats 
-(Erasmus School of Economics), with support from Kenniscentrum Ongelijkheid. The figure and underlying data 
-are available under a Creative Commons BY-NC-SA 4.0 license, conditional 
-upon mentioning the authors and the website opportunitygap.nl. 
-If you have any questions, please contact ravesteijn@ese.eur.nl"
+lang[["license_text"]] <- "This figure was created by Helen Lam, Bastian Ravesteijn, and Coen van de Kraats (Erasmus School of Economics), with support from Kenniscentrum Ongelijkheid. The figure and underlying data are available under a Creative Commons BY-NC-SA 4.0 license, conditional upon mentioning the authors and the website opportunitygap.nl. If you have any questions, please contact ravesteijn@ese.eur.nl"
