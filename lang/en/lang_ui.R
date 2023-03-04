@@ -171,7 +171,7 @@ lang[["house_choices"]] <- c("Home Size per Household Membern" = "c11_living_spa
 lang[["gender_choices"]] <- c("Total", "Men", "Women")
 
 lang[["migration_choices"]] <- c("Total", "No Migration Background", "Turkey", "Morocco",
-                      "Surinam", "Dutch Caribbean")
+                      "Suriname", "Dutch Caribbean")
 
 lang[["household_choices"]] <- c("Total", "Single Parent", "Two Parents")
 
