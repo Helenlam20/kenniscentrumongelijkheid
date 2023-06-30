@@ -1,0 +1,20 @@
+---
+title: "About"
+output: html_document
+---
+
+# About
+
+
+### Licentie
+The website The Opportunity Gap in the Netherlands was created by Helen Lam, Bastian Ravesteijn, and Coen van de Kraats 
+(Erasmus School of Economics), with support from Kenniscentrum Ongelijkheid. The figure and underlying data 
+are available under a Creative Commons BY-NC-SA 4.0 license, conditional 
+upon mentioning the authors and the website [opportunitygap.nl](https://www.opportunitygap.nl). 
+
+
+### Questions and remarks?
+If you have any questions or suggestions, please contact: 
+
+Bastian Ravesteijn: <a href="mailto:ravesteijn@ese.eur.nl">ravesteijn@ese.eur.nl</a>
+

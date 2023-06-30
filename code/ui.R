@@ -66,26 +66,6 @@ body <- dashboardBody(
                                               choices = outcomeChoices,
                                               options = list(`live-search` = T, style = "", size = 10, `show-subtext` = TRUE),
                                               choicesOpt = list(subtext = outcome_dat$population)),
-                                  prettyCheckboxGroup(
-                                    inputId = "line_options",
-                                    label = h5(HTML(lang[["box_outcome_select_line_option"]]),
-                                               tags$style("#q_line {vertical-align: middle; width: 25px;
-                                                          height: 25px; font-size: 11px;
-                                                          border: 2px solid #e7e7e7; border-radius: 100%;
-                                                          background-color: white; color: #555555;
-                                                          line-height: 1pxt; padding: 0px;}"),
-                                               bsButton("q_line", label = NULL, icon = icon("question"), 
-                                                        size = "extra-small")
-                                    ),
-                                    choices = c(lang[["line"]], lang[["average"]]),
-                                    bigger = TRUE, icon = icon("check-square-o"), status = "info",
-                                    outline = TRUE, inline = TRUE, animation = "smooth"
-                                  ),
-                                  bsPopover(id = "q_line", title = lang[["box_outcome_select_line_option_hover"]],
-                                            content = HTML(lang[["box_outcome_select_line_option_hovertext"]]),
-                                            placement = "right", trigger = "hover", 
-                                            options = list(container = "body")
-                                  ),
                                   prettyRadioButtons(
                                     inputId = "parents_options",
                                     label = h5(HTML(lang[["box_outcome_select_parent_option"]]),
@@ -102,8 +82,28 @@ body <- dashboardBody(
                                     bigger = TRUE, 
                                     status = "info", animation = "smooth"
                                   ),
-                                  bsPopover(id = "q_parents", title = lang[["box_outcome_select_parent_option_hover"]],
+                                  bsPopover(id = "q_parents", title = "",
                                             content = HTML(lang[["box_outcome_select_parent_option_hovertext"]]),
+                                            placement = "right", trigger = "hover", 
+                                            options = list(container = "body")
+                                  ),
+                                  prettyCheckboxGroup(
+                                    inputId = "line_options",
+                                    label = h5(HTML(lang[["box_outcome_select_line_option"]]),
+                                               tags$style("#q_line {vertical-align: middle; width: 25px;
+                                                          height: 25px; font-size: 11px;
+                                                          border: 2px solid #e7e7e7; border-radius: 100%;
+                                                          background-color: white; color: #555555;
+                                                          line-height: 1pxt; padding: 0px;}"),
+                                               bsButton("q_line", label = NULL, icon = icon("question"), 
+                                                        size = "extra-small")
+                                    ),
+                                    choices = c(lang[["line"]], lang[["average"]]),
+                                    bigger = TRUE, icon = icon("check-square-o"), status = "info",
+                                    outline = TRUE, inline = TRUE, animation = "smooth"
+                                  ),
+                                  bsPopover(id = "q_line", title = "",
+                                            content = HTML(lang[["box_outcome_select_line_option_hovertext"]]),
                                             placement = "right", trigger = "hover", 
                                             options = list(container = "body")
                                   ),

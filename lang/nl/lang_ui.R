@@ -38,7 +38,7 @@ lang[["disconnect_refresh"]] <- "Klik hier om te vernieuwen"
 # Welcome popup
 lang[["welcome_popup_title"]] <- "Welkom op het Dashboard Ongelijkheid in Amsterdam!"
 lang[["welcome_popup_text"]] <- "Het dashboard <i>Ongelijkheid in Amsterdam</i> geeft inzicht in de samenhang tussen de omstandigheden
-      waarin kinderen opgroeien en hun uitkomsten die later in het leven worden gemeten. Voor het maken van een eigen figuur:
+      waarin kinderen opgroeien en hun uitkomsten die vanaf de geboorte tot aan de volwassenheid worden gemeten. Voor het zelf maken van een figuur:
                   <br><br><b>Stap 1:</b> kies een uitkomstmaat.
                   <br><b>Stap 2:</b> kies een kenmerk van ouders.
                   <br><b>Stap 3:</b> kies geografische en demografische kenmerken van kinderen.
@@ -48,19 +48,18 @@ lang[["welcome_popup_continue"]] <- "Doorgaan"
 
 # Cookie popup
 lang[["cookie_popup_title"]] <- "Cookies verwijderen"
-lang[["cookie_popup_text"]] <- "Wil alle cookies verwijderen?"
+lang[["cookie_popup_text"]] <- "Wilt u alle cookies van deze website verwijderen?"
 
 # Outcome selection box
 lang[["box_outcome"]] <- "Uitkomstmaat"
-lang[["box_outcome_select_outcome"]] <- "Selecteer hier een uitkomstmaat"
-lang[["box_outcome_select_line_option"]] <- "<b>Selecteer hier een optie:</b>"
-lang[["box_outcome_select_line_option_hover"]] <- "Lijn opties"
-
-lang[["box_outcome_select_line_option_hovertext"]] <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het totaalgemiddelde van de groep."
+lang[["box_outcome_select_outcome"]] <- "Selecteer een uitkomstmaat:"
+lang[["box_outcome_select_line_option"]] <- "<b>Selecteer een optie:</b>"
 
 
-lang[["box_outcome_select_parent_option"]] <- "<b>Selecteer hier een kenmerk van ouders:</b>"
-lang[["box_outcome_select_parent_option_hover"]] <- "Kenmerk van ouders optie"
+lang[["box_outcome_select_line_option_hovertext"]] <- "De optie <i>Lijn</i> toont een fitted line door de bollen en is alleen beschikbaar voor de optie <i>Inkomen ouders</i>.<br><br>De optie <i>Gemiddelde</i> toont het gemiddelde van de groep."
+
+
+lang[["box_outcome_select_parent_option"]] <- "<b>Selecteer een kenmerk van ouders:</b>"
 lang[["box_outcome_select_parent_option_hovertext"]] <- "<i>Kenmerk van de ouders</i> staat op de horizontale as van de figuur.<br><br>De optie <i>Opleiding ouders</i> is alleen beschikbaar voor de uitkomstmaten van pasgeborenen en leeringen in groep 8."
 
 # Explaination text box
@@ -86,7 +85,7 @@ lang[["plot_bubble_x_label"]] <- lang[["plot_bar_x_label"]]
 
 # Graph hover label
 lang[["plot_hover_outcome"]] <- "Uitkomst: "
-lang[["plot_hover_parent_income"]] <- "Inkomen ouders: € "
+lang[["plot_hover_parent_income"]] <- "Gemiddeld inkomen ouders: € "
 lang[["plot_hover_number_of_people"]] <- "Aantal mensen: "
 
 
@@ -96,17 +95,17 @@ lang[["download_figure"]] <- "Download figuur"
 
 lang[["make_screenshot"]] <- "Maak een screenshot"
 
-lang[["alternative_box_plot_label"]] <- "<b> Toon alternatief staafdiagram</b>"
+lang[["alternative_box_plot_label"]] <- "<b> Toon alternatief voor staafdiagram</b>"
 
 # Graph adjustments
 lang[["y_axis_label"]] <- "Verticale as (Y-as):"
 lang[["x_axis_label"]] <- "Horizontale as (X-as):"
-lang[["reset"]] <- "Reset"
+lang[["reset"]] <- "Opnieuw instellen"
 
 # Blue/green group adjustments
 lang[["the_netherlands"]] <- "Nederland"
 
-lang[["area"]] <- "Gebied"
+lang[["area"]] <- "Geografie"
 lang[["gender"]] <- "Geslacht"
 lang[["migration_background"]] <- "Migratieachtergrond"
 
@@ -125,6 +124,7 @@ lang[["geography_label_municipalities_amsterdam"]] <- "Gemeenten in Metropool Am
 lang[["geography_label_districts_amsterdam"]] <- "Stadsdelen in Amsterdam"
 lang[["geography_label_areas_amsterdam"]] <- "Gebieden in Amsterdam"
 
+# Voor lang[["money_choices"]], lang[["health_choices"]], lang[["education_choices"]], en lang[["house_choices"]]  niet de tekst achter de "=" vertalen. Dus c30_income moet niet!
 lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
                  "Werkt" = "c30_employed", 
                  "Gewerkte uren per week (werkenden)" = "c30_hrs_work_pw", 
@@ -138,8 +138,8 @@ lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
 lang[["health_choices"]] <- c("Laag geboortegewicht" = "c00_sga",
                    "Vroeggeboorte"  = "c00_preterm_birth", 
                    "Zuigelingensterfte" = "c00_infant_mortality",
-                   "Jeugdbescherming" = "c11_youth_protection",
                    "Zorgkosten" = "c11_youth_health_costs", 
+                   "Jeugdbescherming" = "c11_youth_protection",
                    "Zorgkosten" = "c16_youth_health_costs", 
                    "Jeugdbescherming" = "c16_youth_protection",
                    "Zorgkosten" = "c30_total_health_costs", 
@@ -198,9 +198,4 @@ lang[["label_neighbourhood"]] <- "Wijk"
 
 
 # License
-lang[["license_text"]] <- "Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats 
-van Erasmus School of Economics en de Vrije Universiteit Amsterdam, met 
-ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data 
-zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd 
-onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. 
-Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"
+lang[["license_text"]] <- "Deze figuur is gemaakt door Helen Lam, Bastian Ravesteijn en Coen van de Kraats (Erasmus School of Economics), met ondersteuning van Kenniscentrum Ongelijkheid. De figuur en onderliggende data zijn beschikbaar volgens een Creative Commons BY-NC-SA 4.0 licentie, altijd onder vermelding van auteurs en de website ongelijkheidincijfers.amsterdam. Bij vragen kunt u contact opnemen met ravesteijn@ese.eur.nl"
