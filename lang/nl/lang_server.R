@@ -9,6 +9,7 @@ insert(lang[["adjective_map"]], "Turkije", "Turkse")
 insert(lang[["adjective_map"]], "Marokko", "Marokkaanse")
 insert(lang[["adjective_map"]], "Suriname", "Surinaamse")
 insert(lang[["adjective_map"]], "Nederlandse Antillen", "Antilliaanse")
+insert(lang[["adjective_map"]], "Wel migratieachtergrond", "")
 
 # Algemeen tekst
 # Note: alles tussen <<...>> is een variable die in de server vervangen wordt door dynamische waarde. De betekenis daarvan staan apart gedocumenteerd in een OneDrive excel.
