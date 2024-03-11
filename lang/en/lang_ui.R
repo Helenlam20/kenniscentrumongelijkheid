@@ -1,6 +1,6 @@
 # Dashboard
 lang[["title"]] <- "The Opportunity Gap in the Netherlands"
-lang[["title_width"]] <- 450
+lang[["title_width"]] <- 400
 
 # General
 lang[["outcome_measure"]] <- "Outcome"
@@ -22,12 +22,13 @@ lang[["no"]] <- "No"
 lang[["statistic_average"]] <- "average"
 lang[["statistic_percentage"]] <- "percentage"
 
-lang[["download_readme_title"]] <- "TECHNICAL SUMMARY"
+lang[["download_readme_title"]] <- "TECHNICAL SUMMARY OF THE OPPORTUNITY GAP DASHBOARD"
 
 # Side menu
 lang[["menu_figure"]] <- "Figure"
 lang[["menu_video"]] <- "Explanatory Videos"
 lang[["menu_method"]] <- "Method"
+lang[["menu_faq"]] <- "Frequently asked questions"
 lang[["menu_contact"]] <- "About"
 
 # Disconnect popup
@@ -129,7 +130,14 @@ lang[["money_choices"]] <- c("Personal Income" = "c30_income",
                  "Receives Disability or Sickness Insurance Benefits" = "c30_disability", 
                  "Receives Basic Social Benefits" = "c30_social_assistance", 
                  "Household Wealth"  = "c30_wealth", 
-                 "Household Debt" = "c30_debt")
+                 "Household Debt" = "c30_debt",
+                 ### NEW
+                 "Hourly wage less than 11" = "c30_hourly_wage_max_11",
+                 "Hourly wage less than 14" = "c30_hourly_wage_max_14",
+                 "Wealth excluding home and mortgage debt" = "c30_wealth_no_home", 
+                 "Value gift by parents" = "c30_sum_gifts",
+                 "Gift from parents" = "c30_gifts_received",
+                 "Household income" = "c30_household_income")
 
 lang[["health_choices"]] <- c("Low Birth Weight" = "c00_sga",
                    "Preterm Birth"  = "c00_preterm_birth", 
@@ -166,12 +174,16 @@ lang[["education_choices"]] <- c("Test Score at Least Moderate" = "c11_vmbo_gl_t
 
 lang[["house_choices"]] <- c("Home Size per Household Membern" = "c11_living_space_pp", 
                  "Home Size per Household Member" = "c16_living_space_pp", 
-                 "Home Owner" = "c30_home_owner")
+                 "Home Owner" = "c30_homeowner",   # AANGEPAST
+                 "Homeownership value" = "c30_home_wealth",  # NEW
+                 "Home Size per Household Member" = "c30_living_space_pp")
+                 #"Jonge moeders" = "c30_young_mothers")  # NEW)
 
 lang[["gender_choices"]] <- c("Total", "Men", "Women")
 
 lang[["migration_choices"]] <- c("Total", "No Migration Background", "Turkey", "Morocco",
-                      "Suriname", "Dutch Caribbean")
+                      "Suriname", "Dutch Caribbean", 
+                      "With Migration Background") # NEW
 
 lang[["household_choices"]] <- c("Total", "Single Parent", "Two Parents")
 
