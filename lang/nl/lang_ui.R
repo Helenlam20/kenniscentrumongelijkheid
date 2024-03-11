@@ -133,7 +133,14 @@ lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
                  "Ziekte- of arbeidsongeschiktheidsuitkering" = "c30_disability", 
                  "Bijstand" = "c30_social_assistance", 
                  "Vermogen"  = "c30_wealth", 
-                 "Schulden" = "c30_debt")
+                 "Schulden" = "c30_debt",
+              ### NEW
+                 "Uurloon minder dan 11" = "c30_hourly_wage_max_11",
+                 "Uurloon minder dan 14" = "c30_hourly_wage_max_14",
+                 "Vermogen zonder woning en hypotheekschuld" = "c30_wealth_no_home", 
+                 "Waarde schenkingen door ouders" = "c30_sum_gifts",
+                 "Schenking door ouders" = "c30_gifts_received",
+                 "Huishoudinkomen" = "c30_household_income")
 
 lang[["health_choices"]] <- c("Laag geboortegewicht" = "c00_sga",
                    "Vroeggeboorte"  = "c00_preterm_birth", 
@@ -170,12 +177,16 @@ lang[["education_choices"]] <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_
 
 lang[["house_choices"]] <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
                  "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
-                 "Eigen woning" = "c30_home_owner")
+                 "Eigen woning" = "c30_homeowner",   # AANGEPAST
+                 "Eigenwoningwaarde" = "c30_home_wealth",  # NEW
+                 "Woonoppervlak per lid huishouden" = "c30_living_space_pp")
+                 #"Jonge moeders" = "c30_young_mothers")  # NEW
 
 lang[["gender_choices"]] <- c("Totaal", "Mannen", "Vrouwen")
 
 lang[["migration_choices"]] <- c("Totaal", "Zonder migratieachtergrond", "Turkije", "Marokko",
-                      "Suriname", "Nederlandse Antillen")
+                      "Suriname", "Nederlandse Antillen", 
+                      "Wel migratieachtergrond") # NEW
 
 lang[["household_choices"]] <- c("Totaal", "Eenoudergezin", "Tweeoudergezin")
 
