@@ -1,32 +1,38 @@
 translate_en <- function(i) {
-  i['geografie'][i['geografie'] == 'Nederland'] = 'The Netherlands'
-  i['geografie'][i['geografie'] == 'Metropool Amsterdam'] = 'Amsterdam Metropolitan Area'
+  levels(i$geografie)[match("Nederland",levels(i$geografie))] <- "The Netherlands"
+  levels(i$geografie)[match("Metropool Amsterdam",levels(i$geografie))] <- "Amsterdam Metropolitan Area"
   
-  i['geslacht'][i['geslacht'] == 'Totaal'] = 'Total'
-  i['geslacht'][i['geslacht'] == 'Mannen'] = 'Men'
-  i['geslacht'][i['geslacht'] == 'Vrouwen'] = 'Women'
+  levels(i$geslacht)[match("Totaal",levels(i$geslacht))] <- "Total"
+  levels(i$geslacht)[match("Mannen",levels(i$geslacht))] <- "Men"
+  levels(i$geslacht)[match("Vrouwen",levels(i$geslacht))] <- "Women"
   
-  i[['migratieachtergrond']] <- revalue(i[['migratieachtergrond']], c(
-    "Totaal"="Total", 
-    "Zonder migratieachtergrond" = "No Migration Background",
-    "Marokko" = "Morocco",
-    "Turkije" = "Turkey",
-    "Suriname" = "Suriname",
-    "Nederlandse Antillen" = "Dutch Caribbean"
-  ))
+  levels(i$migratieachtergrond)[match("Totaal",levels(i$migratieachtergrond))] = "Total"
+  levels(i$migratieachtergrond)[match("Zonder migratieachtergrond",levels(i$migratieachtergrond))] = "No Migration Background"
+  levels(i$migratieachtergrond)[match("Marokko",levels(i$migratieachtergrond))] = "Morocco"
+  levels(i$migratieachtergrond)[match("Turkije",levels(i$migratieachtergrond))] = "Turkey"
+  levels(i$migratieachtergrond)[match("Suriname",levels(i$migratieachtergrond))] = "Suriname"
+  levels(i$migratieachtergrond)[match("Nederlandse Antillen",levels(i$migratieachtergrond))] = "Dutch Caribbean"
+  levels(i$migratieachtergrond)[match("Wel migratieachtergrond",levels(i$migratieachtergrond))] = "With Migration Background"
   
-  i['huishouden'][i['huishouden'] == 'Totaal'] = 'Total'
-  i['huishouden'][i['huishouden'] == 'Eenoudergezin'] = 'Single Parent'
-  i['huishouden'][i['huishouden'] == 'Tweeoudergezin'] = 'Two Parents'
   
-  i['opleiding_ouders'][i['opleiding_ouders'] == 'Totaal'] = 'Total'
-  i['bins'][i['bins'] == 'Totaal'] = 'Total'
+  levels(i$huishouden)[match("Totaal",levels(i$huishouden))] <- "Total"
+  levels(i$huishouden)[match("Eenoudergezin",levels(i$huishouden))] <- "Single Parent"
+  levels(i$huishouden)[match("Tweeoudergezin",levels(i$huishouden))] <- "Two Parents"
+  
+  
+  if ("opleiding_ouders" %in% names(i)) {
+    levels(i$opleiding_ouders)[match("Totaal",levels(i$opleiding_ouders))] <- "Total"
+  }
+  
+  
+  levels(i$bins)[match("Totaal",levels(i$bins))] <- "Total"
+  
   return(i)
 }
 
 for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   assign(i, read_rds(file.path("./data/nl/", paste0(i, "_tab.rds"))))
-
+  
 }
 
 bins20 <- translate_en(bins20)
@@ -38,5 +44,6 @@ parents_edu <- translate_en(parents_edu)
 for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   write_rds(get(i), file.path("./data/en/", paste0(i, "_tab.rds")))
 }
+
 
 
