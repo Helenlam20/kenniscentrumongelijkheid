@@ -507,7 +507,7 @@ server <- function(input, output, session) {
       # Initialize plot with formatted axis and theme
       plot <- ggplot()
 
-      if (data_group1_has_data() && data_group2_has_data())
+      if (data_group1_has_data() && data_group2_has_data()) 
         plot <- gen_geom_point(dat, c(data_group1_color, data_group2_color), prefix_text, postfix_text, shape=c(19, 15))
       else if (data_group1_has_data())
         plot <- gen_geom_point(data_group1, data_group1_color, prefix_text, postfix_text, shape=19)
@@ -891,7 +891,9 @@ observeEvent(input$user_reset, {
   
   
   # Create plot
+
   output$main_figure <- renderPlotly({
+    tryCatch({
 
     # call reactive
     makePlot()
@@ -900,8 +902,12 @@ observeEvent(input$user_reset, {
       style(hoverlabel = label) %>%
       layout(font = font, xaxis=list(fixedrange=T), yaxis=list(fixedrange=T))  
       
-  }) # end plot
-  
+  }, 
+  error = function(e) {
+    showNotification("Not enough data to generate plot", type = "message")
+    return(NULL)
+  })})  # end plot
+    
   
   # DOWNLOAD --------------------------------------------------------
 

@@ -125,62 +125,75 @@ lang[["geography_label_districts_amsterdam"]] <- "Stadsdelen in Amsterdam"
 lang[["geography_label_areas_amsterdam"]] <- "Gebieden in Amsterdam"
 
 # Voor lang[["money_choices"]], lang[["health_choices"]], lang[["education_choices"]], en lang[["house_choices"]]  niet de tekst achter de "=" vertalen. Dus c30_income moet niet!
-lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
-                 "Werkt" = "c30_employed", 
-                 "Gewerkte uren per week (werkenden)" = "c30_hrs_work_pw", 
-                 "Vast arbeidscontract" = "c30_permanent_contract", 
-                 "Uurloon"  = "c30_hourly_wage", 
-                 "Ziekte- of arbeidsongeschiktheidsuitkering" = "c30_disability", 
-                 "Bijstand" = "c30_social_assistance", 
-                 "Vermogen"  = "c30_wealth", 
-                 "Schulden" = "c30_debt",
-              ### NEW
-                 "Uurloon minder dan 11" = "c30_hourly_wage_max_11",
-                 "Uurloon minder dan 14" = "c30_hourly_wage_max_14",
-                 "Vermogen zonder woning en hypotheekschuld" = "c30_wealth_no_home", 
-                 "Waarde schenkingen door ouders" = "c30_sum_gifts",
-                 "Schenking door ouders" = "c30_gifts_received",
-                 "Huishoudinkomen" = "c30_household_income")
-
 lang[["health_choices"]] <- c("Laag geboortegewicht" = "c00_sga",
-                   "Vroeggeboorte"  = "c00_preterm_birth", 
-                   "Zuigelingensterfte" = "c00_infant_mortality",
-                   "Zorgkosten" = "c11_youth_health_costs", 
-                   "Jeugdbescherming" = "c11_youth_protection",
-                   "Zorgkosten" = "c16_youth_health_costs", 
-                   "Jeugdbescherming" = "c16_youth_protection",
-                   "Zorgkosten" = "c30_total_health_costs", 
-                   "Gebruikt ziekenhuiszorg" = "c30_hospital", 
-                   "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
-                   "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
-                   "Gebruikt medicijnen" = "c30_pharma")
+                              "Vroeggeboorte"  = "c00_preterm_birth", 
+                              "Zuigelingensterfte" = "c00_infant_mortality",
+                              "Jeugdbescherming" = "c11_youth_protection",
+                              "Zorgkosten" = "c11_youth_health_costs",
+                              "Jeugdbescherming" = "c16_youth_protection",
+                              "Zorgkosten" = "c16_youth_health_costs",
+                              "Jong ouderschap" = "c21_young_parent", # NEW OUTCOME -> on dashboard it days 35 year olds!!
+                              "Zorgkosten" = "c30_total_health_costs", 
+                              "Gebruikt ziekenhuiszorg" = "c30_hospital", 
+                              "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
+                              "Gebruikt geestelijke gezondheidszorg (basis)" = "c30_basic_mhc", 
+                              "Gebruikt medicijnen" = "c30_pharma")
 
 lang[["education_choices"]] <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_gl_test",        
-                      "Eindtoetsadvies havo of hoger" = "c11_havo_test",           
-                      "Eindtoetsadvies vwo" = "c11_vwo_test",                    
-                      "Eindtoets rekenen streefniveau" = "c11_math",           
-                      "Eindtoets lezen streefniveau" = "c11_reading",           
-                      "Eindtoets taalverzorging streefniveau" = "c11_language",  
-                      "Schooladvies vmbo-GL of hoger" = "c11_vmbo_gl_final",            
-                      "Schooladvies havo of hoger" = "c11_havo_final",           
-                      "Schooladvies vwo" = "c11_vwo_final" ,                      
-                      "Schooladvies hoger dan eindtoetsadvies" = "c11_over_advice", 
-                      "Schooladvies lager dan eindtoetsadvies" = "c11_under_advice", 
-                      "Vmbo-GL of hoger" = "c16_vmbo_gl",                  
-                      "Havo of hoger" = "c16_havo",                     
-                      "Vwo" = "c16_vwo",                               
-                      "Startkwalificatie behaald" = "c21_high_school_attained",             
-                      "Hbo of hoger" = "c21_hbo_followed",         
-                      "Universiteit" = "c21_uni_followed",         
-                      "Diploma hbo of hoger" = "c30_hbo_attained",                  
-                      "Diploma universiteit" = "c30_wo_attained")
+                                 "Eindtoetsadvies havo of hoger" = "c11_havo_test",           
+                                 "Eindtoetsadvies vwo" = "c11_vwo_test",                    
+                                 "Eindtoets rekenen streefniveau" = "c11_math",           
+                                 "Eindtoets lezen streefniveau" = "c11_reading",           
+                                 "Eindtoets taalverzorging streefniveau" = "c11_language",  
+                                 "Schooladvies vmbo-GL of hoger" = "c11_vmbo_gl_final",            
+                                 "Schooladvies havo of hoger" = "c11_havo_final",           
+                                 "Schooladvies vwo" = "c11_vwo_final" ,                      
+                                 "Schooladvies hoger dan eindtoetsadvies" = "c11_over_advice", 
+                                 "Schooladvies lager dan eindtoetsadvies" = "c11_under_advice", 
+                                 "Vmbo-GL of hoger" = "c16_vmbo_gl",                  
+                                 "Havo of hoger" = "c16_havo",                     
+                                 "Vwo" = "c16_vwo",                               
+                                 "Startkwalificatie" = "c21_high_school_attained",       # startkwalificatie behaald      
+                                 "Hbo of hoger" = "c21_hbo_followed",         
+                                 "Universiteit" = "c21_uni_followed",         
+                                 "Diploma hbo of hoger" = "c30_hbo_attained",                  
+                                 "Diploma universiteit" = "c30_wo_attained")
+
 
 lang[["house_choices"]] <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
-                 "Woonoppervlak per lid huishouden" = "c16_living_space_pp", 
-                 "Eigen woning" = "c30_homeowner",   # AANGEPAST
-                 "Eigenwoningwaarde" = "c30_home_wealth",  # NEW
-                 "Woonoppervlak per lid huishouden" = "c30_living_space_pp")
-                 #"Jonge moeders" = "c30_young_mothers")  # NEW
+                             "Woonoppervlak per lid huishouden" = "c16_living_space_pp",
+                             "Thuiswonend" = "c21_living_with_parents",
+                             "Leeftijd waarop ouderlijk huis is verlaten" = "c35_age_left_parents",
+                             "Woonoppervlak per lid huishouden" = "c30_living_space_pp",
+                             "Eigen woning" = "c30_homeowner")   # AANGEPAST
+
+lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
+                             "Huishoudinkomen" = "c30_household_income",
+                             "Werkt" = "c30_employed", 
+                             "Gewerkte uren per week" = "c30_hrs_work_pw", # werkenden?
+                             "Vast arbeidscontract" = "c30_permanent_contract", 
+                             "Uurloon"  = "c30_hourly_wage", 
+                             "Uurloon minder dan 11" = "c30_hourly_wage_max_11",
+                             "Uurloon minder dan 14" = "c30_hourly_wage_max_14",
+                             "Ziekte- of arbeidsongeschiktheidsuitkering" = "c30_disability", 
+                             "Bijstand" = "c30_social_assistance", 
+                             "Vermogen"  = "c30_wealth", 
+                             "Vermogen zonder woning en hypotheekschuld" = "c30_wealth_no_home",
+                             "Eigenwoningwaarde" = "c30_home_wealth", 
+                             "Schulden" = "c30_debt",
+                             "Schenking door ouders" = "c30_gifts_received",
+                             "Waarde schenkingen door ouders" = "c30_sum_gifts")
+
+
+                    
+
+
+
+                             
+                           
+
+
+
 
 lang[["gender_choices"]] <- c("Totaal", "Mannen", "Vrouwen")
 

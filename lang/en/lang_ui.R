@@ -123,29 +123,32 @@ lang[["geography_label_areas_amsterdam"]] <- "Amsterdam neighborhoods"
 
 # Voor lang[["money_choices"]], lang[["health_choices"]], lang[["education_choices"]], en lang[["house_choices"]]  niet de tekst achter de "=" vertalen. Dus c30_income moet niet!
 lang[["money_choices"]] <- c("Personal Income" = "c30_income",
-                 "Working" = "c30_employed", 
-                 "Weekly Working Hours (Wage Earners)" = "c30_hrs_work_pw", 
-                 "Has Indefinite-Term Employment Contract (Wage Earners)" = "c30_permanent_contract", 
-                 "Hourly Wage (Wage Earners)"  = "c30_hourly_wage", 
-                 "Receives Disability or Sickness Insurance Benefits" = "c30_disability", 
-                 "Receives Basic Social Benefits" = "c30_social_assistance", 
-                 "Household Wealth"  = "c30_wealth", 
-                 "Household Debt" = "c30_debt",
-                 ### NEW
-                 "Hourly wage less than 11" = "c30_hourly_wage_max_11",
-                 "Hourly wage less than 14" = "c30_hourly_wage_max_14",
-                 "Wealth excluding home and mortgage debt" = "c30_wealth_no_home", 
-                 "Value gift by parents" = "c30_sum_gifts",
-                 "Gift from parents" = "c30_gifts_received",
-                 "Household income" = "c30_household_income")
+                             "Household income" = "c30_household_income",
+                             "Working" = "c30_employed", 
+                             "Weekly Working Hours" = "c30_hrs_work_pw", 
+                             "Has Indefinite-Term Employment Contract" = "c30_permanent_contract", 
+                             "Hourly Wage"  = "c30_hourly_wage", 
+                             "Hourly wage less than 11" = "c30_hourly_wage_max_11",
+                             "Hourly wage less than 14" = "c30_hourly_wage_max_14",
+                             "Receives Disability or Sickness Insurance Benefits" = "c30_disability", 
+                             "Receives Basic Social Benefits" = "c30_social_assistance",
+                             "Household Wealth"  = "c30_wealth", 
+                             "Wealth excluding home and mortgage debt" = "c30_wealth_no_home",
+                             "Home value" = "c30_home_wealth",
+                             "Household Debt" = "c30_debt",
+                             "Gift from parents" = "c30_gifts_received",
+                             "Value gift by parents" = "c30_sum_gifts"
+)
+                 
 
-lang[["health_choices"]] <- c("Low Birth Weight" = "c00_sga",
+lang[["health_choices"]] <- c("Small for Gestational Age" = "c00_sga",
                    "Preterm Birth"  = "c00_preterm_birth", 
-                   "Stillbirth and Infant Mortality " = "c00_infant_mortality",
-                   "Health Care Costs" = "c11_youth_health_costs", 
+                   "Infant Mortality " = "c00_infant_mortality",
                    "Child Protective Services" = "c11_youth_protection",
-                   "Health Care Costs" = "c16_youth_health_costs", 
+                   "Health Care Costs" = "c11_youth_health_costs",
                    "Child Protective Services" = "c16_youth_protection",
+                   "Health Care Costs" = "c16_youth_health_costs", 
+                   "Young Parenthood" = "c21_young_parent",
                    "Health Care Costs" = "c30_total_health_costs", 
                    "Uses Hospital Care" = "c30_hospital", 
                    "Uses Mental Health Care (Specialist)" = "c30_specialist_mhc", 
@@ -166,18 +169,18 @@ lang[["education_choices"]] <- c("Test Score at Least Moderate" = "c11_vmbo_gl_t
                       "Moderate-Ability Track or Higher" = "c16_vmbo_gl",                  
                       "High-Ability Track or Higher" = "c16_havo",                     
                       "Very High-Ability Track" = "c16_vwo",                               
-                      "Basic Educational Degree Aittainment" = "c21_high_school_attained",             
+                      "High School Degree" = "c21_high_school_attained",             
                       "Higher Professional Education or University Enrollment" = "c21_hbo_followed",         
                       "University Enrollment" = "c21_uni_followed",         
                       "Higher Professional Education or University Attainment" = "c30_hbo_attained",                  
                       "University Attainment" = "c30_wo_attained")
 
-lang[["house_choices"]] <- c("Home Size per Household Membern" = "c11_living_space_pp", 
+lang[["house_choices"]] <- c("Home Size per Household Member" = "c11_living_space_pp", 
                  "Home Size per Household Member" = "c16_living_space_pp", 
-                 "Home Owner" = "c30_homeowner",   # AANGEPAST
-                 "Homeownership value" = "c30_home_wealth",  # NEW
-                 "Home Size per Household Member" = "c30_living_space_pp")
-                 #"Jonge moeders" = "c30_young_mothers")  # NEW)
+                 "Living with parents" = "c21_living_with_parents",
+                 "Age left parents" = "c35_age_left_parents",
+                 "Home Size per Household Member" = "c30_living_space_pp",
+                 "Home Owner" = "c30_home_owner")   # AANGEPAST)
 
 lang[["gender_choices"]] <- c("Total", "Men", "Women")
 
