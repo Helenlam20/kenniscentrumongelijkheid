@@ -112,8 +112,8 @@ lang[["one_group_label"]] <- "<b> Show single group</b>"
 # Choices
 lang[["health_catogory_label"]] <- "Health and Wellbeing" 
 lang[["education_catogory_label"]] <- "Education" 
-lang[["house_catogory_label"]] <- "Housing" 
 lang[["money_catogory_label"]] <- "Work and Income" 
+lang[["house_catogory_label"]] <- "Housing" 
 
 lang[["geography_label_the_netherlands"]] <- "The Netherlands"
 lang[["geography_label_metropolis_amsterdam"]] <- "Amsterdam Metropolitan Area"
@@ -148,7 +148,7 @@ lang[["health_choices"]] <- c("Small for Gestational Age" = "c00_sga",
                    "Health Care Costs" = "c11_youth_health_costs",
                    "Child Protective Services" = "c16_youth_protection",
                    "Health Care Costs" = "c16_youth_health_costs", 
-                   "Young Parenthood" = "c21_young_parent",
+                   "Young Parenthood" = "c21_young_parents",
                    "Health Care Costs" = "c30_total_health_costs", 
                    "Uses Hospital Care" = "c30_hospital", 
                    "Uses Mental Health Care (Specialist)" = "c30_specialist_mhc", 
@@ -178,9 +178,9 @@ lang[["education_choices"]] <- c("Test Score at Least Moderate" = "c11_vmbo_gl_t
 lang[["house_choices"]] <- c("Home Size per Household Member" = "c11_living_space_pp", 
                  "Home Size per Household Member" = "c16_living_space_pp", 
                  "Living with parents" = "c21_living_with_parents",
-                 "Age left parents" = "c35_age_left_parents",
+                 "Age left parents" = "c30_age_left_parents",
                  "Home Size per Household Member" = "c30_living_space_pp",
-                 "Home Owner" = "c30_home_owner")   # AANGEPAST)
+                 "Home Owner" = "c30_homeowner")   # AANGEPAST
 
 lang[["gender_choices"]] <- c("Total", "Men", "Women")
 
