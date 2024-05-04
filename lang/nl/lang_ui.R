@@ -115,8 +115,8 @@ lang[["one_group_label"]] <- "<b> Toon één groep</b>"
 # Choices
 lang[["health_catogory_label"]] <- "Gezondheid en welzijn" 
 lang[["education_catogory_label"]] <- "Onderwijs" 
-lang[["house_catogory_label"]] <- "Wonen" 
 lang[["money_catogory_label"]] <- "Werk en inkomen" 
+lang[["house_catogory_label"]] <- "Wonen" 
 
 lang[["geography_label_the_netherlands"]] <- "Nederland"
 lang[["geography_label_metropolis_amsterdam"]] <- "Metropool Amsterdam"
@@ -132,7 +132,7 @@ lang[["health_choices"]] <- c("Laag geboortegewicht" = "c00_sga",
                               "Zorgkosten" = "c11_youth_health_costs",
                               "Jeugdbescherming" = "c16_youth_protection",
                               "Zorgkosten" = "c16_youth_health_costs",
-                              "Jong ouderschap" = "c21_young_parent", # NEW OUTCOME -> on dashboard it days 35 year olds!!
+                              "Jong ouderschap" = "c21_young_parents", # NEW OUTCOME -> on dashboard it days 35 year olds!!
                               "Zorgkosten" = "c30_total_health_costs", 
                               "Gebruikt ziekenhuiszorg" = "c30_hospital", 
                               "Gebruikt geestelijke gezondheidszorg (specialistisch)" = "c30_specialist_mhc", 
@@ -159,14 +159,6 @@ lang[["education_choices"]] <- c("Eindtoetsadvies vmbo-GL of hoger" = "c11_vmbo_
                                  "Diploma hbo of hoger" = "c30_hbo_attained",                  
                                  "Diploma universiteit" = "c30_wo_attained")
 
-
-lang[["house_choices"]] <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
-                             "Woonoppervlak per lid huishouden" = "c16_living_space_pp",
-                             "Thuiswonend" = "c21_living_with_parents",
-                             "Leeftijd waarop ouderlijk huis is verlaten" = "c35_age_left_parents",
-                             "Woonoppervlak per lid huishouden" = "c30_living_space_pp",
-                             "Eigen woning" = "c30_homeowner")   # AANGEPAST
-
 lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
                              "Huishoudinkomen" = "c30_household_income",
                              "Werkt" = "c30_employed", 
@@ -184,16 +176,12 @@ lang[["money_choices"]] <- c("Persoonlijk inkomen" = "c30_income",
                              "Schenking door ouders" = "c30_gifts_received",
                              "Waarde schenkingen door ouders" = "c30_sum_gifts")
 
-
-                    
-
-
-
-                             
-                           
-
-
-
+lang[["house_choices"]] <- c("Woonoppervlak per lid huishouden" = "c11_living_space_pp", 
+                             "Woonoppervlak per lid huishouden" = "c16_living_space_pp",
+                             "Thuiswonend" = "c21_living_with_parents",
+                             "Leeftijd waarop ouderlijk huis is verlaten" = "c30_age_left_parents",
+                             "Woonoppervlak per lid huishouden" = "c30_living_space_pp",
+                             "Eigen woning" = "c30_homeowner")   # AANGEPAST
 
 lang[["gender_choices"]] <- c("Totaal", "Mannen", "Vrouwen")
 
