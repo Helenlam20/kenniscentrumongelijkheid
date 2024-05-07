@@ -79,15 +79,15 @@ names(GeoChoices) <- c(
 outcomeChoices <- list(
     lang[["health_choices"]], 
     lang[["education_choices"]],
-    lang[["house_choices"]],
-    lang[["money_choices"]]
+    lang[["money_choices"]],
+    lang[["house_choices"]]
 )
 
 names(outcomeChoices) <- c(
     lang[["health_catogory_label"]], 
     lang[["education_catogory_label"]],
-    lang[["house_catogory_label"]],
-    lang[["money_catogory_label"]]
+    lang[["money_catogory_label"]],
+    lang[["house_catogory_label"]]
 )
 
 # GenderChoices <- c("Totaal", "Mannen", "Vrouwen")

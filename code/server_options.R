@@ -58,7 +58,9 @@ add_bold_text_html <- function(text, color) {
 #### HTML TEXT ####
 dummy <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "dummy") 
 costs <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "costs") 
-continuous <- c(subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "continuous"), costs)
+years <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "years") 
+continuous <- c(subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "continuous"), costs, years)
+# years <- subset(outcome_dat$analyse_outcome, outcome_dat$prefix_postfix == "years") 
 
 
 # get signs for the outcomes

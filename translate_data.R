@@ -46,4 +46,9 @@ for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
 }
 
 
+# this is only necessary if new data has manually been added. The variable types need to be converted
+# to factors for the translation to work!!
 
+# library(magrittr)
+# cols <- c("geografie", "geslacht", "migratieachtergrond", "huishouden", "bins", "uitkomst", "type", "uitkomst_NL")
+# mean %<>% mutate_at(cols, factor)
