@@ -35,6 +35,21 @@ for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   
 }
 
+
+
+# this is only necessary if new data has manually been added. The variable types need to be converted
+# to factors for the translation to work!!
+
+# library(magrittr)
+cols <- c("geografie", "geslacht", "migratieachtergrond", "huishouden", "bins", "uitkomst", "type", "uitkomst_NL", "opleiding_ouders")
+bins5 %<>% mutate_at(cols, factor)
+bins10 %<>% mutate_at(cols, factor)
+bins20 %<>% mutate_at(cols, factor)
+mean %<>% mutate_at(cols, factor)
+parents_edu %<>% mutate_at(cols, factor)
+
+
+
 bins20 <- translate_en(bins20)
 bins10 <- translate_en(bins10)
 bins5 <- translate_en(bins5)
@@ -44,11 +59,3 @@ parents_edu <- translate_en(parents_edu)
 for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
   write_rds(get(i), file.path("./data/en/", paste0(i, "_tab.rds")))
 }
-
-
-# this is only necessary if new data has manually been added. The variable types need to be converted
-# to factors for the translation to work!!
-
-# library(magrittr)
-# cols <- c("geografie", "geslacht", "migratieachtergrond", "huishouden", "bins", "uitkomst", "type", "uitkomst_NL")
-# mean %<>% mutate_at(cols, factor)
