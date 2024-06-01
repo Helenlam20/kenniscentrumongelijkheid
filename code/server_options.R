@@ -388,7 +388,7 @@ get_rounded_slider_max <- function(data_max, steps) {
   return(slider_max_rounded)
 }
 
-get_rounded_slider_min <- function(data_min, steps, min_zero=TRUE) {
+get_rounded_slider_min <- function(data_min, steps, min_zero=FALSE) {
   num_padding_steps = 25
 
   # Calculate the minimum value of the slider to be 20 steps below 
