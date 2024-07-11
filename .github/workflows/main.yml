@@ -15,7 +15,5 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
         script: |
-          whoami
-          ls -la
+          make pull
