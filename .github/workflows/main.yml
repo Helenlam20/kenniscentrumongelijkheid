@@ -1,12 +1,15 @@
 name: Deploy on DigitalOcean
-on: [push]
-jobs:
-  
+on: 
+  push:
+    branches:
+      - main
+
+jobs:  
   build:
-    name: Build
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: SSH 
+    - name: Pull latest version
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
