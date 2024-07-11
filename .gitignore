@@ -5,6 +5,7 @@
 rsconnect/*
 Makefile
 *.sh
+restart.txt
 
 # Ignore local config files
 *.local.R
