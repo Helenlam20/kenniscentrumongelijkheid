@@ -224,9 +224,9 @@ body <- dashboardBody(
     # tab content
     tabItem(tabName = "contact",
             box(status = "primary", 
-              includeMarkdown(lang[["loc_contact.Rmd"]])
-            )
-    )
+                includeMarkdown(lang[["loc_contact.Rmd"]]),
+                includeMarkdown(paste0("### Dashboard ", lang[["version"]], "\n", dashboard_version))
+            ))
     
   )
 )
