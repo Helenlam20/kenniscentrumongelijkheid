@@ -1,8 +1,4 @@
-## Dashboard version
-dashboard_version <- system(r"(git log -1 --format="%cd")", intern=TRUE)
-if (is_empty(dashboard_version)) {
-  dashboard_version <- "N/A"
-}
+
 
 #### LOAD DATA ####
 outcome_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "outcome")
