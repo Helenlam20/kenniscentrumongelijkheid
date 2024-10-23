@@ -4,7 +4,7 @@
 # - Load packages and data 
 # - shinyApp: the shinyApp function creates Shiny app objects from an explicit UI/server pair.
 #
-# (c) Erasmus School of Economics 2022
+# (c) Erasmus School of Economics 2024
 
  
 # clear workspace
