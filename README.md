@@ -13,3 +13,7 @@ The dashboard consists of three elements:
 
 ![logo_kco.png](logo/logo_kco.png)
 
+# change to English version of the Dashboard locally
+1. Create an config.local.R file
+2. Change the 'nl' to 'en'
+3. Remove the loop 
