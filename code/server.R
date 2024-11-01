@@ -22,13 +22,13 @@ server <- function(input, output, session) {
         title = lang[["welcome_popup_title"]],
         text = HTML(lang[["welcome_popup_text"]]),
         btn_labels = lang[["welcome_popup_continue"]],
-        btn_colors = "#18BC9C",
+        btn_colors = "#fff846",
         html = TRUE,
         closeOnClickOutside = TRUE,
         showCloseButton = TRUE,
-        imageUrl = "logo_button_shadow.svg",
+        imageUrl = "KCO_logo.png",
         imageWidth = 150,
-        imageHeight = 150
+        imageHeight = 100
       )
   })
 
@@ -40,15 +40,15 @@ server <- function(input, output, session) {
       text = lang[["cookie_popup_text"]],
       type = NULL,
       btn_labels = c(lang[["no"]], lang[["yes"]] ),
-      btn_colors = c("#18BC9C", "#18BC9C"),
+      btn_colors = c("#fff846", "#fff846"),
       closeOnClickOutside = TRUE,
       showCloseButton = TRUE,
       allowEscapeKey = TRUE,
       cancelOnDismiss = TRUE,
       html = TRUE,
-      imageUrl = "logo_button_shadow.svg",
+      imageUrl = "KCO_logo.png",
       imageWidth = 150,
-      imageHeight = 150
+      imageHeight = 100
     )
   })
 
@@ -152,13 +152,13 @@ server <- function(input, output, session) {
         bin <- get_bin(data_group1, data_group2) 
       }
        
-      data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = lang[["blue_group"]] )
-      data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = lang[["green_group"]])
+      data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = lang[["black_group"]] )
+      data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = lang[["yellow_group"]])
       dat <- bind_rows(data_group1, data_group2)      
         
     } else if (input$parents_options == lang[["parent_education"]] ) {
-      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = lang[["blue_group"]] )
-      data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = lang[["green_group"]])
+      data_group1 <- data_group1 %>%  filter(type == "parents_edu") %>% mutate(group = lang[["black_group"]] )
+      data_group2 <- data_group2 %>% filter(type == "parents_edu") %>% mutate(group = lang[["yellow_group"]])
       dat <- bind_rows(data_group1, data_group2)
     }
   })
@@ -186,7 +186,7 @@ server <- function(input, output, session) {
 
     
     caption1 <- paste(
-        sprintf("%s:", toupper(lang[["blue_group"]])), 
+        sprintf("%s:", toupper(lang[["black_group"]])), 
         input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
@@ -195,7 +195,7 @@ server <- function(input, output, session) {
     caption2 <- ""
     if(!input$OnePlot) {
       caption2 <- paste(
-        sprintf("%s:", toupper(lang[["green_group"]])), 
+        sprintf("%s:", toupper(lang[["yellow_group"]])), 
         input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
@@ -218,7 +218,7 @@ server <- function(input, output, session) {
   CaptionFile <- reactive({
     
     caption1 <- paste(
-        sprintf("%s:", toupper(lang[["blue_group"]])), 
+        sprintf("%s:", toupper(lang[["black_group"]])), 
         input$geografie1, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht1, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie1, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
@@ -227,7 +227,7 @@ server <- function(input, output, session) {
     caption2 <- ""
     if(!input$OnePlot) {
       caption2 <- paste(
-        sprintf("%s:", toupper(lang[["green_group"]])), 
+        sprintf("%s:", toupper(lang[["yellow_group"]])), 
         input$geografie2, sprintf("(%s) -",tolower(lang[["area"]])), 
         input$geslacht2, sprintf("(%s) -",tolower(lang[["gender"]])), 
         input$migratie2, sprintf("(%s) -",tolower(lang[["migration_background"]])), 
@@ -244,7 +244,7 @@ server <- function(input, output, session) {
   # Flags on whether there is any data
   data_group1_has_data = reactive({
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == lang[["blue_group"]])
+    data_group1 <- subset(dat, dat$group == lang[["black_group"]])
     data_group1_has_data = ifelse(nrow(data_group1) > 0, TRUE, FALSE)
   })
 
@@ -253,7 +253,7 @@ server <- function(input, output, session) {
       data_group2_has_data = FALSE
     } else {
       dat <- filterData()
-      data_group2 <- subset(dat, dat$group == lang[["green_group"]] )
+      data_group2 <- subset(dat, dat$group == lang[["yellow_group"]] )
       data_group2_has_data = ifelse(nrow(data_group2) > 0, TRUE, FALSE)
     }
   })
@@ -270,10 +270,10 @@ server <- function(input, output, session) {
 
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == lang[["blue_group"]])
+    data_group1 <- subset(dat, dat$group == lang[["black_group"]])
     N1 <- decimal0(sum(data_group1$N))
 
-    data_group2 <- subset(dat, dat$group == lang[["green_group"]])
+    data_group2 <- subset(dat, dat$group == lang[["yellow_group"]])
     N2 <- decimal0(sum(data_group2$N))
 
     lang_dynamic_map <- hashmap()
@@ -308,7 +308,7 @@ server <- function(input, output, session) {
     }
     
     group1_text <- gen_algemeen_group_text(
-      group_type_text = add_bold_text_html(text=tolower(lang["blue_group"]), color=data_group1_color),
+      group_type_text = add_bold_text_html(text=tolower(lang["black_group"]), color=data_group1_color),
       group_data_size = N1,
       geslacht_input = input$geslacht1,
       migratie_input = input$migratie1,
@@ -321,7 +321,9 @@ server <- function(input, output, session) {
     group2_text <- ""
     if (!input$OnePlot) {
       group2_text <- gen_algemeen_group_text(
-        group_type_text = add_bold_text_html(text=tolower(lang[["green_group"]]), color=data_group2_color),
+        group_type_text = add_bold_text_html(
+          text=tolower(lang[["yellow_group"]]), 
+          color= "black"),
         group_data_size = N2,
         geslacht_input = input$geslacht2,
         migratie_input = input$migratie2,
@@ -360,8 +362,8 @@ server <- function(input, output, session) {
     
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == lang[["blue_group"]])
-    data_group2 <- subset(dat, dat$group == lang[["green_group"]])
+    data_group1 <- subset(dat, dat$group == lang[["black_group"]])
+    data_group2 <- subset(dat, dat$group == lang[["yellow_group"]])
     num_rows <- max(nrow(data_group1), nrow(data_group2))
 
     lang_dynamic_map <- hashmap()
@@ -371,9 +373,9 @@ server <- function(input, output, session) {
 
 
     has_data <- FALSE
-    if (input$SwitchColor == lang[["blue_group"]]) { 
-        lang_dynamic_map[["<<var_group_id>>"]] <- tolower(lang[["blue_group"]])
-        lang_dynamic_map[["<<var_group_id_colored>>"]] <- add_bold_text_html(text=lang_dynamic_map[["<<var_group_id>>"]], color=data_group1_color)
+    if (input$SwitchColor == lang[["black_group"]]) { 
+        lang_dynamic_map[["<<var_group_id>>"]] <- tolower(lang[["black_group"]])
+        lang_dynamic_map[["<<var_group_id_colored>>"]] <- add_bold_text_html(text=lang_dynamic_map[["<<var_group_id>>"]], color= "black")
         if (data_group1_has_data()) {
           # Fill lang_dynamic map
           has_data <- TRUE 
@@ -381,7 +383,7 @@ server <- function(input, output, session) {
           if (input$parents_options == lang[["parent_income"]])
             data_identifier <- lang[["dot"]]
 
-          lang_dynamic_map[["<<var_group_datapoint_id>>"]] <-  add_bold_text_html(text=paste(lang[["blue_adjective"]], data_identifier), color=data_group1_color)
+          lang_dynamic_map[["<<var_group_datapoint_id>>"]] <-  add_bold_text_html(text=paste(lang[["black_adjective"]], data_identifier), color= "black")
           lang_dynamic_map[["<<var_data_parent_lowest_income>>"]] <- decimal0(data_group1$parents_income[as.numeric(1)]*1000)
           lang_dynamic_map[["<<var_data_parent_highest_income>>"]] <- decimal0(data_group1$parents_income[as.numeric(num_rows)]*1000)
           lang_dynamic_map[["<<var_data_lowest_mean>>"]] <- paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text)
@@ -399,9 +401,11 @@ server <- function(input, output, session) {
           lang_dynamic_map[["<<var_data_middle_mean>>"]] <- paste0(prefix_text, decimal1(data_group1$mean[2]), postfix_text)
           lang_dynamic_map[["<<var_data_right_mean>>"]] <- paste0(prefix_text, decimal1(data_group1$mean[1]), postfix_text)
         }
-    } else if (input$SwitchColor == lang[["green_group"]]) {
-        lang_dynamic_map[["<<var_group_id>>"]] <- tolower(lang[["green_group"]])
-        lang_dynamic_map[["<<var_group_id_colored>>"]] <- add_bold_text_html(text=lang_dynamic_map[["<<var_group_id>>"]], color=data_group2_color)
+    } else if (input$SwitchColor == lang[["yellow_group"]]) {
+        lang_dynamic_map[["<<var_group_id>>"]] <- tolower(lang[["yellow_group"]])
+        lang_dynamic_map[["<<var_group_id_colored>>"]] <- add_bold_text_html(
+          text=lang_dynamic_map[["<<var_group_id>>"]], 
+          color= "black")
         if (data_group2_has_data()) {
           # Fill lang_dynamic map
           has_data <- TRUE 
@@ -409,7 +413,10 @@ server <- function(input, output, session) {
           if (input$parents_options == lang[["parent_income"]])
             data_identifier <- lang[["dot"]]
 
-          lang_dynamic_map[["<<var_group_datapoint_id>>"]] <-  add_bold_text_html(text=paste(lang[["green_adjective"]], data_identifier), color=data_group2_color)
+          lang_dynamic_map[["<<var_group_datapoint_id>>"]] <- add_bold_text_html(
+            text = paste(lang[["yellow_adjective"]], data_identifier), 
+            color = "black"
+          )          
           lang_dynamic_map[["<<var_data_parent_lowest_income>>"]] <- decimal0(data_group2$parents_income[as.numeric(1)]*1000)
           lang_dynamic_map[["<<var_data_parent_highest_income>>"]] <- decimal0(data_group2$parents_income[as.numeric(num_rows)]*1000)
           lang_dynamic_map[["<<var_data_lowest_mean>>"]] <- paste0(prefix_text, decimal1(data_group2$mean[1]), postfix_text)
@@ -429,7 +436,7 @@ server <- function(input, output, session) {
         }
     }
 
-    if(!has_data) {
+    if(has_data == FALSE) {
       # Generate no data message
       # HTML(gen_nodata_found(lang_dynamic_map[["<<var_group_id_colored>>"]]))
       HTML(add_dynamic_text(lang[["no_group_data"]], lang_dynamic_map))
@@ -479,8 +486,8 @@ server <- function(input, output, session) {
     
     # load data
     dat <- filterData()
-    data_group1 <- subset(dat, dat$group == lang[["blue_group"]])
-    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == lang[["green_group"]])}
+    data_group1 <- subset(dat, dat$group == lang[["black_group"]])
+    if (!(input$OnePlot)) {data_group2 <- subset(dat, dat$group == lang[["yellow_group"]])}
 
 
     # Parse additional input options
@@ -508,11 +515,11 @@ server <- function(input, output, session) {
       plot <- ggplot()
 
       if (data_group1_has_data() && data_group2_has_data()) 
-        plot <- gen_geom_point(dat, c(data_group1_color, data_group2_color), prefix_text, postfix_text, shape=c(19, 15))
+        plot <- gen_geom_point(dat, color=c(data_group1_outline, data_group2_outline), fill=c(data_group1_color, data_group2_color), prefix_text, postfix_text, shape=c(19, 15))
       else if (data_group1_has_data())
-        plot <- gen_geom_point(data_group1, data_group1_color, prefix_text, postfix_text, shape=19)
+        plot <- gen_geom_point(data_group1, color=data_group1_outline, fill=data_group1_color, prefix_text, postfix_text, shape=19)
       else if (data_group2_has_data())
-        plot <- gen_geom_point(data_group2, data_group2_color, prefix_text, postfix_text, shape=15)
+        plot <- gen_geom_point(data_group2, color=data_group2_outline, fill=data_group2_color, prefix_text, postfix_text, shape=15)
 
       plot <- plot + # scale_x_continuous(labels = function(x) paste0("€ ", x)) +
               theme_minimal() +
@@ -528,12 +535,12 @@ server <- function(input, output, session) {
 
         # Plot regression line if it is selected
         if (line_option_selected)
-          plot <- plot + gen_regression_line(data_group1, data_group1_color, polynom, linetype1_reg)
+          plot <- plot + gen_regression_line(data_group1, color=data_group1_outline, polynom, linetype1_reg)
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
           total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-          plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean)
+          plot <- plot + gen_mean_line(total_group1, color=data_group1_outline, linetype1_mean)
         }
       }
 
@@ -546,13 +553,14 @@ server <- function(input, output, session) {
 
         # Plot the additional options
         if (line_option_selected)
-          plot <- plot + gen_regression_line(data_group2, data_group2_color, polynom, linetype2_reg)
+          plot <- plot + gen_regression_line(data_group2, color=data_group2_outline, polynom, linetype2_reg)
 
         if (mean_option_selected) {
           total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-          plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean)
+          plot <- plot + gen_mean_line(total_group2, color=data_group2_outline, linetype2_mean)
         }
-      }     
+      }   
+      
        
       #### BAR PLOT ####
     } else if(input$parents_options == lang[["parent_education"]]) {
@@ -562,7 +570,9 @@ server <- function(input, output, session) {
     if (!(input$change_barplot)) {
   
       if (data_group1_has_data() && data_group2_has_data())
-        plot <- gen_bar_plot(dat, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color, data_group2_color))
+        plot <- gen_bar_plot(dat, prefix_text, postfix_text)+ 
+          scale_color_manual("", values = c(data_group1_outline, data_group2_outline))+ # Outline color for each group
+          scale_fill_manual("", values = c(data_group1_color, data_group2_color))
       else if (data_group1_has_data())
         plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color))
       else if (data_group2_has_data())
@@ -578,12 +588,12 @@ server <- function(input, output, session) {
         # get average of the groups
         if (data_group1_has_data()) {
           total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-          plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
+          plot <- plot + gen_mean_line(total_group1, color=data_group1_outline, linetype1_mean) 
         }
         
         if (data_group2_has_data()) {
           total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-          plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
+          plot <- plot + gen_mean_line(total_group2, color=data_group2_outline, linetype2_mean) 
           
         }
       }
@@ -611,12 +621,12 @@ server <- function(input, output, session) {
          # get average of the groups
          if (data_group1_has_data()) {
            total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-           plot <- plot + gen_mean_line(total_group1, data_group1_color, linetype1_mean) 
+           plot <- plot + gen_mean_line(total_group1, data_group1_outline, linetype1_mean) 
          }
          
          if (data_group2_has_data()) {
            total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-           plot <- plot + gen_mean_line(total_group2, data_group2_color, linetype2_mean) 
+           plot <- plot + gen_mean_line(total_group2, data_group2_outline, linetype2_mean) 
            
          }
        }
@@ -671,7 +681,7 @@ server <- function(input, output, session) {
     
     vals$plot <- plot
   })
-
+  
 
 
   # UI RADIOBUTTON TOOLTIP ---------------------------------------------
@@ -730,9 +740,9 @@ observeEvent(input$OnePlot,{
 
   
   if (!input$OnePlot) {
-    group_choices <- c(lang[["blue_group"]], lang[["green_group"]] )
+    group_choices <- c(lang[["black_group"]], lang[["yellow_group"]] )
   } else {
-    group_choices <- lang[["blue_group"]] 
+    group_choices <- lang[["black_group"]] 
   }
   
   updatePrettyRadioButtons(

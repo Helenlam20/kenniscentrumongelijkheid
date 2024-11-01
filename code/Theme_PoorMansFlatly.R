@@ -37,29 +37,29 @@ logo_poor_mans_flatly <- function(boldText = "Shiny", mainText = "App", badgeTex
 theme_poor_mans_flatly <- shinyDashboardThemeDIY(
   
   ### general
-  appFontFamily = "Helvetica"
-  ,appFontColor = "rgb(33,37,41)"
-  ,primaryFontColor = "rgb(245,245,245)"
-  ,infoFontColor = "rgb(245,245,245)"
-  ,successFontColor = "rgb(245,245,245)"
-  ,warningFontColor = "rgb(245,245,245)"
-  ,dangerFontColor = "rgb(245,245,245)"
-  ,bodyBackColor = "rgb(255,255,255)"
+  appFontFamily = "Arial"
+  ,appFontColor = "#000000"
+  ,primaryFontColor = "#ffffff" #font color of uitkomstmaat box header
+  ,infoFontColor = "#ffffff"
+  ,successFontColor = "#000000"
+  ,warningFontColor = "#ffffff"
+  ,dangerFontColor = "#ffffff"
+  ,bodyBackColor = "#ffffff"
   
   ### header
-  ,logoBackColor = "rgb(24,188,156)"
+  ,logoBackColor = "#fff846" #behind "Dashboard Ongelijkheid in Amsterdam"
+
+  ,headerButtonBackColor = "#fff846" #menu button
+  ,headerButtonIconColor = "#000000"
+  ,headerButtonBackColorHover = "#fffca5"
+  ,headerButtonIconColorHover = "#000000"
   
-  ,headerButtonBackColor = "rgb(24,188,156)"
-  ,headerButtonIconColor = "rgb(44,62,80)"
-  ,headerButtonBackColorHover = "rgb(20,154,128)"
-  ,headerButtonIconColorHover = "rgb(0,0,0)"
-  
-  ,headerBackColor = "rgb(24,188,156)"
+  ,headerBackColor = "#fff846"
   ,headerBoxShadowColor = ""
   ,headerBoxShadowSize = "0px 0px 0px"
   
   ### sidebar
-  ,sidebarBackColor = "rgb(44,62,80)"
+  ,sidebarBackColor = "#fff846" #color of the sidebar block
   ,sidebarPadding = 0
   
   ,sidebarMenuBackColor = "inherit"
@@ -69,69 +69,70 @@ theme_poor_mans_flatly <- shinyDashboardThemeDIY(
   ,sidebarShadowRadius = ""
   ,sidebarShadowColor = "0px 0px 0px"
   
-  ,sidebarUserTextColor = "rgb(255,255,255)"
+  ,sidebarUserTextColor = "#ffffff"
   
-  ,sidebarSearchBackColor = "rgb(255,255,255)"
-  ,sidebarSearchIconColor = "rgb(44,62,80)"
-  ,sidebarSearchBorderColor = "rgb(255,255,255)"
+  ,sidebarSearchBackColor = "#ffffff"
+  ,sidebarSearchIconColor = "#000000"
+  ,sidebarSearchBorderColor = "#ffffff"
   
-  ,sidebarTabTextColor = "rgb(255,255,255)"
+  ,sidebarTabTextColor = "#000000"  #text color on the sidebar
   ,sidebarTabTextSize = 16
   ,sidebarTabBorderStyle = "none"
   ,sidebarTabBorderColor = "none"
   ,sidebarTabBorderWidth = 0
   
-  ,sidebarTabBackColorSelected = "rgb(30,43,55)"
-  ,sidebarTabTextColorSelected = "rgb(24,188,156)"
+  ,sidebarTabBackColorSelected = "#000000"
+  ,sidebarTabTextColorSelected = "#ffffff"
   ,sidebarTabRadiusSelected = "0px"
   
-  ,sidebarTabBackColorHover = "rgb(44,62,80)"
-  ,sidebarTabTextColorHover = "rgb(24,188,156)"
+  ,sidebarTabBackColorHover = "#000000" 
+  ,sidebarTabTextColorHover = "#ffffff"
   ,sidebarTabBorderStyleHover = "none"
   ,sidebarTabBorderColorHover = "none"
   ,sidebarTabBorderWidthHover = 0
   ,sidebarTabRadiusHover = "0px"
   
   ### boxes
-  ,boxBackColor = "rgb(245,245,245)"
+  ,boxBackColor = "#ffffff"
   ,boxBorderRadius = 8
   ,boxShadowSize = "0px 0px 0px"
   ,boxShadowColor = ""
   ,boxTitleSize = 16
-  ,boxDefaultColor = "rgb(52,152,219)"
-  ,boxPrimaryColor = "rgb(44,62,80)"
-  ,boxInfoColor = "rgb(52,152,219)"
-  ,boxSuccessColor = "rgb(24, 188, 156)"
-  ,boxWarningColor = "rgb(243,156,18)"
-  ,boxDangerColor = "rgb(231,76,60)"
+  ,boxDefaultColor = "#000000" 
+  ,boxPrimaryColor = "#000000" #uitkomstmaat and figure header color
+  ,boxInfoColor = "#000000" #black group
+  ,boxSuccessColor = "#fff846" #yellow group
+  ,boxWarningColor = "#f39c12"
+  ,boxDangerColor = "#e74c3c"
   
-  ,tabBoxTabColor = "rgb(44,62,80)"
+  ,tabBoxTabColor = "#000000" #algemene uitleg
   ,tabBoxTabTextSize = 16
-  ,tabBoxTabTextColor = "rgb(24, 188, 156)"
-  ,tabBoxTabTextColorSelected = "rgb(255, 255, 255)"
-  ,tabBoxBackColor = "rgb(245,245,245)"
-  ,tabBoxHighlightColor = "rgb(255,255,255)"
+  ,tabBoxTabTextColor = "#000000"
+  ,tabBoxTabTextColorSelected = "#ffffff"
+  ,tabBoxBackColor = "#ffffff" #back color of boxes
+  ,tabBoxHighlightColor = "#ffffff"
   ,tabBoxBorderRadius = 8
   
-  ### inputs
-  ,buttonBackColor = "rgb(44,62,80)"
-  ,buttonTextColor = "rgb(255,255,255)"
-  ,buttonBorderColor = "rgb(44,62,80)"
+  ### inputs 
+  #download data, screenshot, etc. options
+  ,buttonBackColor = "#ffffff"
+  ,buttonTextColor = "#000000"
+  ,buttonBorderColor = "#000000"
   ,buttonBorderRadius = 8
   
-  ,buttonBackColorHover = "rgb(30,43,55)"
-  ,buttonTextColorHover = "rgb(255,255,255)"
-  ,buttonBorderColorHover = "rgb(30,43,55)"
+  ,buttonBackColorHover = "#000000"
+  ,buttonTextColorHover = "#ffffff"
+  ,buttonBorderColorHover = "#000000"
   
-  ,textboxBackColor = "rgb(255,255,255)"
-  ,textboxBorderColor = "rgb(206,212,218)"
+  ,textboxBackColor = "#ffffff"
+  ,textboxBorderColor = "#000000"
   ,textboxBorderRadius = 8
-  ,textboxBackColorSelect = "rgb(255,255,255)"
-  ,textboxBorderColorSelect = "rgb(89,126,162)"
+  ,textboxBackColorSelect = "#ffffff" #search bar geografie
+  ,textboxBorderColorSelect = "#000000"
   
   ### tables
-  ,tableBackColor = "rgb(255,255,255)"
-  ,tableBorderColor = "rgb(236,240,241)"
+  ,tableBackColor = "#fffffff"
+  ,tableBorderColor = "#000000"
   ,tableBorderTopSize = 1
   ,tableBorderRowSize = 1
   

@@ -27,9 +27,246 @@ body {
 
 
 .sweet-alert {
-  font-family: 'Helvetica', 'Open Sans', Helvetica,Arial,sans-serif;
+  font-family: var(--forma), sans-serif;
 }
 
 iframe {
     max-width: 100% !important;
+}
+
+/* when hover on question or eraser */
+#beginscherm:hover, #reset_cookies:hover {
+    background-color: #fffca5 ; /* Change this to your preferred hover color */
+}
+
+/* check boxes */
+.pretty input:checked~.state.p-info .icon,.pretty input:checked~.state.p-info .svg,.pretty.p-toggle .state.p-info .icon,.pretty.p-toggle .state.p-info .svg {
+    color: black;
+    stroke: #fff;
+}
+
+.pretty input:checked~.state.p-info label:after,.pretty.p-toggle .state.p-info label:after {
+    background-color: #fffca5!important
+
+}
+
+.pretty input:checked~.state.p-info-o label:before,.pretty.p-toggle .state.p-info-o label:before {
+    border-color: #000 !important
+}
+
+.pretty input:checked~.state.p-info-o .icon,.pretty input:checked~.state.p-info-o .svg,.pretty input:checked~.state.p-info-o svg,.pretty.p-toggle .state.p-info-o .icon,.pretty.p-toggle .state.p-info-o .svg,.pretty.p-toggle .state.p-info-o svg {
+    color: #black;
+    stroke: #black
+}
+
+.pretty input:checked~.state.p-info-o label:after,.pretty.p-toggle .state.p-info-o label:after {
+    background-color: #fffca5
+}
+
+/*Welcome window*/
+div:where(.swal2-container) div:where(.swal2-popup) {
+    display: none;
+    position: relative;
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 100%);
+    width: 32em;
+    max-width: 100%;
+    padding: 0 0 1.25em;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    color: #000000;
+    font-family: inherit;
+    font-size: 1rem
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+    border: 0;
+    border-radius: .25em;
+    background: initial;
+    background-color: #fff846;
+    color: #000000;
+    font-size: 1em
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+    border: 0;
+    border-radius: .25em;
+    background: initial;
+    background-color: #000000;
+    /* color:#fff; */
+    font-size: 1em
+}
+
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+    color: #000000 !important;
+    text-decoration: none;
+    background-color: #fff846 !important;
+    outline: 0;
+}
+
+.selectize-dropdown .selected {
+    background-color: #fff846;
+    color: #000
+}
+
+.dropdown-menu>li>a {
+    /* color:#777; */
+}
+
+/* Change background color of dropdown menu item on hover */
+.dropdown-menu > li > a:hover {
+    background-color: #fffca5 !important; /* Background color on hover */
+    color: #000000 !important;            /* Text color on hover */
+}
+
+/*pickerinput dropdown menu (outcomes, axis settings, geography*/
+.btn.dropdown-toggle {
+     background-color: #ffffff; /* Your desired background color */
+    /* color: #ffffff; */             /* Text color */
+}
+
+#ss-connect-dialog::before { content: 'Je sessie is verlopen, laad de applicatie opnieuw.' }#ss-connect-dialog label { display: none !important; }#ss-connect-dialog a {
+   display: block !important;
+   color: #000000 !important;
+   font-size: 0 !important;
+   margin-top: 22px !important;
+   font-weight: normal !important;
+}
+
+.selectize-dropdown-content .option:hover {
+    background-color: #fffca5; /* Your desired background color for active items */
+    color: #000000;             /* Text color for active items */
+}
+
+.nav-tabs-custom {
+    margin-bottom: 20px;
+    background: #ffffff00;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0%);
+    border-radius: 8px
+}
+
+.nav-tabs-custom>.nav-tabs {
+    margin: 0;
+    border-bottom-color: #ffffff00;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px
+}
+
+.nav-tabs-custom>.nav-tabs>li {
+    border-top: 3px solid #00000000;
+    margin-bottom: -2px;
+    margin-right: 5px
+}
+
+.nav-tabs-custom>.nav-tabs>li>a {
+    color: #000000;
+    border-radius: 8px
+}
+
+.nav-tabs-custom>.nav-tabs>li>a.text-muted {
+    color: #ffffff
+}
+
+.nav-tabs>li>a:hover {
+    margin: 0;
+    background: black
+}
+
+.nav-tabs-custom>.nav-tabs>li>a:hover {
+    color: #ffffff;
+    background : black;
+}
+
+.nav-tabs-custom>.nav-tabs>li:not(.active)>a:active,.nav-tabs-custom>.nav-tabs>li:not(.active)>a:focus,.nav-tabs-custom>.nav-tabs>li:not(.active)>a:hover {
+    border-color: #000000cc
+}
+
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #00000000
+}
+
+.nav-tabs-custom>.nav-tabs>li.active:hover>a,.nav-tabs-custom>.nav-tabs>li.active>a {
+    background-color: #000000;
+    color: #ffffff
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+    border-top-color: #000000;
+    border-left-color: #000000;
+    border-right-color: #000000
+}
+
+.pretty.p-switch.p-fill input:checked~.state.p-info:before {
+    background-color: #000000 !important;
+}
+
+.pretty.p-switch input:checked~.state.p-info:before {
+    border-color: #000000;
+}
+
+.pretty.p-switch .state:before {
+    content: '';
+    border: 1px solid #000000;
+    border-radius: 60px;
+    width: 2em;
+    box-sizing: unset;
+    height: calc(1em + 2px);
+    position: absolute;
+    top: 0;
+    top: calc((0% - (100% - 1em)) - 16%);
+    z-index: 0;
+    transition: all .5s ease
+}
+
+
+.pretty.p-switch .state label:after {
+    background-color: #000000!important;
+     border: 1px solid #000000
+}
+
+.pretty input:checked~.state.p-info-o .icon,.pretty input:checked~.state.p-info-o .svg,.pretty input:checked~.state.p-info-o svg,.pretty.p-toggle .state.p-info-o .icon,.pretty.p-toggle .state.p-info-o .svg,.pretty.p-toggle .state.p-info-o svg {
+    color: #000000;
+    stroke: #000000
+}
+
+.dropdown-menu>li>a {
+    color: #000000;
+}
+
+.dropdown-menu>li>a:hover {
+    background-color: #e1e3e9;
+    color: #000000
+}
+
+.dropdown-header {
+  color : black;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+    border: 0;
+    border-radius: .25em;
+    background: initial;
+    background-color: #6e7881;
+    color: #000000;
+    font-size: 1em
+}
+
+/*borders of the yellow group box*/
+.box.box-solid.box-success{
+border-bottom-color:#000000 !important;
+border-left-color:#000000;
+border-right-color:#000000;
+border-top-color:#000000;
+}
+
+.bootstrap-select .dropdown-menu li.active small {
+    color: #777777  !important;
+}
+
+/*outcome dropdown menu*/
+.btn {
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    border: 1px solid black;
 }
