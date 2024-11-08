@@ -14,7 +14,7 @@ library(readxl)
 
 
 # add NL name
-outcome_tab <- read_excel("~/Documents/GitHub/kenniscentrumongelijkheid/data/nl/outcome_table.xlsx") 
+outcome_tab <- read_excel("~/data/nl/outcome_table.xlsx") 
 
 # type of outcomes
 dummy <- subset(outcome_tab$analyse_outcome, outcome_tab$prefix_postfix == "dummy")
@@ -24,7 +24,7 @@ outcome_tab <- outcome_tab %>%
 
 # directories
 for (i in c("mean", "parents_edu", "median", "bins5", "bins10", "bins20")) {
-  file_path <- paste0("~/Documents/GitHub/kenniscentrumongelijkheid/data/nl/", i, "_tab.rds")
+  file_path <- paste0("~/data/nl/", i, "_tab.rds")
   data <- readRDS(file_path)
   
   if (i == "bins20") {
