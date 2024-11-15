@@ -75,17 +75,18 @@ div:where(.swal2-container) div:where(.swal2-popup) {
     border: none;
     border-radius: 5px;
     background: #fff;
-    color: #000000;
+    color: #000000 !important;
     font-family: inherit;
     font-size: 1rem
 }
 
+/*Welcome and cookies pop-up*/ 
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
     border: 0;
     border-radius: .25em;
     background: initial;
     background-color: #fff846;
-    color: #000000;
+    color: #000000 !important;
     font-size: 1em
 }
 
@@ -93,9 +94,20 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
     border: 0;
     border-radius: .25em;
     background: initial;
-    background-color: #000000;
-    /* color:#fff; */
+    background-color: #fff846;
+    color: #000000 !important;
     font-size: 1em
+}
+
+/* Welcome text */
+.swal2-title {
+    color: #000000 !important;
+}
+
+.swal2-image {
+    background-color: #fff846;  /* Set the desired background color */
+    padding: 10px; /* Add padding for better spacing if needed */
+    border-radius: 10px; /* Match the popup's style */
 }
 
 .dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
@@ -110,9 +122,6 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
     color: #000
 }
 
-.dropdown-menu>li>a {
-    /* color:#777; */
-}
 
 /* Change background color of dropdown menu item on hover */
 .dropdown-menu > li > a:hover {

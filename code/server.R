@@ -27,8 +27,8 @@ server <- function(input, output, session) {
         closeOnClickOutside = TRUE,
         showCloseButton = TRUE,
         imageUrl = "KCO_logo.png",
-        imageWidth = 150,
-        imageHeight = 100
+        imageWidth = 210,
+        imageHeight = 140
       )
   })
 
@@ -47,8 +47,8 @@ server <- function(input, output, session) {
       cancelOnDismiss = TRUE,
       html = TRUE,
       imageUrl = "KCO_logo.png",
-      imageWidth = 150,
-      imageHeight = 100
+      imageWidth = 210,
+      imageHeight = 140
     )
   })
 
