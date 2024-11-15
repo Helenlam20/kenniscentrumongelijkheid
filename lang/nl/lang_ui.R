@@ -10,11 +10,11 @@ lang[["parent_education"]] <- "Opleiding ouders"
 lang[["line"]] <- "Lijn"
 lang[["average"]] <- "Gemiddelde"
 
-lang[["blue_group"]] <- "Blauwe groep"
-lang[["green_group"]] <- "Groene groep"
+lang[["black_group"]] <- "Zwarte groep"
+lang[["yellow_group"]] <- "Gele groep"
 
-lang[["blue_adjective"]] <- "blauwe"
-lang[["green_adjective"]] <- "groene"
+lang[["black_adjective"]] <- "zwarte"
+lang[["yellow_adjective"]] <- "gele"
 
 lang[["yes"]] <- "Ja"
 lang[["no"]] <- "Nee"
@@ -102,7 +102,7 @@ lang[["y_axis_label"]] <- "Verticale as (Y-as):"
 lang[["x_axis_label"]] <- "Horizontale as (X-as):"
 lang[["reset"]] <- "Opnieuw instellen"
 
-# Blue/green group adjustments
+# black/yellow group adjustments
 lang[["the_netherlands"]] <- "Nederland"
 
 lang[["area"]] <- "Geografie"

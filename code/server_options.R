@@ -27,8 +27,12 @@ decimal2 <- function(x) {
 #### HTML COLOR ####
 
 # data group colors
-data_group1_color <- "#3498db"
-data_group2_color <- "#18bc9c" 
+
+data_group1_color <- "#000000" #fill colors
+data_group2_color <- "#fff846" 
+data_group1_outline <- "#000000" # outline colors
+data_group2_outline <- "#000000" 
+
 
 # linetype
 linetype1_reg <- "longdash"
@@ -44,15 +48,24 @@ add_text_color_html <- function(text, color) {
   return(formatted_string)
 }
 
-add_bold_text_html <- function(text, color) {
+add_bold_text_html <- function(text, color, style) {
+  formatted_string <- paste0("<b ")
   if (missing(color)) {
-    formatted_string <-  paste0("<b>", text, "</b>")
+    if (missing(style)) {
+      formatted_string <- paste0(formatted_string, ">", text)
+    } else {
+      formatted_string <- paste0(formatted_string, "style=", style, "'>", text)
+    }
   } else {
-    formatted_string <-  paste0("<b style='color:", color, "'>", text, "</b>")
+    formatted_string <- paste0(formatted_string, "style='color:", color)
+    if (!missing(style)) {
+      formatted_string <- paste0(formatted_string, ";", style)
+    }
+    formatted_string <- paste0(formatted_string, "'>", text)
   }
+  formatted_string <- paste0(formatted_string, "</b>")
   return(formatted_string)
 }
-
 
 
 #### HTML TEXT ####
@@ -147,16 +160,16 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   migration_text <- ""
   if (migratie_input == lang[["no_migrationbackground"]])
     migration_text <- add_dynamic_text(lang[["general_text_group_text_without_migration"]], lang_dynamic_map)
-  else if (migratie_input != "Totaal" ) {
+  else if (migratie_input != "Totaal" & migratie_input != "Total") {
     lang_dynamic_map[["<<var_input_migration_adjective>>"]] <- lang[["adjective_map"]][[migratie_input]]
     migration_text <- lang[["general_text_group_text_with_migration"]]
   }
-
+  
   lang_dynamic_map[["<<var_input_household>>"]] <- tolower(huishouden_input)
   household_text <- ""
   if (huishouden_input != lang[["total"]])
     household_text <- add_dynamic_text(lang[["general_text_group_text_household"]], lang_dynamic_map)
-
+  
   
   
   lang_dynamic_map[["<<var_group_size>>"]] <- group_data_size
@@ -167,7 +180,7 @@ gen_algemeen_group_text <- function(group_type_text, group_data_size, geslacht_i
   lang_dynamic_map[["<<var_input_geography>>"]] <- geografie_input
   
   group_text <- add_dynamic_text(lang[["general_text_groupX"]], lang_dynamic_map)
-
+  
   return(group_text)
 }
 
@@ -214,9 +227,9 @@ thema <- theme(plot.title = element_text(hjust = 0, size = 18,
 
 # hovertext
 font <- list(
-  family = "Helvetica",
+  family = "Arial",
   size = 14,
-  color = "white"
+  color = "#a6a6a6"
 )
 label <- list(
   bordercolor = "white",
@@ -285,18 +298,36 @@ HTML_to_plain_text <- function(txt) {
 }
 
 
-# Plotting functions
-gen_geom_point <- function(data, color, prefix_text, postfix_text, shape) {
+gen_geom_point <- function(data, color, fill, prefix_text, postfix_text, shape) {
+  # Ensure groups are ordered correctly
+  data$group <- factor(data$group, levels = c(lang[["black_group"]], lang[["yellow_group"]]))
+  
   plot <- ggplot() +
-    suppressWarnings(geom_point(data = data, aes(x = parents_income, y = mean, color = group, shape=group, 
-                                text = paste0("<b>", geografie, "</b></br>",
-                                              "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
-                                              "</br>", lang[["plot_hover_parent_income"]] , decimal0(parents_income * 1000),
-                                              "</br>", lang[["plot_hover_number_of_people"]], decimal0(N))),
-                size=3)) + scale_shape_manual("", values=shape) + scale_color_manual("", values=color) 
+    suppressWarnings(
+      geom_point(
+        data = data,
+        aes(
+          x = parents_income,
+          y = mean,
+          color = group,     # Outline color set by group
+          fill = group,
+          shape = group,
+          text = paste0(
+            "<b>", geografie, "</b></br>",
+            "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+            "</br>", lang[["plot_hover_parent_income"]], decimal0(parents_income * 1000),
+            "</br>", lang[["plot_hover_number_of_people"]], decimal0(N)
+          )
+        ),
+        size = 3,
+      )
+    ) +
+    scale_shape_manual("", values = shape) +
+    scale_color_manual("", values = color) + # Outline color for each group
+    scale_fill_manual("", values = fill)                  # Fill color for each group
+  
   return(plot)
 }
-
 
 gen_highlight_points <- function(data, color) {
   min_max <- data %>%
@@ -342,16 +373,23 @@ gen_q75_line <- function(dat, color, linetype) {
 }
 
 gen_bar_plot <- function(data, prefix_text, postfix_text) {
-  plot <- ggplot(data, aes(x = opleiding_ouders, y = mean, fill = group,
+  data$group <- factor(data$group, levels = c(lang[["black_group"]], lang[["yellow_group"]]))
+  plot <- ggplot(data, aes(
+                x = opleiding_ouders, 
+                y = mean, 
+                color = group, 
+                fill = group,
                 text = paste0("<b>", geografie, "</b></br>",
-                "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
-                "</br>", lang[["plot_hover_number_of_people"]], decimal0(N)))
-                )
-
+                  "</br>", lang[["plot_hover_outcome"]], prefix_text, decimal2(mean), postfix_text,
+                  "</br>", lang[["plot_hover_number_of_people"]], decimal0(N)
+                  )
+                ))
+  
   return(plot)
 }
 
 gen_bubble_plot <- function(data, prefix_text, postfix_text) {
+  data$group <- factor(data$group, levels = c(lang[["black_group"]], lang[["yellow_group"]]))
   plot <- ggplot() +
     geom_linerange(data = data, aes(x = opleiding_ouders, ymin = 0, ymax = mean, colour = group), 
                    position = position_dodge(width = 1)) +
@@ -420,11 +458,10 @@ get_datetime <- function() {
   str_replace(format(Sys.time(), "%Y-%m-%d %H-%M-%S"), " ", "_")
 } 
 
-# Dynamic text
 add_dynamic_text <- function(text, lang_dynamic_map) {
-    for (identifier in keys(lang_dynamic_map)) {
-      text <- str_replace_all(text, identifier, paste0(lang_dynamic_map[[identifier]]))
-
-    }
-    return(text)
+  for (identifier in keys(lang_dynamic_map)) {
+    text <- str_replace_all(text, identifier, paste0(lang_dynamic_map[[identifier]]))
+    
+  }
+  return(text)
 }

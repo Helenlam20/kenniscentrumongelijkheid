@@ -20,7 +20,7 @@ sidebar <-
     sidebarMenu(
       HTML(paste0(
         "<br>",
-        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='logo_button_shadow.svg' width='65%'>",
+        "<img style = 'display: block; margin-left: auto; margin-right: auto;' src='KCO_logo.png' width='65%'>",
         "<br>"
       )),
       menuItem(lang[["menu_figure"]], tabName = "gradient", icon = icon("signal", lib = "glyphicon")),
@@ -37,15 +37,15 @@ body <- dashboardBody(
   disconnectMessage(
     text = lang[["disconnect_message"]],
     refresh = lang[["disconnect_refresh"]],
-    background = "#3498db",
-    colour = "white",
-    overlayColour = "grey",
-    overlayOpacity = 0.75,
+    background = "#fff846",
+    colour = "black",
+    overlayColour = "black",
+    overlayOpacity = 0.65,
     refreshColour = "white"
   ),
   useShinyjs(),
   useSweetAlert(), 
-  tags$head(tags$link(rel = "icon", type = "image/png", href = "logo_button_shadow.svg")),
+  tags$head(tags$link(rel = "icon", type = "image/png", href = "KCO_logo.png")),
   # JS cookie library
   tags$script(src = paste0("https://cdn.jsdelivr.net/npm/js-cookie@rc/","dist/js.cookie.min.js")), 
   tags$script(HTML("$('body').addClass('sidebar-mini');")),
@@ -99,7 +99,7 @@ body <- dashboardBody(
                                                         size = "extra-small")
                                     ),
                                     choices = c(lang[["line"]], lang[["average"]]),
-                                    bigger = TRUE, icon = icon("check-square-o"), status = "info",
+                                    bigger = TRUE, icon = icon("check"), status = "info",
                                     outline = TRUE, inline = TRUE, animation = "smooth"
                                   ),
                                   bsPopover(id = "q_line", title = "",
@@ -124,7 +124,7 @@ body <- dashboardBody(
                                          br(), 
                                          prettyRadioButtons(
                                            inputId = "SwitchColor", label = lang[["box_text_switch_label"]], 
-                                           choices = c(lang[["blue_group"]] , lang[["green_group"]]),
+                                           choices = c(lang[["black_group"]] , lang[["yellow_group"]]),
                                            icon = icon("check"), inline = TRUE,
                                            bigger = TRUE, 
                                            status = "info", animation = "smooth")
@@ -148,33 +148,33 @@ body <- dashboardBody(
                          prettySwitch(inputId = "change_barplot", label = HTML(lang[["alternative_box_plot_label"]]),
                                       status = "info", inline = TRUE, fill = T, bigger = T),
                          shinycssloaders::withSpinner(plotlyOutput("main_figure", height = "450"), 
-                                                      type = 1, color = "#18BC9C", size = 1.5)),
+                                                      type = 1, color = "#fff846", size = 1.5)),
               ),
               column(width = 3,
                      box(height = NULL,
-                         title = lang[["blue_group"]], width = NULL, status = "info", solidHeader = TRUE,
+                         title = lang[["black_group"]], width = NULL, status = "info", solidHeader = TRUE,
                          pickerInput("geografie1", label = lang[["area"]], selected = lang[["the_netherlands"]],
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
-                         selectizeInput(inputId = "geslacht1", label = lang[["gender"]] ,
+                         pickerInput(inputId = "geslacht1", label = lang[["gender"]],
                                         choices = lang[["gender_choices"]]),
-                         selectizeInput(inputId = "migratie1", label = lang[["migration_background"]],
+                         pickerInput(inputId = "migratie1", label = lang[["migration_background"]],
                                         choices = lang[["migration_choices"]]),
-                         selectizeInput(inputId = "huishouden1", label = lang[["parent_amount_label"]],
+                         pickerInput(inputId = "huishouden1", label = lang[["parent_amount_label"]],
                                         choices = lang[["household_choices"]]),
                          prettySwitch(inputId = "OnePlot", label = HTML(lang[["one_group_label"]]),
                                       status = "info", inline = TRUE, fill = T, bigger = T)
                      ),
-                     box(height = NULL, id="box_groene_group",
-                         title = lang[["green_group"]], width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
+                     box(height = NULL, id="box_gele_group",
+                         title = lang[["yellow_group"]], width = NULL, status = "success", solidHeader = TRUE, collapsible = TRUE,
                          pickerInput("geografie2", label = lang[["area"]], selected = "Amsterdam",
                                      choices = GeoChoices,
                                      options = list(`live-search` = TRUE, style = "", size = 10)),
-                         selectizeInput(inputId = "geslacht2", label = lang[["gender"]],
+                         pickerInput(inputId = "geslacht2", label = lang[["gender"]],
                                         choices = lang[["gender_choices"]]),
-                         selectizeInput(inputId = "migratie2", label = lang[["migration_background"]],
+                         pickerInput(inputId = "migratie2", label = lang[["migration_background"]],
                                         choices = lang[["migration_choices"]]),
-                         selectizeInput(inputId = "huishouden2", label = lang[["parent_amount_label"]],
+                         pickerInput(inputId = "huishouden2", label = lang[["parent_amount_label"]],
                                         choices = lang[["household_choices"]]),
                      ),
               )
@@ -238,11 +238,11 @@ ui <- dashboardPage(
   header = dashboardHeader(
     titleWidth = lang[["title_width"]], 
     title = tags$span(lang[["title"]], 
-                      style = "font-weight: bold;"
+                      style = "font-weight: bold;color: black !important;"
                       
     ),
-    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question"))),
-    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser")))
+    tags$li(class = "dropdown", actionLink("beginscherm", "", icon("question", style = "color: black;"))),
+    tags$li(class = "dropdown", actionLink("reset_cookies", "", icon("eraser", style = "color: black;")))
 
   ),
   sidebar = sidebar,

@@ -1,7 +1,7 @@
 
 // Hardcoded way to collapse groene groep when OnePlot is selected
 // Get collapse button from groene groep box
-var box_btn = document.getElementById('box_groene_group').closest('.box').getElementsByClassName('btn btn-box-tool')[0];
+var box_btn = document.getElementById('box_gele_group').closest('.box').getElementsByClassName('btn btn-box-tool')[0];
 // Hide the button
 box_btn.style.visibility='hidden';
 // Add an listener to the OnePlot toggle to also click the hidden collapse button
