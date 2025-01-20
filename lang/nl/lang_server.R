@@ -21,7 +21,7 @@ lang[["general_text_axis_parent_education"]] <- "Elke staaf in het figuur toont 
 
 lang[["general_text_axis_parent_education_lollipop"]] <- "Elke lollipop (lijn met stip) in het figuur toont het <<statistic_type>> <<input_outcome_name_lowercase>> van <<input_population>>, uitgesplitst naar het hoogst behaalde opleidingsniveau van de ouders. De bolgrootte is proportioneel aan het aantal mensen binnen een groep."
 
-lang[["general_text_groupX"]] <- "De <<var_group_id_colored>> bestaat uit <<var_group_size>> <<var_input_gender_adjective>> <<var_input_population>> <<general_text_migration_if_available>> die zijn opgegroeid <<general_text_household_if_available>> in <<var_input_geography>>."
+lang[["general_text_groupX"]] <- "De <<var_group_id_colored>> bestaat uit <<var_group_size>> <<var_input_gender_adjective>> <<var_input_population>> <<general_text_migration_if_available>> die zijn opgegroeid <<general_text_household_if_available>> in <<var_input_geography>> <<var_input_smaller_geography>>."
 
 lang[["general_text_group_text_with_migration"]] <- "met een <<var_input_migration_adjective>> migratieachtergrond"
 lang[["general_text_group_text_without_migration"]] <- "zonder een migratieachtergrond"

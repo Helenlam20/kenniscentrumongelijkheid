@@ -103,9 +103,12 @@ lang[["x_axis_label"]] <- "Horizontale as (X-as):"
 lang[["reset"]] <- "Opnieuw instellen"
 
 # black/yellow group adjustments
-lang[["the_netherlands"]] <- "Nederland"
+lang[["label_the_netherlands"]] <- "Nederland"
+lang[["label_metropolis_amsterdam"]] <- "Metropool Amsterdam"
 
-lang[["area"]] <- "Geografie"
+
+lang[["area"]] <- "Gemeente"
+lang[["smaller_area"]] <- "Stadsdeel, postcode (3 cijfers), wijk of gebied"
 lang[["gender"]] <- "Geslacht"
 lang[["migration_background"]] <- "Migratieachtergrond"
 
@@ -121,8 +124,12 @@ lang[["house_catogory_label"]] <- "Wonen"
 lang[["geography_label_the_netherlands"]] <- "Nederland"
 lang[["geography_label_metropolis_amsterdam"]] <- "Metropool Amsterdam"
 lang[["geography_label_municipalities_amsterdam"]] <- "Gemeenten in Metropool Amsterdam"
-lang[["geography_label_districts_amsterdam"]] <- "Stadsdelen in Amsterdam"
-lang[["geography_label_areas_amsterdam"]] <- "Gebieden in Amsterdam"
+lang[["geography_label_districts_amsterdam"]] <- "Stadsdeel"
+lang[["geography_label_areas_amsterdam"]] <- "Gebied"
+lang[["geography_label_neighborhood"]] <- "Wijk"
+lang[["geography_label_pc3"]] <- "Postcode (3 cijfers)"
+lang[["geography_label_whole_municipality"]] <- "Gehele gebied"
+
 
 # Voor lang[["money_choices"]], lang[["health_choices"]], lang[["education_choices"]], en lang[["house_choices"]]  niet de tekst achter de "=" vertalen. Dus c30_income moet niet!
 lang[["health_choices"]] <- c("Laag geboortegewicht" = "c00_sga",
@@ -205,7 +212,9 @@ lang[["label_students_in_grade_8"]] <- "leerlingen in groep 8"
 # !!! This has to be consistent with outcome_table.xlsx
 lang[["label_municipality"]] <- "Gemeente"
 lang[["label_district"]] <- "Stadsdeel"
-lang[["label_neighbourhood"]] <- "Wijk"
+lang[["label_area"]] <- "Gebied"
+lang[["label_neighborhood"]] <- "Wijk"
+lang[["label_pc3"]] <- "PC3"
 
 
 

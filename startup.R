@@ -2,7 +2,7 @@
 
 #### LOAD DATA ####
 outcome_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "outcome")
-area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area")
+area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area_2")
 
 
 for (i in c("bins20", "bins10", "bins5", "mean", "parents_edu")) {
