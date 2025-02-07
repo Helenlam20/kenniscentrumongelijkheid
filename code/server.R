@@ -574,7 +574,9 @@ server <- function(input, output, session) {
           scale_color_manual("", values = c(data_group1_outline, data_group2_outline))+ # Outline color for each group
           scale_fill_manual("", values = c(data_group1_color, data_group2_color))
       else if (data_group1_has_data())
-        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group1_color))
+        plot <- gen_bar_plot(data_group1, prefix_text, postfix_text) + 
+          scale_color_manual("", values = c(data_group1_outline))+ # Outline color for each group
+          scale_fill_manual("", values=c(data_group1_color))
       else if (data_group2_has_data())
         plot <- gen_bar_plot(data_group2, prefix_text, postfix_text) + scale_fill_manual("", values=c(data_group2_color))
 
