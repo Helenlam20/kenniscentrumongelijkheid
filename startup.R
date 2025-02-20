@@ -2,7 +2,7 @@
 
 #### LOAD DATA ####
 outcome_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "outcome")
-area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area")
+area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area_2")
 
 
 csv_files <- list.files(path = lang[["loc_data_rds"]], pattern = "\\.csv$", full.names = TRUE)
