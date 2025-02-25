@@ -2,32 +2,20 @@
 
 #### LOAD DATA ####
 outcome_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "outcome")
-area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area_2")
+area_dat <- read_excel(lang[["loc_outome_table.xlsx"]], sheet = "area")
 
+# Define sample names
+samples <- c("child_mortality", "classroom", "elementary_school", 
+             "high_school", "main", "perinatal", "students")
 
-csv_files <- list.files(path = lang[["loc_data_rds"]], pattern = "\\.csv$", full.names = TRUE)
+# Load all RDS files into a named list
+data_list <- lapply(samples, function(sample) {
+  read_rds(file.path(lang[["loc_data_rds"]], paste0(sample, ".rds")))
+})
+names(data_list) <- samples  # Assign names to the list
 
-
-read_and_cast_csv <- function(file) {
-  dt <- fread(file)
-  
-  dt[, N := as.numeric(N)]
-  dt[, parents_income := as.numeric(parents_income)]
-  dt[, mean := as.numeric(mean)]
-  
-  # Ensure all other columns are of type character
-  dt <- dt %>% mutate(across(-c(N, mean, parents_income), as.character))
-  
-  
-  return(dt)
-}
-
-cols_fact <- c("geografie", "geslacht", "migratieachtergrond", "huishouden", "bins", "opleiding_ouders", "uitkomst",
-               "type")
-
-gradient_dat <- csv_files %>% map_dfr(~read_and_cast_csv(.x)) %>%
-  mutate_at(cols_fact, factor) 
-
+# Combine all datasets into one (if needed)
+gradient_dat <- bind_rows(data_list)
 
 # txt file for README in download button for data and fig
 # temp_txt <- paste(readLines("./data/README.txt"))
