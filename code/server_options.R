@@ -108,13 +108,13 @@ get_postfix <- function(outcome) {
 # select percentage based on the data
 get_perc_per_bin_html <- function(data_group) {
   perc <- 0
-  if ("20" %in% unique(data_group$type)) {
+  if ("20_income" %in% unique(data_group$type)) {
     perc <- 5
-  } else if ("10" %in% unique(data_group$type)) {
+  } else if ("10_income" %in% unique(data_group$type)) {
     perc <- 10
-  } else if ("5" %in% unique(data_group$type)) {
+  } else if ("5_income" %in% unique(data_group$type)) {
     perc <- 20
-  } else if ("1" %in% unique(data_group$type)) {
+  } else if ("1_income" %in% unique(data_group$type)) {
     perc <- 100
   }
   return(perc)
@@ -242,14 +242,14 @@ label <- list(
 # select percentage based on the data
 get_perc_per_bin <- function(data_group) {
   bin <- 100
-  if ("20" %in% unique(data_group$type)) {
-    bin <- 20
-  } else if ("10" %in% unique(data_group$type)) {
-    bin <- 10
-  } else if ("5" %in% unique(data_group$type)) {
-    bin <- 5
-  } else if ("1" %in% unique(data_group$type)) {
-    bin <- 1
+  if ("20_income" %in% unique(data_group$type)) {
+    bin <- "20_income"
+  } else if ("10_income" %in% unique(data_group$type)) {
+    bin <- "10_income"
+  } else if ("5_income" %in% unique(data_group$type)) {
+    bin <- "5_income"
+  } else if ("1_income" %in% unique(data_group$type)) {
+    bin <- "1_income"
   }
   return(bin)
 }

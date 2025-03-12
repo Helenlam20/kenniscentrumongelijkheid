@@ -443,8 +443,8 @@ server <- function(input, output, session) {
     postfix_text <- get_postfix(input$outcome)
     
     # get average of total group
-    total_group1 <- dataInput1()  %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
-    total_group2 <- dataInput2()  %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+    total_group1 <- dataInput1()  %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
+    total_group2 <- dataInput2()  %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
     
     # load data
     dat <- filterData()
@@ -625,7 +625,7 @@ server <- function(input, output, session) {
 
         # Plot mean line if it is selected
         if (mean_option_selected) {
-          total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+          total_group1 <- dataInput1() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group1, color=data_group1_outline, linetype1_mean)
         }
       }
@@ -642,7 +642,7 @@ server <- function(input, output, session) {
           plot <- plot + gen_regression_line(data_group2, color=data_group2_outline, polynom, linetype2_reg)
 
         if (mean_option_selected) {
-          total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+          total_group2 <- dataInput2() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group2, color=data_group2_outline, linetype2_mean)
         }
       }   
@@ -675,12 +675,12 @@ server <- function(input, output, session) {
       if (mean_option_selected) {
         # get average of the groups
         if (data_group1_has_data()) {
-          total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+          total_group1 <- dataInput1() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group1, color=data_group1_outline, linetype1_mean) 
         }
         
         if (data_group2_has_data()) {
-          total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+          total_group2 <- dataInput2() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
           plot <- plot + gen_mean_line(total_group2, color=data_group2_outline, linetype2_mean) 
           
         }
@@ -708,12 +708,12 @@ server <- function(input, output, session) {
        if (mean_option_selected) {
          # get average of the groups
          if (data_group1_has_data()) {
-           total_group1 <- dataInput1() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+           total_group1 <- dataInput1() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
            plot <- plot + gen_mean_line(total_group1, data_group1_outline, linetype1_mean) 
          }
          
          if (data_group2_has_data()) {
-           total_group2 <- dataInput2() %>% filter(bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+           total_group2 <- dataInput2() %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
            plot <- plot + gen_mean_line(total_group2, data_group2_outline, linetype2_mean) 
            
          }
