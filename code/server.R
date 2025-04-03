@@ -112,11 +112,21 @@ server <- function(input, output, session) {
                             gradient_dat$migratieachtergrond == input$migratie1 & 
                             gradient_dat$huishouden == input$huishouden1)
     } else {
-      data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
-                              gradient_dat$geografie == input$geografie1_2 & 
-                              gradient_dat$geslacht == input$geslacht1 &
-                              gradient_dat$migratieachtergrond == input$migratie1 & 
-                              gradient_dat$huishouden == input$huishouden1)
+      if (input$geografie1_2 %in% area_dat$area[area_dat$type == "Wijk"]) {
+        wijk_code1 <- area_dat$wijkcode[area_dat$area == input$geografie1_2 & area_dat$gemeente == input$geografie1_1]
+        
+        data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == wijk_code1 & 
+                                gradient_dat$geslacht == input$geslacht1 &
+                                gradient_dat$migratieachtergrond == input$migratie1 & 
+                                gradient_dat$huishouden == input$huishouden1)
+      } else {
+        data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == input$geografie1_2 & 
+                                gradient_dat$geslacht == input$geslacht1 &
+                                gradient_dat$migratieachtergrond == input$migratie1 & 
+                                gradient_dat$huishouden == input$huishouden1)
+      }
     }
   })
   
@@ -128,11 +138,21 @@ server <- function(input, output, session) {
                               gradient_dat$migratieachtergrond == input$migratie2 & 
                               gradient_dat$huishouden == input$huishouden2)
     } else {
-      data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
-                              gradient_dat$geografie == input$geografie2_2 & 
-                              gradient_dat$geslacht == input$geslacht2 &
-                              gradient_dat$migratieachtergrond == input$migratie2 & 
-                              gradient_dat$huishouden == input$huishouden2)
+      if (input$geografie2_2 %in% area_dat$area[area_dat$type == "Wijk"]) {
+        wijk_code2 <- area_dat$wijkcode[area_dat$area == input$geografie2_2 & area_dat$gemeente == input$geografie2_1]
+        
+        data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == wijk_code2 & 
+                                gradient_dat$geslacht == input$geslacht2 &
+                                gradient_dat$migratieachtergrond == input$migratie2 & 
+                                gradient_dat$huishouden == input$huishouden2)
+      } else {
+        data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == input$geografie2_2 & 
+                                gradient_dat$geslacht == input$geslacht2 &
+                                gradient_dat$migratieachtergrond == input$migratie2 & 
+                                gradient_dat$huishouden == input$huishouden2)
+      }
     }
   })
   
@@ -196,11 +216,22 @@ server <- function(input, output, session) {
                               gradient_dat$migratieachtergrond == input$migratie1 & 
                               gradient_dat$huishouden == input$huishouden1)
     } else {
-      data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
-                              gradient_dat$geografie == input$geografie1_2 & 
-                              gradient_dat$geslacht == input$geslacht1 &
-                              gradient_dat$migratieachtergrond == input$migratie1 & 
-                              gradient_dat$huishouden == input$huishouden1)
+      if (input$geografie1_2 %in% area_dat$area[area_dat$type == "Wijk"]) {
+        wijk_code1 <- area_dat$wijkcode[area_dat$area == input$geografie1_2 & area_dat$gemeente == input$geografie1_1]
+        
+        data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == wijk_code1 & 
+                                gradient_dat$geslacht == input$geslacht1 &
+                                gradient_dat$migratieachtergrond == input$migratie1 & 
+                                gradient_dat$huishouden == input$huishouden1)
+        
+      } else {
+        data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == input$geografie1_2 & 
+                                gradient_dat$geslacht == input$geslacht1 &
+                                gradient_dat$migratieachtergrond == input$migratie1 & 
+                                gradient_dat$huishouden == input$huishouden1)
+      }
     }
     
     if (input$geografie2_2 == "") {
@@ -210,11 +241,21 @@ server <- function(input, output, session) {
                               gradient_dat$migratieachtergrond == input$migratie2 & 
                               gradient_dat$huishouden == input$huishouden2)
     } else {
-      data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
-                              gradient_dat$geografie == input$geografie2_2 & 
-                              gradient_dat$geslacht == input$geslacht2 &
-                              gradient_dat$migratieachtergrond == input$migratie2 & 
-                              gradient_dat$huishouden == input$huishouden2)
+      if (input$geografie2_2 %in% area_dat$area[area_dat$type == "Wijk"]) {
+        wijk_code2 <- area_dat$wijkcode[area_dat$area == input$geografie2_2 & area_dat$gemeente == input$geografie2_1]
+        
+        data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == wijk_code2 & 
+                                gradient_dat$geslacht == input$geslacht2 &
+                                gradient_dat$migratieachtergrond == input$migratie2 & 
+                                gradient_dat$huishouden == input$huishouden2)
+      } else {
+        data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
+                                gradient_dat$geografie == input$geografie2_2 & 
+                                gradient_dat$geslacht == input$geslacht2 &
+                                gradient_dat$migratieachtergrond == input$migratie2 & 
+                                gradient_dat$huishouden == input$huishouden2)
+      }
     }
     
     # Flag to check whether to use the user input
