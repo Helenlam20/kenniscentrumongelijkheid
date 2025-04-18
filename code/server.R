@@ -189,7 +189,7 @@ server <- function(input, output, session) {
   # FILTER DATA ----------------------------------------------------
   filterData <- reactive({
     
-    if (input$geografie1_2 == "") {
+    if (is.null(input$geografie1_2) || input$geografie1_2 == "") {
       data_group1 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                               gradient_dat$geografie == input$geografie1_1 & 
                               gradient_dat$geslacht == input$geslacht1 &
@@ -203,7 +203,7 @@ server <- function(input, output, session) {
                               gradient_dat$huishouden == input$huishouden1)
     }
     
-    if (input$geografie2_2 == "") {
+    if (is.null(input$geografie2_2) || input$geografie2_2 == "") {
       data_group2 <- subset(gradient_dat, gradient_dat$uitkomst == input$outcome &
                               gradient_dat$geografie == input$geografie2_1 & 
                               gradient_dat$geslacht == input$geslacht2 &
@@ -232,8 +232,8 @@ server <- function(input, output, session) {
         bin <- get_bin(data_group1, data_group2) 
       }
        
-      data_group1 <- data_group1 %>% filter(type == bin) %>% mutate(group = lang[["black_group"]] )
-      data_group2 <- data_group2 %>% filter(type == bin) %>% mutate(group = lang[["yellow_group"]])
+      data_group1 <- data_group1 %>% filter(type == paste0(bin, "_income")) %>% mutate(group = lang[["black_group"]] )
+      data_group2 <- data_group2 %>% filter(type == paste0(bin, "_income")) %>% mutate(group = lang[["yellow_group"]])
       dat <- bind_rows(data_group1, data_group2)      
         
     } else if (input$parents_options == lang[["parent_education"]] ) {
@@ -443,8 +443,8 @@ server <- function(input, output, session) {
     postfix_text <- get_postfix(input$outcome)
     
     # get average of total group
-    total_group1 <- dataInput1()  %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
-    total_group2 <- dataInput2()  %>% filter(parent_income_wealth_bins_levels == lang[["total"]], opleiding_ouders == lang[["total"]])
+    total_group1 <- dataInput1()  %>% filter(parent_income_wealth_bins == lang[["total"]], opleiding_ouders == lang[["total"]])
+    total_group2 <- dataInput2()  %>% filter(parent_income_wealth_bins == lang[["total"]], opleiding_ouders == lang[["total"]])
     
     # load data
     dat <- filterData()
