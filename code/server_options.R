@@ -243,13 +243,13 @@ label <- list(
 get_perc_per_bin <- function(data_group) {
   bin <- 100
   if ("20_income" %in% unique(data_group$type)) {
-    bin <- "20_income"
+    bin <- 20
   } else if ("10_income" %in% unique(data_group$type)) {
-    bin <- "10_income"
+    bin <- 10
   } else if ("5_income" %in% unique(data_group$type)) {
-    bin <- "5_income"
+    bin <- 5
   } else if ("1_income" %in% unique(data_group$type)) {
-    bin <- "1_income"
+    bin <- 1
   }
   return(bin)
 }
